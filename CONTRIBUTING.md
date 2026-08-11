@@ -27,11 +27,42 @@ test: agregar pruebas para el cliente de Steam
 chore: actualizar dependencias
 ```
 
+## Arquitectura
+
+El proyecto usa MVVM adaptado a SwiftUI + SwiftData. La decision completa, con
+alternativas y consecuencias, esta en
+[`docs/decisiones/001-arquitectura.md`](docs/decisiones/001-arquitectura.md).
+
+Las reglas que se revisan en cada PR:
+
+1. **Una vista nunca llama a un `Service` directamente.** Siempre pasa por un
+   ViewModel. Si una vista importa un Service, el PR no se fusiona.
+2. Una vista **si** puede usar `@Query` para leer modelos locales de SwiftData.
+3. Los `Services` no importan SwiftUI y se definen como protocolo, para poder
+   inyectar un doble en las pruebas.
+4. Los DTOs de red nunca se persisten: se mapean a modelos `@Model` antes.
+5. Los ViewModels reciben Services por inyeccion; no construyen URLs ni
+   parsean JSON.
+
 ## Estilo de codigo
 
 Seguimos las [Swift API Design Guidelines](https://www.swift.org/documentation/api-design-guidelines/)
-oficiales de Apple. Cuando el proyecto tenga codigo real, se agrega SwiftLint
-para que el estilo se revise solo.
+oficiales de Apple, con estas reglas de formato:
+
+| Regla | Valor |
+| --- | --- |
+| Indentacion | **2 espacios** (nunca tabs) |
+| Ancho de linea | 120 caracteres |
+| Llave de apertura | En la misma linea |
+| Imports | Ordenados alfabeticamente |
+
+Para que Xcode respete la indentacion de 2 espacios:
+`Xcode > Settings > Text Editing > Indentation` y dejar
+`Prefer Indent Using: Spaces`, `Tab width: 2`, `Indent width: 2`.
+
+Cuando el proyecto tenga codigo real se agrega SwiftLint, y estas reglas
+quedan escritas en `.swiftlint.yml` para que el estilo se revise solo y no
+dependa de la configuracion local de cada maquina.
 
 ## Secretos
 
@@ -42,10 +73,28 @@ commit siguiente, porque queda en el historial de git.
 
 ## Tests
 
-No hay tests el primer dia porque no hay logica todavia. A partir del primer
-commit que tenga una funcion real (parseo de JSON, llamada de red,
-transformacion de datos), esa funcion va acompañada de su prueba en XCTest.
-No es opcional una vez que existe logica que pueda romperse.
+El proyecto usa **Swift Testing** (`@Test`, `#expect`) para pruebas unitarias
+y **XCTest** solo para pruebas de interfaz.
+
+Reglas:
+
+- Toda logica que pueda romperse va con su prueba: parseo de JSON, mapeo de
+  DTO a modelo, calculos, filtros, validaciones.
+- Las llamadas de red no se prueban contra el servidor real. Se prueba el
+  parseo con respuestas JSON guardadas como archivos de apoyo.
+- Vistas de SwiftUI no llevan prueba unitaria; lo que se prueba es el modelo
+  que las alimenta.
+- Un PR que agrega logica sin prueba no se fusiona.
+
+## Documentacion
+
+- Todo tipo y metodo publico lleva comentario de documentacion (`///`).
+- Cada requerimiento (issue) se cierra con su documentacion al dia.
+- Las decisiones de arquitectura que no sean obvias se registran en
+  `docs/decisiones/`, en un archivo corto por decision: que se decidio,
+  que alternativas habia y por que se escogio esa.
+- El `README.md` se actualiza cuando cambia la forma de instalar o correr
+  el proyecto.
 
 ## Orden de construccion del proyecto
 
