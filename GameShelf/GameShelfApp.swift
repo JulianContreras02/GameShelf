@@ -27,7 +27,7 @@ struct GameShelfApp: App {
 
   var body: some Scene {
     WindowGroup {
-      LibraryView()
+      RootView()
     }
     .modelContainer(sharedModelContainer)
   }
