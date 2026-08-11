@@ -21,10 +21,18 @@ struct LibraryView: View {
   @State private var agregandoAColeccion = false
   @State private var statusViewModel = GameStatusViewModel()
   @State private var busqueda = ""
+  @State private var filtro = GameFilter()
+  @State private var mostrandoFiltros = false
+  @State private var preferencias = LibraryPreferences()
 
-  /// Juegos que se muestran, ya filtrados por la busqueda.
+  /// Lo que hay que aplicar para obtener la lista que se ve.
+  private var consulta: GameQuery {
+    GameQuery(search: busqueda, filter: filtro, sort: preferencias.sortOrder)
+  }
+
+  /// Juegos que se muestran, ya buscados, filtrados y ordenados.
   private var juegosVisibles: [Game] {
-    GameSearch.filter(games, query: busqueda)
+    consulta.apply(to: games)
   }
 
   private var buscando: Bool {
@@ -48,6 +56,9 @@ struct LibraryView: View {
         .toolbar { barraDeHerramientas }
         .sheet(isPresented: $agregandoAColeccion) {
           BulkAddToCollectionView(juegos: juegosSeleccionados)
+        }
+        .sheet(isPresented: $mostrandoFiltros) {
+          GameFiltersView(filter: $filtro, resultados: juegosVisibles.count)
         }
         // Al cambiar la busqueda se limpia la seleccion: si no, se podrian
         // mover juegos que ya no estan a la vista.
@@ -83,7 +94,12 @@ struct LibraryView: View {
   @ViewBuilder
   private var contenido: some View {
     if games.isEmpty {
-      estadoSinJuegos
+      LibraryEmptyStateView(
+        state: viewModel.state,
+        syncReturnedNoGames: viewModel.lastSyncReturnedNoGames
+      ) {
+        Task { await viewModel.sync(into: modelContext) }
+      }
     } else if juegosVisibles.isEmpty {
       // Hay juegos, pero ninguno coincide con la busqueda: es un caso distinto
       // de "todavia no tienes juegos" y merece su propio mensaje.
@@ -131,8 +147,28 @@ struct LibraryView: View {
           }
           .disabled(seleccionados.isEmpty)
         } else {
-          Button("Seleccionar", systemImage: "checklist") {
-            modoSeleccion = .active
+          Menu {
+            Section("Ordenar por") {
+              Picker("Ordenar por", selection: $preferencias.sortOrder) {
+                ForEach(GameSortOrder.allCases, id: \.self) { orden in
+                  Label(orden.displayName, systemImage: orden.symbolName).tag(orden)
+                }
+              }
+            }
+            Divider()
+            Button(textoBotonFiltrar, systemImage: "line.3.horizontal.decrease") {
+              mostrandoFiltros = true
+            }
+            if filtro.isActive {
+              Button("Quitar filtros", systemImage: "xmark.circle", role: .destructive) {
+                filtro.clear()
+              }
+            }
+            Button("Seleccionar juegos", systemImage: "checklist") {
+              modoSeleccion = .active
+            }
+          } label: {
+            Label("Opciones", systemImage: iconoDeOpciones)
           }
         }
       }
@@ -176,19 +212,34 @@ struct LibraryView: View {
     .listStyle(.plain)
   }
 
-  private var textoEncabezado: String {
-    if buscando, !modoSeleccion.isEditing {
-      return juegosVisibles.count == 1
-        ? "1 resultado"
-        : "\(juegosVisibles.count) resultados"
-    }
-    guard modoSeleccion.isEditing else { return "\(games.count) juegos" }
+  private var textoBotonFiltrar: String {
+    filtro.isActive ? "Filtrar (\(filtro.activeCount))" : "Filtrar"
+  }
 
-    switch seleccionados.count {
-    case 0: return "Selecciona juegos"
-    case 1: return "1 seleccionado"
-    default: return "\(seleccionados.count) seleccionados"
+  private var iconoDeOpciones: String {
+    filtro.isActive
+      ? "line.3.horizontal.decrease.circle.fill"
+      : "line.3.horizontal.decrease.circle"
+  }
+
+  private var textoEncabezado: String {
+    if modoSeleccion.isEditing {
+      switch seleccionados.count {
+      case 0: return "Selecciona juegos"
+      case 1: return "1 seleccionado"
+      default: return "\(seleccionados.count) seleccionados"
+      }
     }
+
+    // Con la lista recortada hay que decir cuantos se ven Y cuantos hay, o
+    // parece que faltan juegos.
+    guard consulta.isNarrowing else { return "\(games.count) juegos" }
+
+    let visibles = juegosVisibles.count
+    if buscando {
+      return visibles == 1 ? "1 resultado" : "\(visibles) resultados"
+    }
+    return "\(visibles) de \(games.count) juegos"
   }
 
   private func avisoDeFallo(_ mensaje: String) -> some View {
@@ -223,149 +274,4 @@ struct LibraryView: View {
     return "Actualizado \(LastPlayedFormatter.text(for: fecha).lowercased())"
   }
 
-  // MARK: - Sin juegos
-
-  @ViewBuilder
-  private var estadoSinJuegos: some View {
-    switch viewModel.state {
-    case .syncing:
-      ProgressView("Trayendo tu biblioteca…")
-        .controlSize(.large)
-
-    case .failed(let mensaje, let sugerencia):
-      ContentUnavailableView {
-        Label("No se pudo sincronizar", systemImage: "exclamationmark.triangle")
-      } description: {
-        Text([mensaje, sugerencia].compactMap { $0 }.joined(separator: "\n\n"))
-      } actions: {
-        Button("Reintentar") {
-          Task { await viewModel.sync(into: modelContext) }
-        }
-        .buttonStyle(.borderedProminent)
-      }
-
-    case .succeeded where viewModel.lastSyncReturnedNoGames:
-      // Sincronizo bien pero Steam no devolvio nada. La causa mas comun es un
-      // perfil privado, y la API no permite distinguirlo de una biblioteca
-      // realmente vacia.
-      ContentUnavailableView {
-        Label("Steam no devolvio juegos", systemImage: "lock")
-      } description: {
-        Text(
-          """
-          La sincronizacion funciono, pero tu biblioteca llego vacia.
-
-          Suele pasar cuando el perfil de Steam es privado. En Steam, revisa \
-          Perfil > Editar perfil > Privacidad y deja "Detalles del juego" en \
-          publico.
-          """
-        )
-      } actions: {
-        Button("Volver a intentar") {
-          Task { await viewModel.sync(into: modelContext) }
-        }
-        .buttonStyle(.borderedProminent)
-      }
-
-    case .idle, .succeeded:
-      ContentUnavailableView {
-        Label("Sin juegos todavia", systemImage: "gamecontroller")
-      } description: {
-        Text("Trae tu biblioteca de Steam para empezar.")
-      } actions: {
-        Button("Sincronizar con Steam") {
-          Task { await viewModel.sync(into: modelContext) }
-        }
-        .buttonStyle(.borderedProminent)
-      }
-    }
-  }
-}
-
-// MARK: - Vistas previas
-
-/// Contenedor en memoria con juegos de ejemplo, solo para las vistas previas.
-@MainActor
-private func contenedorDeEjemplo() -> ModelContainer? {
-  let config = ModelConfiguration(isStoredInMemoryOnly: true)
-  guard let contenedor = try? ModelContainer(
-    for: Game.self, StoreEntry.self, configurations: config
-  ) else {
-    return nil
-  }
-
-  struct Ejemplo {
-    let nombre: String
-    let horas: Double
-    let appID: String
-  }
-
-  let ejemplos = [
-    Ejemplo(nombre: "Red Dead Redemption 2", horas: 227.9, appID: "1174180"),
-    Ejemplo(nombre: "Hollow Knight", horas: 1.5, appID: "367520"),
-    Ejemplo(nombre: "Un juego sin jugar", horas: 0, appID: "413150")
-  ]
-
-  for ejemplo in ejemplos {
-    let juego = Game(
-      name: ejemplo.nombre,
-      coverImageURL:
-        "https://cdn.cloudflare.steamstatic.com/steam/apps/\(ejemplo.appID)/header.jpg",
-      playtimeHours: ejemplo.horas
-    )
-    juego.storeEntries = [StoreEntry(store: .steam, storeGameID: ejemplo.appID)]
-    contenedor.mainContext.insert(juego)
-  }
-
-  return contenedor
-}
-
-/// Servicio inerte para las vistas previas: no sale a la red.
-private struct PreviewSteamService: SteamServicing {
-  var error: Error?
-
-  func fetchOwnedGames() async throws -> [SteamGameDTO] {
-    if let error { throw error }
-    return []
-  }
-}
-
-/// UserDefaults aislado para que las vistas previas no toquen los del sistema.
-@MainActor
-private func defaultsDePrueba() -> UserDefaults {
-  UserDefaults(suiteName: "preview.\(UUID().uuidString)") ?? .standard
-}
-
-#Preview("Con juegos") {
-  if let contenedor = contenedorDeEjemplo() {
-    LibraryView(
-      viewModel: LibraryViewModel(
-        service: PreviewSteamService(),
-        defaults: defaultsDePrueba()
-      )
-    )
-    .modelContainer(contenedor)
-  } else {
-    Text("No se pudo crear el contenedor de ejemplo")
-  }
-}
-
-#Preview("Vacia") {
-  LibraryView(
-    viewModel: LibraryViewModel(
-      service: PreviewSteamService(),
-      defaults: defaultsDePrueba()
-    )
-  )
-  .modelContainer(for: [Game.self, StoreEntry.self], inMemory: true)
-}
-
-#Preview("Error de red") {
-  LibraryView(
-    viewModel: LibraryViewModel(
-      service: PreviewSteamService(error: NetworkError.noConnection),
-      defaults: defaultsDePrueba()
-    )
-  )
-  .modelContainer(for: [Game.self, StoreEntry.self], inMemory: true)
 }
