@@ -28,6 +28,11 @@ final class StoreEntry {
   /// Horas jugadas registradas por esta tienda en particular.
   var playtimeHours: Double = 0
 
+  /// Ultima vez que el usuario jugo, segun la tienda.
+  ///
+  /// `nil` si nunca lo jugo ahi. Viene de `rtime_last_played` en Steam.
+  var lastPlayedAt: Date?
+
   /// Ultima vez que se sincronizo con la tienda.
   var lastSyncedAt: Date?
 
@@ -39,6 +44,7 @@ final class StoreEntry {
     storeGameID: String,
     storeURL: String? = nil,
     playtimeHours: Double = 0,
+    lastPlayedAt: Date? = nil,
     lastSyncedAt: Date? = nil
   ) {
     self.id = UUID()
@@ -46,6 +52,7 @@ final class StoreEntry {
     self.storeGameID = storeGameID
     self.storeURL = storeURL
     self.playtimeHours = playtimeHours
+    self.lastPlayedAt = lastPlayedAt
     self.lastSyncedAt = lastSyncedAt
   }
 }
