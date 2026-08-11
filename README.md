@@ -18,16 +18,42 @@ usandolo tambien para experimentar con las funciones de accesibilidad de iOS.
 
 ## Como correrlo
 
-1. Abrir `GameShelf.xcodeproj` en Xcode.
-2. Conseguir tu propia API key de Steam en
-   https://steamcommunity.com/dev/apikey
-3. Crear un archivo `Secrets.xcconfig` en la raiz del proyecto (no se sube a
-   git, ver `.gitignore`) con:
-   ```
-   STEAM_API_KEY = tu_key_aqui
-   STEAM_ID = tu_steamid64_aqui
-   ```
-4. Correr en el simulador o en tu propio dispositivo.
+### 1. Crear tu archivo de secretos
+
+```bash
+cp Config/Secrets.example.xcconfig Config/Secrets.xcconfig
+```
+
+Ese archivo esta ignorado por git, asi que tus claves nunca se suben.
+
+### 2. Conseguir las claves
+
+| Clave | Donde se saca |
+| --- | --- |
+| `STEAM_API_KEY` | https://steamcommunity.com/dev/apikey (pide un dominio; sirve `localhost`) |
+| `STEAM_ID` | Tu SteamID64, el numero de 17 digitos. Se obtiene en https://steamid.io pegando la URL de tu perfil |
+| `ITAD_API_KEY` | https://isthereanydeal.com/apps/new/ (solo hace falta para el modulo de ofertas) |
+
+Llena los valores en `Config/Secrets.xcconfig`:
+
+```
+STEAM_API_KEY = tu_key_aqui
+STEAM_ID = 76561198000000000
+ITAD_API_KEY = tu_key_aqui
+```
+
+### 3. Correr
+
+Abrir `GameShelf.xcodeproj` en Xcode y correr en el simulador o en tu
+dispositivo.
+
+Si falta alguna clave el proyecto **compila igual**: la app avisa cuales faltan
+en vez de caerse. Ver `docs/decisiones/002-gestion-de-secretos.md`.
+
+### Requisitos
+
+- Xcode 26 o superior
+- [SwiftLint](https://github.com/realm/SwiftLint): `brew install swiftlint`
 
 ## Estado del proyecto
 
