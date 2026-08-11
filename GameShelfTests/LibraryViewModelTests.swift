@@ -21,13 +21,23 @@ private func juegosDeEjemplo() throws -> [SteamGameDTO] {
     .response.games
 }
 
+/// UserDefaults aislado por instancia: si las pruebas comparten los del
+/// sistema, la fecha que escribe una hace fallar el estado inicial de otra.
+@MainActor
+private func hacerViewModel(_ behavior: StubSteamService.Behavior) -> LibraryViewModel {
+  LibraryViewModel(
+    service: StubSteamService(behavior),
+    defaults: UserDefaults(suiteName: "test.\(UUID().uuidString)") ?? .standard
+  )
+}
+
 @Suite("LibraryViewModel - sincronizacion")
 @MainActor
 struct LibraryViewModelTests {
 
   @Test("Arranca sin hacer nada")
   func estadoInicial() {
-    let viewModel = LibraryViewModel(service: StubSteamService(.success([])))
+    let viewModel = hacerViewModel(.success([]))
 
     #expect(viewModel.state == .idle)
     #expect(viewModel.lastSyncedAt == nil)
@@ -36,7 +46,7 @@ struct LibraryViewModelTests {
   @Test("Una sincronizacion correcta guarda los juegos y reporta cuantos")
   func sincronizacionCorrecta() async throws {
     let context = try hacerContexto()
-    let viewModel = LibraryViewModel(service: StubSteamService(.success(try juegosDeEjemplo())))
+    let viewModel = hacerViewModel(.success(try juegosDeEjemplo()))
 
     await viewModel.sync(into: context)
 
@@ -48,7 +58,7 @@ struct LibraryViewModelTests {
   @Test("Sincronizar dos veces actualiza en vez de duplicar")
   func segundaSincronizacion() async throws {
     let context = try hacerContexto()
-    let viewModel = LibraryViewModel(service: StubSteamService(.success(try juegosDeEjemplo())))
+    let viewModel = hacerViewModel(.success(try juegosDeEjemplo()))
 
     await viewModel.sync(into: context)
     await viewModel.sync(into: context)
@@ -60,7 +70,7 @@ struct LibraryViewModelTests {
   @Test("Sin conexion muestra un mensaje con su sugerencia, no un crash")
   func errorDeRed() async throws {
     let context = try hacerContexto()
-    let viewModel = LibraryViewModel(service: StubSteamService(.failure(NetworkError.noConnection)))
+    let viewModel = hacerViewModel(.failure(NetworkError.noConnection))
 
     await viewModel.sync(into: context)
 
@@ -76,9 +86,7 @@ struct LibraryViewModelTests {
   @Test("Una API key rechazada sugiere revisar la clave")
   func errorDeCredenciales() async throws {
     let context = try hacerContexto()
-    let viewModel = LibraryViewModel(
-      service: StubSteamService(.failure(NetworkError.httpError(statusCode: 401)))
-    )
+    let viewModel = hacerViewModel(.failure(NetworkError.httpError(statusCode: 401)))
 
     await viewModel.sync(into: context)
 
@@ -92,9 +100,7 @@ struct LibraryViewModelTests {
   @Test("Si faltan las claves, lo dice en vez de fallar en la red")
   func faltanCredenciales() async throws {
     let context = try hacerContexto()
-    let viewModel = LibraryViewModel(
-      service: StubSteamService(.failure(AppSecrets.MissingSecretError(key: .steamAPIKey)))
-    )
+    let viewModel = hacerViewModel(.failure(AppSecrets.MissingSecretError(key: .steamAPIKey)))
 
     await viewModel.sync(into: context)
 
@@ -110,10 +116,10 @@ struct LibraryViewModelTests {
   func falloConservaLoGuardado() async throws {
     let context = try hacerContexto()
 
-    let exitoso = LibraryViewModel(service: StubSteamService(.success(try juegosDeEjemplo())))
+    let exitoso = hacerViewModel(.success(try juegosDeEjemplo()))
     await exitoso.sync(into: context)
 
-    let fallido = LibraryViewModel(service: StubSteamService(.failure(NetworkError.noConnection)))
+    let fallido = hacerViewModel(.failure(NetworkError.noConnection))
     await fallido.sync(into: context)
 
     #expect(
@@ -125,7 +131,7 @@ struct LibraryViewModelTests {
   @Test("Una biblioteca vacia no es un error")
   func bibliotecaVacia() async throws {
     let context = try hacerContexto()
-    let viewModel = LibraryViewModel(service: StubSteamService(.success([])))
+    let viewModel = hacerViewModel(.success([]))
 
     await viewModel.sync(into: context)
 
@@ -135,7 +141,7 @@ struct LibraryViewModelTests {
   @Test("Las notas del usuario sobreviven a una sincronizacion desde la vista")
   func notasSobreviven() async throws {
     let context = try hacerContexto()
-    let viewModel = LibraryViewModel(service: StubSteamService(.success(try juegosDeEjemplo())))
+    let viewModel = hacerViewModel(.success(try juegosDeEjemplo()))
 
     await viewModel.sync(into: context)
 
