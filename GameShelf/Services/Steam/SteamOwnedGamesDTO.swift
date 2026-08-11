@@ -57,6 +57,13 @@ struct SteamGameDTO: Decodable, Equatable, Identifiable {
   /// Tiempo jugado **en minutos**, no en horas.
   let playtimeMinutes: Int?
 
+  /// Minutos jugados en las ultimas dos semanas.
+  ///
+  /// Steam **solo manda este campo si hubo actividad reciente**: en una
+  /// biblioteca real aparecio en 2 de 118 juegos. Que sea `nil` significa
+  /// "no lo has tocado", no que falte el dato.
+  let playtimeLast2WeeksMinutes: Int?
+
   /// Hash del icono. No es una URL: hay que construirla con `iconURL`.
   let iconHash: String?
 
@@ -68,6 +75,19 @@ struct SteamGameDTO: Decodable, Equatable, Identifiable {
   /// Tiempo jugado en horas, que es como se muestra en la app.
   var playtimeHours: Double {
     Double(playtimeMinutes ?? 0) / 60
+  }
+
+  /// Horas jugadas en las ultimas dos semanas, o `0` si no hubo actividad.
+  var playtimeLast2WeeksHours: Double {
+    Double(playtimeLast2WeeksMinutes ?? 0) / 60
+  }
+
+  /// Si el juego se toco en las ultimas dos semanas.
+  ///
+  /// Sirve para destacar lo que se esta jugando ahora sin tener que comparar
+  /// fechas a mano.
+  var isRecentlyPlayed: Bool {
+    (playtimeLast2WeeksMinutes ?? 0) > 0
   }
 
   /// Ultima vez que se jugo, o `nil` si nunca.
@@ -100,6 +120,7 @@ struct SteamGameDTO: Decodable, Equatable, Identifiable {
     case appID = "appid"
     case name
     case playtimeMinutes = "playtime_forever"
+    case playtimeLast2WeeksMinutes = "playtime_2weeks"
     case iconHash = "img_icon_url"
     case lastPlayedTimestamp = "rtime_last_played"
   }

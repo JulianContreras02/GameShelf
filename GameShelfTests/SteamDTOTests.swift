@@ -19,31 +19,40 @@ struct SteamOwnedGamesDTOTests {
   func decodificaRespuestaReal() throws {
     let payload = try cargarBiblioteca()
 
-    #expect(payload.count == 4)
-    #expect(payload.games.count == 4)
+    #expect(payload.count == 5)
+    #expect(payload.games.count == 5)
     #expect(payload.isEmpty == false)
   }
 
   @Test("Lee los campos de un juego completo")
   func camposDeUnJuego() throws {
     let payload = try cargarBiblioteca()
-    let tf2 = try #require(payload.games.first { $0.appID == 440 })
+    let juego = try #require(payload.games.first { $0.appID == 444090 })
 
-    #expect(tf2.name == "Team Fortress 2")
-    #expect(tf2.playtimeMinutes == 1234)
-    #expect(tf2.iconHash == "e3f595a92552da3d664ad00277fad2107345f743")
+    #expect(juego.name == "Juego Con Muchas Horas")
+    #expect(juego.playtimeMinutes == 84270)
+    #expect(juego.iconHash == "e3f595a92552da3d664ad00277fad2107345f743")
   }
 
   @Test("Convierte minutos a horas, que es la unidad que usa la app")
   func minutosAHoras() throws {
     let payload = try cargarBiblioteca()
 
-    let tf2 = try #require(payload.games.first { $0.appID == 440 })
-    // 1234 minutos = 20.5666... horas
-    #expect(abs(tf2.playtimeHours - 20.5667) < 0.001)
+    let juego = try #require(payload.games.first { $0.appID == 444090 })
+    // 84270 minutos = 1404.5 horas
+    #expect(abs(juego.playtimeHours - 1404.5) < 0.001)
 
-    let hollowKnight = try #require(payload.games.first { $0.appID == 367520 })
-    #expect(hollowKnight.playtimeHours == 1.5, "90 minutos son exactamente 1.5 horas")
+    let corto = try #require(payload.games.first { $0.appID == 1245620 })
+    #expect(corto.playtimeHours == 0.75, "45 minutos son exactamente 0.75 horas")
+  }
+
+  @Test("Campos extra que manda Steam no rompen la decodificacion")
+  func camposExtraNoRompen() throws {
+    // La respuesta real trae content_descriptorids, has_leaderboards y los
+    // playtime_* por plataforma, que el DTO no modela a proposito.
+    let payload = try cargarBiblioteca()
+
+    #expect(payload.games.count == 5, "Los campos que ignoramos no deben estorbar")
   }
 
   @Test("Un juego sin nombre no rompe la decodificacion")
@@ -62,11 +71,11 @@ struct SteamOwnedGamesDTOTests {
   @Test("Nunca jugado se traduce a nil, no a 1970")
   func nuncaJugado() throws {
     let payload = try cargarBiblioteca()
-    let stardew = try #require(payload.games.first { $0.appID == 413150 })
+    let nunca = try #require(payload.games.first { $0.appID == 34330 })
 
-    #expect(stardew.playtimeMinutes == 0)
+    #expect(nunca.playtimeMinutes == 0)
     #expect(
-      stardew.lastPlayed == nil,
+      nunca.lastPlayed == nil,
       "rtime_last_played 0 significa nunca, no el 1 de enero de 1970"
     )
   }
@@ -74,10 +83,45 @@ struct SteamOwnedGamesDTOTests {
   @Test("Una fecha real se convierte bien")
   func fechaRealSeConvierte() throws {
     let payload = try cargarBiblioteca()
-    let tf2 = try #require(payload.games.first { $0.appID == 440 })
-    let fecha = try #require(tf2.lastPlayed)
+    let juego = try #require(payload.games.first { $0.appID == 444090 })
+    let fecha = try #require(juego.lastPlayed)
 
-    #expect(fecha == Date(timeIntervalSince1970: 1_719_878_400))
+    #expect(fecha == Date(timeIntervalSince1970: 1_739_079_369))
+  }
+}
+
+@Suite("DTOs de Steam - actividad reciente")
+struct SteamRecentPlaytimeTests {
+
+  private func cargarBiblioteca() throws -> SteamOwnedGamesPayload {
+    try Fixture.decode(SteamOwnedGamesResponse.self, from: "steam_owned_games").response
+  }
+
+  @Test("playtime_2weeks se lee cuando viene")
+  func conActividadReciente() throws {
+    let juego = try #require(cargarBiblioteca().games.first { $0.appID == 1174180 })
+
+    #expect(juego.playtimeLast2WeeksMinutes == 320)
+    #expect(abs(juego.playtimeLast2WeeksHours - 5.3333) < 0.001)
+    #expect(juego.isRecentlyPlayed)
+  }
+
+  @Test("Sin playtime_2weeks el juego no cuenta como reciente")
+  func sinActividadReciente() throws {
+    // Steam omite el campo cuando no hubo actividad: en la biblioteca real
+    // solo venia en 2 de 118 juegos.
+    let juego = try #require(cargarBiblioteca().games.first { $0.appID == 444090 })
+
+    #expect(juego.playtimeLast2WeeksMinutes == nil)
+    #expect(juego.playtimeLast2WeeksHours == 0)
+    #expect(juego.isRecentlyPlayed == false)
+  }
+
+  @Test("Solo los juegos con actividad aparecen como recientes")
+  func soloLosRecientes() throws {
+    let recientes = try cargarBiblioteca().games.filter(\.isRecentlyPlayed)
+
+    #expect(recientes.map(\.appID) == [1174180])
   }
 }
 
@@ -134,20 +178,20 @@ struct SteamDTOURLTests {
 
   @Test("La caratula se arma a partir del appID")
   func caratula() throws {
-    let tf2 = try #require(cargarBiblioteca().games.first { $0.appID == 440 })
+    let juego = try #require(cargarBiblioteca().games.first { $0.appID == 444090 })
 
     #expect(
-      tf2.coverURL?.absoluteString
-        == "https://cdn.cloudflare.steamstatic.com/steam/apps/440/header.jpg"
+      juego.coverURL?.absoluteString
+        == "https://cdn.cloudflare.steamstatic.com/steam/apps/444090/header.jpg"
     )
   }
 
   @Test("El icono usa el hash que manda Steam")
   func icono() throws {
-    let tf2 = try #require(cargarBiblioteca().games.first { $0.appID == 440 })
-    let url = try #require(tf2.iconURL?.absoluteString)
+    let juego = try #require(cargarBiblioteca().games.first { $0.appID == 444090 })
+    let url = try #require(juego.iconURL?.absoluteString)
 
-    #expect(url.contains("/440/"))
+    #expect(url.contains("/444090/"))
     #expect(url.hasSuffix("e3f595a92552da3d664ad00277fad2107345f743.jpg"))
   }
 
@@ -156,8 +200,8 @@ struct SteamDTOURLTests {
     let juegos = try cargarBiblioteca().games
 
     // Cadena vacia
-    let stardew = try #require(juegos.first { $0.appID == 413150 })
-    #expect(stardew.iconURL == nil)
+    let sinIcono = try #require(juegos.first { $0.appID == 34330 })
+    #expect(sinIcono.iconURL == nil)
 
     // Campo ausente
     let incompleto = try #require(juegos.first { $0.appID == 1245620 })
@@ -166,11 +210,11 @@ struct SteamDTOURLTests {
 
   @Test("La ficha de la tienda apunta al appID correcto")
   func fichaDeTienda() throws {
-    let hollowKnight = try #require(cargarBiblioteca().games.first { $0.appID == 367520 })
+    let juego = try #require(cargarBiblioteca().games.first { $0.appID == 322170 })
 
     #expect(
-      hollowKnight.storeURL?.absoluteString
-        == "https://store.steampowered.com/app/367520"
+      juego.storeURL?.absoluteString
+        == "https://store.steampowered.com/app/322170"
     )
   }
 }
