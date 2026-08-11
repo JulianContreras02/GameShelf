@@ -20,6 +20,16 @@ struct LibraryView: View {
   @State private var seleccionados: Set<UUID> = []
   @State private var agregandoAColeccion = false
   @State private var statusViewModel = GameStatusViewModel()
+  @State private var busqueda = ""
+
+  /// Juegos que se muestran, ya filtrados por la busqueda.
+  private var juegosVisibles: [Game] {
+    GameSearch.filter(games, query: busqueda)
+  }
+
+  private var buscando: Bool {
+    !busqueda.normalizedForSearch.isEmpty
+  }
 
   init(viewModel: LibraryViewModel? = nil) {
     _viewModel = State(initialValue: viewModel ?? .live())
@@ -39,6 +49,13 @@ struct LibraryView: View {
         .sheet(isPresented: $agregandoAColeccion) {
           BulkAddToCollectionView(juegos: juegosSeleccionados)
         }
+        // Al cambiar la busqueda se limpia la seleccion: si no, se podrian
+        // mover juegos que ya no estan a la vista.
+        .onChange(of: busqueda) { _, _ in
+          if !seleccionados.isEmpty {
+            seleccionados.removeAll()
+          }
+        }
         .onChange(of: agregandoAColeccion) { _, mostrando in
           // Al cerrar la hoja se sale del modo seleccion: dejarlo activo con
           // los mismos juegos marcados confunde sobre si ya se agregaron.
@@ -50,6 +67,11 @@ struct LibraryView: View {
         .refreshable {
           await viewModel.sync(into: modelContext)
         }
+        .searchable(
+          text: $busqueda,
+          placement: .navigationBarDrawer(displayMode: .automatic),
+          prompt: "Buscar en tu biblioteca"
+        )
         // Primera sincronizacion automatica: la biblioteca aparece sola al
         // abrir por primera vez, sin tener que tocar nada.
         .task {
@@ -62,8 +84,23 @@ struct LibraryView: View {
   private var contenido: some View {
     if games.isEmpty {
       estadoSinJuegos
+    } else if juegosVisibles.isEmpty {
+      // Hay juegos, pero ninguno coincide con la busqueda: es un caso distinto
+      // de "todavia no tienes juegos" y merece su propio mensaje.
+      sinResultados
     } else {
       listaDeJuegos
+    }
+  }
+
+  private var sinResultados: some View {
+    ContentUnavailableView {
+      Label("Sin resultados", systemImage: "magnifyingglass")
+    } description: {
+      Text("Ningun juego coincide con \"\(busqueda)\".")
+    } actions: {
+      Button("Limpiar busqueda") { busqueda = "" }
+        .buttonStyle(.bordered)
     }
   }
 
@@ -113,7 +150,7 @@ struct LibraryView: View {
       }
 
       Section {
-        ForEach(games) { game in
+        ForEach(juegosVisibles) { game in
           NavigationLink {
             GameDetailView(game: game)
           } label: {
@@ -140,6 +177,11 @@ struct LibraryView: View {
   }
 
   private var textoEncabezado: String {
+    if buscando, !modoSeleccion.isEditing {
+      return juegosVisibles.count == 1
+        ? "1 resultado"
+        : "\(juegosVisibles.count) resultados"
+    }
     guard modoSeleccion.isEditing else { return "\(games.count) juegos" }
 
     switch seleccionados.count {
