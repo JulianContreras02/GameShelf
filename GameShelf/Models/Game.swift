@@ -52,6 +52,12 @@ final class Game {
   /// colecciones, y borrar una coleccion no borra los juegos.
   var collections: [GameCollection] = []
 
+  /// Etiquetas libres del usuario.
+  ///
+  /// Tambien muchos a muchos. A diferencia de las colecciones, se escriben al
+  /// vuelo desde la ficha del juego.
+  var tags: [GameTag] = []
+
   init(
     name: String,
     coverImageURL: String? = nil,

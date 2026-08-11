@@ -16,6 +16,7 @@ struct GameDetailView: View {
   let game: Game
 
   @State private var eligiendoColecciones = false
+  @State private var editandoEtiquetas = false
   @State private var statusViewModel = GameStatusViewModel()
   @State private var mensajeDeError: String?
 
@@ -34,6 +35,8 @@ struct GameDetailView: View {
         Divider()
         seccionColecciones
         Divider()
+        seccionEtiquetas
+        Divider()
         proximamente
       }
       .padding()
@@ -42,6 +45,9 @@ struct GameDetailView: View {
     .navigationBarTitleDisplayMode(.inline)
     .sheet(isPresented: $eligiendoColecciones) {
       GameCollectionsPicker(juego: game)
+    }
+    .sheet(isPresented: $editandoEtiquetas) {
+      GameTagsEditor(juego: game)
     }
     .alert(
       "No se pudo guardar",
@@ -233,10 +239,47 @@ struct GameDetailView: View {
     )
   }
 
+  // MARK: - Etiquetas
+
+  private var seccionEtiquetas: some View {
+    VStack(alignment: .leading, spacing: 12) {
+      HStack {
+        Text("Etiquetas")
+          .font(.headline)
+        Spacer()
+        Button("Editar") { editandoEtiquetas = true }
+          .font(.subheadline)
+      }
+
+      if game.tags.isEmpty {
+        Button {
+          editandoEtiquetas = true
+        } label: {
+          Label("Agregar etiquetas", systemImage: "tag")
+            .font(.subheadline)
+        }
+      } else {
+        FlowLayout(spacing: 8) {
+          ForEach(game.tags.sorted { $0.normalized < $1.normalized }) { etiqueta in
+            Text(etiqueta.name)
+              .font(.caption.weight(.medium))
+              .padding(.horizontal, 10)
+              .padding(.vertical, 5)
+              .background(.quaternary, in: Capsule())
+          }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(
+          "\(game.tags.count) etiquetas: "
+            + game.tags.map(\.name).joined(separator: ", ")
+        )
+      }
+    }
+  }
+
   /// Lo que va a vivir en esta pantalla mas adelante.
   private static let pendientes: [(titulo: String, icono: String)] = [
-    ("Notas personales", "note.text"),
-    ("Etiquetas", "tag")
+    ("Notas personales", "note.text")
   ]
 }
 

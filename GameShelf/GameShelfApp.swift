@@ -14,7 +14,8 @@ struct GameShelfApp: App {
     let schema = Schema([
       Game.self,
       StoreEntry.self,
-      GameCollection.self
+      GameCollection.self,
+      GameTag.self
     ])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
