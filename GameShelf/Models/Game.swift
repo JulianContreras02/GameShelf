@@ -45,6 +45,13 @@ final class Game {
   @Relationship(deleteRule: .cascade, inverse: \StoreEntry.game)
   var storeEntries: [StoreEntry] = []
 
+  /// Colecciones del usuario a las que pertenece.
+  ///
+  /// Relacion de muchos a muchos: un juego puede estar en varias colecciones y
+  /// una coleccion tiene varios juegos. Borrar un juego no borra las
+  /// colecciones, y borrar una coleccion no borra los juegos.
+  var collections: [GameCollection] = []
+
   init(
     name: String,
     coverImageURL: String? = nil,
