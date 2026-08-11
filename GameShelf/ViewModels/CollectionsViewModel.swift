@@ -112,6 +112,63 @@ final class CollectionsViewModel {
     try renumerar(in: context)
   }
 
+  // MARK: - Asignar juegos
+
+  /// Mete o saca un juego de una coleccion, segun donde este.
+  ///
+  /// - Returns: `true` si quedo dentro, `false` si quedo fuera.
+  @discardableResult
+  func toggle(
+    _ juego: Game,
+    in coleccion: GameCollection,
+    context: ModelContext
+  ) throws -> Bool {
+    let estaba = coleccion.contains(juego)
+    if estaba {
+      coleccion.remove(juego)
+    } else {
+      coleccion.add(juego)
+    }
+    try context.save()
+    return !estaba
+  }
+
+  /// Agrega varios juegos a una coleccion de una sola vez.
+  ///
+  /// Los que ya estaban no se duplican ni se cuentan.
+  ///
+  /// - Returns: Cuantos se agregaron de verdad.
+  @discardableResult
+  func add(
+    _ juegos: [Game],
+    to coleccion: GameCollection,
+    context: ModelContext
+  ) throws -> Int {
+    let nuevos = juegos.filter { !coleccion.contains($0) }
+    for juego in nuevos {
+      coleccion.add(juego)
+    }
+    try context.save()
+    return nuevos.count
+  }
+
+  /// Quita varios juegos de una coleccion. Los juegos no se borran.
+  ///
+  /// - Returns: Cuantos se quitaron de verdad.
+  @discardableResult
+  func remove(
+    _ juegos: [Game],
+    from coleccion: GameCollection,
+    context: ModelContext
+  ) throws -> Int {
+    let presentes = juegos.filter { coleccion.contains($0) }
+    for juego in presentes {
+      coleccion.remove(juego)
+    }
+    try context.save()
+    return presentes.count
+  }
+
   // MARK: - Reordenar
 
   /// Mueve colecciones dentro de la lista y reescribe su orden.

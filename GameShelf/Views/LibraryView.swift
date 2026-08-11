@@ -16,24 +16,34 @@ struct LibraryView: View {
   @Query(sort: \Game.name) private var games: [Game]
 
   @State private var viewModel: LibraryViewModel
+  @State private var modoSeleccion: EditMode = .inactive
+  @State private var seleccionados: Set<UUID> = []
+  @State private var agregandoAColeccion = false
 
   init(viewModel: LibraryViewModel? = nil) {
     _viewModel = State(initialValue: viewModel ?? .live())
+  }
+
+  /// Los juegos marcados, resueltos desde sus identificadores.
+  private var juegosSeleccionados: [Game] {
+    games.filter { seleccionados.contains($0.id) }
   }
 
   var body: some View {
     NavigationStack {
       contenido
         .navigationTitle("Biblioteca")
-        .toolbar {
-          ToolbarItem(placement: .topBarTrailing) {
-            if viewModel.state.isSyncing {
-              ProgressView()
-            } else {
-              Button("Sincronizar", systemImage: "arrow.clockwise") {
-                Task { await viewModel.sync(into: modelContext) }
-              }
-            }
+        .environment(\.editMode, $modoSeleccion)
+        .toolbar { barraDeHerramientas }
+        .sheet(isPresented: $agregandoAColeccion) {
+          BulkAddToCollectionView(juegos: juegosSeleccionados)
+        }
+        .onChange(of: agregandoAColeccion) { _, mostrando in
+          // Al cerrar la hoja se sale del modo seleccion: dejarlo activo con
+          // los mismos juegos marcados confunde sobre si ya se agregaron.
+          if !mostrando {
+            seleccionados.removeAll()
+            modoSeleccion = .inactive
           }
         }
         .refreshable {
@@ -56,10 +66,45 @@ struct LibraryView: View {
     }
   }
 
+  // MARK: - Barra de herramientas
+
+  @ToolbarContentBuilder
+  private var barraDeHerramientas: some ToolbarContent {
+    ToolbarItem(placement: .topBarTrailing) {
+      if modoSeleccion.isEditing {
+        Button("Listo") {
+          seleccionados.removeAll()
+          modoSeleccion = .inactive
+        }
+      } else if viewModel.state.isSyncing {
+        ProgressView()
+      } else {
+        Button("Sincronizar", systemImage: "arrow.clockwise") {
+          Task { await viewModel.sync(into: modelContext) }
+        }
+      }
+    }
+
+    if !games.isEmpty {
+      ToolbarItem(placement: .topBarLeading) {
+        if modoSeleccion.isEditing {
+          Button("Agregar a coleccion", systemImage: "folder.badge.plus") {
+            agregandoAColeccion = true
+          }
+          .disabled(seleccionados.isEmpty)
+        } else {
+          Button("Seleccionar", systemImage: "checklist") {
+            modoSeleccion = .active
+          }
+        }
+      }
+    }
+  }
+
   // MARK: - Con juegos
 
   private var listaDeJuegos: some View {
-    List {
+    List(selection: $seleccionados) {
       // Si la red falla pero hay datos guardados, se avisa sin tapar la
       // biblioteca: los datos viejos siguen siendo utiles.
       if case .failed(let mensaje, _) = viewModel.state {
@@ -76,9 +121,9 @@ struct LibraryView: View {
         }
       } header: {
         HStack {
-          Text("\(games.count) juegos")
+          Text(textoEncabezado)
           Spacer()
-          if let texto = textoUltimaSincronizacion {
+          if let texto = textoUltimaSincronizacion, !modoSeleccion.isEditing {
             Text(texto)
               .textCase(nil)
           }
@@ -86,6 +131,16 @@ struct LibraryView: View {
       }
     }
     .listStyle(.plain)
+  }
+
+  private var textoEncabezado: String {
+    guard modoSeleccion.isEditing else { return "\(games.count) juegos" }
+
+    switch seleccionados.count {
+    case 0: return "Selecciona juegos"
+    case 1: return "1 seleccionado"
+    default: return "\(seleccionados.count) seleccionados"
+    }
   }
 
   private func avisoDeFallo(_ mensaje: String) -> some View {
