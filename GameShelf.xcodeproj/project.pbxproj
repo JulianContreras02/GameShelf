@@ -31,15 +31,11 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		067F2C3148FDD41EAB72ECD9 /* GameShelfTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = GameShelfTests;
 			sourceTree = "<group>";
 		};
 		3F6DE2C2302AC155008429DB /* GameShelf */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = GameShelf;
 			sourceTree = "<group>";
 		};
