@@ -15,7 +15,9 @@ xcuserdata/
 *.moved-aside
 *.xcuserstate
 *.xcscmblueprint
-*.xcscheme
+# Los schemes de usuario ya quedan cubiertos por xcuserdata/.
+# Los compartidos (xcshareddata/xcschemes/) SI se versionan: sin ellos,
+# CI no encuentra el scheme y no puede compilar ni correr las pruebas.
 
 # Swift Package Manager
 .build/
