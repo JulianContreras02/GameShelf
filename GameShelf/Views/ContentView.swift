@@ -8,54 +8,42 @@
 import SwiftData
 import SwiftUI
 
+/// Pantalla provisional que lista la biblioteca.
+///
+/// La vista real de biblioteca llega en el issue #10. Por ahora solo confirma
+/// que el modelo funciona de punta a punta.
 struct ContentView: View {
-  @Environment(\.modelContext) private var modelContext
-  @Query private var items: [Item]
+  // Lectura directa con @Query: es una lectura simple, sin logica que probar.
+  // Ver docs/decisiones/001-arquitectura.md
+  @Query(sort: \Game.name) private var games: [Game]
 
   var body: some View {
-    NavigationSplitView {
-      List {
-        ForEach(items) { item in
-          NavigationLink {
-            Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-          } label: {
-            Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+    NavigationStack {
+      Group {
+        if games.isEmpty {
+          ContentUnavailableView(
+            "Sin juegos todavia",
+            systemImage: "gamecontroller",
+            description: Text("Cuando conectes Steam, tu biblioteca aparece aca.")
+          )
+        } else {
+          List(games) { game in
+            VStack(alignment: .leading, spacing: 4) {
+              Text(game.name)
+                .font(.headline)
+              Text(game.stores.map(\.displayName).joined(separator: " · "))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
           }
         }
-        .onDelete(perform: deleteItems)
       }
-      .toolbar {
-        ToolbarItem(placement: .navigationBarTrailing) {
-          EditButton()
-        }
-        ToolbarItem {
-          Button(action: addItem) {
-            Label("Add Item", systemImage: "plus")
-          }
-        }
-      }
-    } detail: {
-      Text("Select an item")
-    }
-  }
-
-  private func addItem() {
-    withAnimation {
-      let newItem = Item(timestamp: Date())
-      modelContext.insert(newItem)
-    }
-  }
-
-  private func deleteItems(offsets: IndexSet) {
-    withAnimation {
-      for index in offsets {
-        modelContext.delete(items[index])
-      }
+      .navigationTitle("Biblioteca")
     }
   }
 }
 
 #Preview {
   ContentView()
-    .modelContainer(for: Item.self, inMemory: true)
+    .modelContainer(for: Game.self, inMemory: true)
 }

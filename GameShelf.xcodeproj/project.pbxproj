@@ -6,15 +6,40 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		FAA1F6000ACD512E388E5950 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4229D06BD3487424DD144405 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E3B17B78FB82F4391D694C39 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3F6DE2B8302AC155008429DB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3F6DE2BF302AC155008429DB;
+			remoteInfo = GameShelf;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		3F6DE2C0302AC155008429DB /* GameShelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameShelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4229D06BD3487424DD144405 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		A1B2C3D001000000000000E1 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		A1B2C3D002000000000000E2 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.example.xcconfig; sourceTree = "<group>"; };
+		DF6B6176E745C08054F338C8 /* GameShelfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameShelfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		067F2C3148FDD41EAB72ECD9 /* GameShelfTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			path = GameShelfTests;
+			sourceTree = "<group>";
+		};
 		3F6DE2C2302AC155008429DB /* GameShelf */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = GameShelf;
 			sourceTree = "<group>";
 		};
@@ -28,6 +53,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		91516431F72B960070B2F95F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAA1F6000ACD512E388E5950 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -37,6 +70,8 @@
 				A1B2C3D003000000000000E3 /* Config */,
 				3F6DE2C2302AC155008429DB /* GameShelf */,
 				3F6DE2C1302AC155008429DB /* Products */,
+				4C2CB4ED67DC2A65FFC39028 /* Frameworks */,
+				067F2C3148FDD41EAB72ECD9 /* GameShelfTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -44,8 +79,25 @@
 			isa = PBXGroup;
 			children = (
 				3F6DE2C0302AC155008429DB /* GameShelf.app */,
+				DF6B6176E745C08054F338C8 /* GameShelfTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4C2CB4ED67DC2A65FFC39028 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8FFE722231064994A8CFCD3A /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8FFE722231064994A8CFCD3A /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				4229D06BD3487424DD144405 /* Foundation.framework */,
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 		A1B2C3D003000000000000E3 /* Config */ = {
@@ -60,6 +112,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		37E46D9E2345D9D18C3EE6F3 /* GameShelfTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 146107F5B7F29BBF9CD05B02 /* Build configuration list for PBXNativeTarget "GameShelfTests" */;
+			buildPhases = (
+				2AFD3A6F687899A893331B16 /* Sources */,
+				91516431F72B960070B2F95F /* Frameworks */,
+				02DC787B9220E84969BA0FEA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				728D816875AB2A35AB9C8C75 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				067F2C3148FDD41EAB72ECD9 /* GameShelfTests */,
+			);
+			name = GameShelfTests;
+			productName = GameShelfTests;
+			productReference = DF6B6176E745C08054F338C8 /* GameShelfTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		3F6DE2BF302AC155008429DB /* GameShelf */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3F6DE2CD302AC156008429DB /* Build configuration list for PBXNativeTarget "GameShelf" */;
@@ -77,8 +150,6 @@
 				3F6DE2C2302AC155008429DB /* GameShelf */,
 			);
 			name = GameShelf;
-			packageProductDependencies = (
-			);
 			productName = GameShelf;
 			productReference = 3F6DE2C0302AC155008429DB /* GameShelf.app */;
 			productType = "com.apple.product-type.application";
@@ -113,11 +184,19 @@
 			projectRoot = "";
 			targets = (
 				3F6DE2BF302AC155008429DB /* GameShelf */,
+				37E46D9E2345D9D18C3EE6F3 /* GameShelfTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		02DC787B9220E84969BA0FEA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3F6DE2BE302AC155008429DB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -150,6 +229,13 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2AFD3A6F687899A893331B16 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3F6DE2BC302AC155008429DB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -159,7 +245,33 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		728D816875AB2A35AB9C8C75 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GameShelf;
+			target = 3F6DE2BF302AC155008429DB /* GameShelf */;
+			targetProxy = E3B17B78FB82F4391D694C39 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		1205C56AC4B7AD63925F2C59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				DEVELOPMENT_TEAM = JKR97663T9;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.juliancontreras.GameShelfTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GameShelf.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GameShelf";
+			};
+			name = Debug;
+		};
 		3F6DE2CB302AC156008429DB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A1B2C3D001000000000000E1 /* Secrets.xcconfig */;
@@ -349,9 +461,36 @@
 			};
 			name = Release;
 		};
+		93E130903EAB0502B9FCBB3C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				DEVELOPMENT_TEAM = JKR97663T9;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.juliancontreras.GameShelfTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GameShelf.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GameShelf";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		146107F5B7F29BBF9CD05B02 /* Build configuration list for PBXNativeTarget "GameShelfTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93E130903EAB0502B9FCBB3C /* Release */,
+				1205C56AC4B7AD63925F2C59 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		3F6DE2BB302AC155008429DB /* Build configuration list for PBXProject "GameShelf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

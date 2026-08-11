@@ -12,7 +12,8 @@ import SwiftUI
 struct GameShelfApp: App {
   var sharedModelContainer: ModelContainer = {
     let schema = Schema([
-      Item.self
+      Game.self,
+      StoreEntry.self
     ])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
