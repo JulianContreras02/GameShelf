@@ -13,7 +13,8 @@ struct GameShelfApp: App {
   var sharedModelContainer: ModelContainer = {
     let schema = Schema([
       Game.self,
-      StoreEntry.self
+      StoreEntry.self,
+      GameCollection.self
     ])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
