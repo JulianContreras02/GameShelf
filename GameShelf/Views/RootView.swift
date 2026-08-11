@@ -17,6 +17,10 @@ struct RootView: View {
         LibraryView()
       }
 
+      Tab("Progreso", systemImage: "chart.bar") {
+        GameProgressView()
+      }
+
       Tab("Colecciones", systemImage: "folder") {
         CollectionsView()
       }

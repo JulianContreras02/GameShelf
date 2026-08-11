@@ -19,6 +19,7 @@ struct LibraryView: View {
   @State private var modoSeleccion: EditMode = .inactive
   @State private var seleccionados: Set<UUID> = []
   @State private var agregandoAColeccion = false
+  @State private var statusViewModel = GameStatusViewModel()
 
   init(viewModel: LibraryViewModel? = nil) {
     _viewModel = State(initialValue: viewModel ?? .live())
@@ -118,6 +119,11 @@ struct LibraryView: View {
           } label: {
             GameRow(game: game)
           }
+          .contextMenu {
+            PlayStatusMenu(actual: game.status) { nuevo in
+              cambiarEstado(de: game, a: nuevo)
+            }
+          }
         }
       } header: {
         HStack {
@@ -162,6 +168,12 @@ struct LibraryView: View {
     .font(.footnote)
     .listRowBackground(Color.orange.opacity(0.12))
     .accessibilityElement(children: .contain)
+  }
+
+  private func cambiarEstado(de juego: Game, a estado: PlayStatus) {
+    // Un fallo al guardar el estado no merece tapar la pantalla: se ignora en
+    // silencio porque el usuario ve que la etiqueta no cambio.
+    try? statusViewModel.setStatus(estado, for: juego, in: modelContext)
   }
 
   private var textoUltimaSincronizacion: String? {
