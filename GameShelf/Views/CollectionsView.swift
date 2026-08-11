@@ -87,17 +87,20 @@ struct CollectionsView: View {
   private var lista: some View {
     List {
       ForEach(colecciones) { coleccion in
-        Button {
-          coleccionEnEdicion = coleccion
-          mostrandoEditor = true
+        NavigationLink {
+          CollectionDetailView(coleccion: coleccion)
         } label: {
           fila(coleccion)
         }
-        .buttonStyle(.plain)
         .swipeActions(edge: .trailing) {
           Button("Borrar", systemImage: "trash", role: .destructive) {
             coleccionPorBorrar = coleccion
           }
+          Button("Editar", systemImage: "pencil") {
+            coleccionEnEdicion = coleccion
+            mostrandoEditor = true
+          }
+          .tint(.blue)
         }
       }
       .onMove(perform: mover)
@@ -119,15 +122,11 @@ struct CollectionsView: View {
       }
 
       Spacer()
-
-      Image(systemName: "chevron.right")
-        .font(.caption.bold())
-        .foregroundStyle(.tertiary)
     }
     .contentShape(Rectangle())
     .accessibilityElement(children: .combine)
     .accessibilityLabel("\(coleccion.name), \(textoCantidad(coleccion))")
-    .accessibilityHint("Toca para editar")
+    .accessibilityHint("Toca para ver sus juegos")
   }
 
   private var estadoVacio: some View {

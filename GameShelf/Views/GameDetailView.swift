@@ -13,6 +13,8 @@ import SwiftUI
 struct GameDetailView: View {
   let game: Game
 
+  @State private var eligiendoColecciones = false
+
   var body: some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 20) {
@@ -24,12 +26,57 @@ struct GameDetailView: View {
           botonTienda(enlace)
         }
         Divider()
+        seccionColecciones
+        Divider()
         proximamente
       }
       .padding()
     }
     .navigationTitle(game.name)
     .navigationBarTitleDisplayMode(.inline)
+    .sheet(isPresented: $eligiendoColecciones) {
+      GameCollectionsPicker(juego: game)
+    }
+  }
+
+  // MARK: - Colecciones
+
+  private var seccionColecciones: some View {
+    VStack(alignment: .leading, spacing: 12) {
+      HStack {
+        Text("Colecciones")
+          .font(.headline)
+        Spacer()
+        Button("Editar") { eligiendoColecciones = true }
+          .font(.subheadline)
+      }
+
+      if game.collections.isEmpty {
+        Button {
+          eligiendoColecciones = true
+        } label: {
+          Label("Agregar a una coleccion", systemImage: "folder.badge.plus")
+            .font(.subheadline)
+        }
+      } else {
+        // Las etiquetas fluyen a varias lineas si no caben
+        FlowLayout(spacing: 8) {
+          ForEach(game.collections.sorted { $0.sortOrder < $1.sortOrder }) { coleccion in
+            Label(coleccion.name, systemImage: coleccion.symbolName)
+              .font(.caption.weight(.medium))
+              .padding(.horizontal, 10)
+              .padding(.vertical, 5)
+              .background(coleccion.color.swiftUIColor.opacity(0.18), in: Capsule())
+              .foregroundStyle(coleccion.color.swiftUIColor)
+          }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(
+          "En \(game.collections.count) colecciones: "
+            + game.collections.map(\.name).joined(separator: ", ")
+        )
+      }
+    }
   }
 
   // MARK: - Partes
@@ -126,7 +173,6 @@ struct GameDetailView: View {
   /// Lo que va a vivir en esta pantalla mas adelante.
   private static let pendientes: [(titulo: String, icono: String)] = [
     ("Marcar estado del juego", "flag"),
-    ("Agregar a una coleccion", "folder"),
     ("Notas personales", "note.text")
   ]
 }
