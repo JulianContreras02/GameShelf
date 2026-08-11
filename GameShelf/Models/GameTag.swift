@@ -63,8 +63,11 @@ final class GameTag {
   }
 
   /// Forma para comparar dos nombres: sin mayusculas ni tildes.
+  ///
+  /// Usa la misma regla que la busqueda de juegos, para que escribir "accion"
+  /// se comporte igual en los dos sitios.
   static func normalize(_ nombre: String) -> String {
-    clean(nombre).folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil)
+    clean(nombre).normalizedForSearch
   }
 
   /// Si dos nombres son la misma etiqueta.
