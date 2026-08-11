@@ -8,6 +8,8 @@
 
 /* Begin PBXFileReference section */
 		3F6DE2C0302AC155008429DB /* GameShelf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameShelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D001000000000000E1 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		A1B2C3D002000000000000E2 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.example.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +34,7 @@
 		3F6DE2B7302AC155008429DB = {
 			isa = PBXGroup;
 			children = (
+				A1B2C3D003000000000000E3 /* Config */,
 				3F6DE2C2302AC155008429DB /* GameShelf */,
 				3F6DE2C1302AC155008429DB /* Products */,
 			);
@@ -43,6 +46,15 @@
 				3F6DE2C0302AC155008429DB /* GameShelf.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A1B2C3D003000000000000E3 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D001000000000000E1 /* Secrets.xcconfig */,
+				A1B2C3D002000000000000E2 /* Secrets.example.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,6 +162,7 @@
 /* Begin XCBuildConfiguration section */
 		3F6DE2CB302AC156008429DB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3D001000000000000E1 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -214,6 +227,7 @@
 		};
 		3F6DE2CC302AC156008429DB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3D001000000000000E1 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -279,6 +293,7 @@
 				DEVELOPMENT_TEAM = JKR97663T9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -311,6 +326,7 @@
 				DEVELOPMENT_TEAM = JKR97663T9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
