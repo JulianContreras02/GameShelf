@@ -30,6 +30,12 @@ struct GameRow: View {
         .font(.subheadline)
         // .secondary se adapta solo a modo claro y oscuro
         .foregroundStyle(.secondary)
+
+        // El estado por defecto no se muestra: marcar todo como "pendiente"
+        // llenaria la lista de etiquetas sin informacion.
+        if game.status != .backlog {
+          PlayStatusBadge(status: game.status)
+        }
       }
 
       Spacer(minLength: 0)
@@ -44,6 +50,9 @@ struct GameRow: View {
     var partes = [game.name, PlaytimeFormatter.accessible(hours: game.playtimeHours)]
     if !game.stores.isEmpty {
       partes.append("en \(game.stores.map(\.displayName).joined(separator: " y "))")
+    }
+    if game.status != .backlog {
+      partes.append(game.status.displayName)
     }
     return partes.joined(separator: ", ")
   }

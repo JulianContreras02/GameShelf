@@ -11,15 +11,21 @@ import SwiftUI
 /// Solo muestra: no llama a servicios ni sincroniza. Las secciones de estado,
 /// colecciones y notas quedan reservadas para los issues #16, #15 y #20.
 struct GameDetailView: View {
+  @Environment(\.modelContext) private var modelContext
+
   let game: Game
 
   @State private var eligiendoColecciones = false
+  @State private var statusViewModel = GameStatusViewModel()
+  @State private var mensajeDeError: String?
 
   var body: some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 20) {
         caratula
         encabezado
+        Divider()
+        seccionEstado
         Divider()
         datos
         if let enlace = game.storeLink() {
@@ -36,6 +42,63 @@ struct GameDetailView: View {
     .navigationBarTitleDisplayMode(.inline)
     .sheet(isPresented: $eligiendoColecciones) {
       GameCollectionsPicker(juego: game)
+    }
+    .alert(
+      "No se pudo guardar",
+      isPresented: .init(
+        get: { mensajeDeError != nil },
+        set: { if !$0 { mensajeDeError = nil } }
+      )
+    ) {
+      Button("Entendido", role: .cancel) {}
+    } message: {
+      Text(mensajeDeError ?? "")
+    }
+  }
+
+  // MARK: - Estado
+
+  private var seccionEstado: some View {
+    VStack(alignment: .leading, spacing: 10) {
+      Text("Estado")
+        .font(.headline)
+
+      Menu {
+        PlayStatusMenu(actual: game.status) { nuevo in
+          cambiarEstado(a: nuevo)
+        }
+      } label: {
+        HStack {
+          Label {
+            Text(game.status.displayName)
+              .foregroundStyle(.primary)
+          } icon: {
+            Image(systemName: game.status.symbolName)
+              .foregroundStyle(game.status.tint)
+          }
+          Spacer()
+          Image(systemName: "chevron.up.chevron.down")
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 10))
+      }
+      .accessibilityLabel("Estado del juego: \(game.status.displayName)")
+      .accessibilityHint("Toca para cambiarlo")
+
+      Text(game.status.explanation)
+        .font(.caption)
+        .foregroundStyle(.secondary)
+    }
+  }
+
+  private func cambiarEstado(a estado: PlayStatus) {
+    do {
+      try statusViewModel.setStatus(estado, for: game, in: modelContext)
+    } catch {
+      mensajeDeError = error.localizedDescription
     }
   }
 
@@ -172,8 +235,8 @@ struct GameDetailView: View {
 
   /// Lo que va a vivir en esta pantalla mas adelante.
   private static let pendientes: [(titulo: String, icono: String)] = [
-    ("Marcar estado del juego", "flag"),
-    ("Notas personales", "note.text")
+    ("Notas personales", "note.text"),
+    ("Etiquetas", "tag")
   ]
 }
 
