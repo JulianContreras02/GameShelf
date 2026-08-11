@@ -58,7 +58,11 @@ struct LibraryView: View {
 
         Section {
           ForEach(games) { game in
-            GameRow(game: game)
+            NavigationLink {
+              GameDetailView(game: game)
+            } label: {
+              GameRow(game: game)
+            }
           }
         } header: {
           Text("\(games.count) juegos")

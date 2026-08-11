@@ -73,4 +73,34 @@ final class Game {
   func isAvailable(on store: Store) -> Bool {
     storeEntries.contains { $0.store == store }
   }
+
+  /// La ultima vez que se jugo, mirando todas las tiendas.
+  ///
+  /// `nil` si no se ha jugado en ninguna.
+  var lastPlayedAt: Date? {
+    storeEntries.compactMap(\.lastPlayedAt).max()
+  }
+
+  /// Si el juego nunca se ha jugado, segun las horas que reportan las tiendas.
+  ///
+  /// Es distinto de `status`: esto es un dato de la tienda, y `status` es una
+  /// decision del usuario. Pueden no coincidir, por ejemplo si lo jugaste en
+  /// consola y lo marcaste como terminado.
+  var isUnplayed: Bool {
+    playtimeHours <= 0
+  }
+
+  /// Enlace a la ficha del juego en una tienda.
+  ///
+  /// Si esta en varias, prefiere la que se indique; si no, la primera que
+  /// tenga enlace.
+  func storeLink(preferring store: Store? = nil) -> URL? {
+    let candidatas = storeEntries.filter { $0.storeURL?.isEmpty == false }
+
+    let elegida = store.flatMap { preferida in
+      candidatas.first { $0.store == preferida }
+    } ?? candidatas.first
+
+    return elegida?.storeURL.flatMap(URL.init(string:))
+  }
 }
