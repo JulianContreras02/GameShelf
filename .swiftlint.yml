@@ -1,0 +1,27 @@
+# Reglas escritas en CONTRIBUTING.md, aplicadas aca para que no dependan
+# de la configuracion local de cada maquina.
+
+# line_length ya viene activa por defecto en SwiftLint con warning: 120 -
+# la dejamos explicita igual, porque este archivo es donde se documentan
+# nuestros acuerdos, no queremos que dependa de un valor por defecto que
+# SwiftLint podria cambiar en una version futura.
+line_length:
+  warning: 120
+  error: 150
+  ignores_comments: true
+  ignores_urls: true
+
+# CONTRIBUTING.md dice indentacion de 2 espacios. No es una regla activa
+# por defecto, hay que pedirla explicitamente.
+opt_in_rules:
+  - indentation_width
+  - sorted_imports
+  - force_unwrapping
+  - explicit_init
+
+indentation_width:
+  indentation_width: 2
+
+excluded:
+  - GameShelf.xcodeproj
+  - docs
