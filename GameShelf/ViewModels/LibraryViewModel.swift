@@ -19,8 +19,16 @@ import SwiftData
 final class LibraryViewModel {
 
   /// En que punto esta la sincronizacion.
+  ///
+  /// Transiciones posibles:
+  /// ```
+  /// idle ─────────► syncing ──┬──► succeeded ──► syncing ──► ...
+  ///                           └──► failed ─────► syncing ──► ...
+  /// ```
+  /// Nunca se pasa de `syncing` a `syncing`: las llamadas mientras hay una en
+  /// curso se ignoran.
   enum State: Equatable {
-    /// Sin hacer nada.
+    /// Todavia no se ha intentado nada en esta sesion.
     case idle
     /// Pidiendo datos a Steam.
     case syncing
@@ -30,17 +38,34 @@ final class LibraryViewModel {
     case failed(message: String, suggestion: String?)
 
     var isSyncing: Bool { self == .syncing }
+
+    /// Si ya se intentó sincronizar al menos una vez en esta sesion.
+    var hasAttempted: Bool { self != .idle }
   }
 
   private(set) var state: State = .idle
 
   /// Cuando termino la ultima sincronizacion correcta.
+  ///
+  /// Se guarda entre sesiones para poder decirle al usuario que tan viejos son
+  /// los datos que esta viendo cuando la red falla.
   private(set) var lastSyncedAt: Date?
 
-  private let service: SteamServicing
+  /// Si la ultima sincronizacion correcta no trajo ningun juego.
+  ///
+  /// Sirve para distinguir "todavia no has sincronizado" de "sincronizamos y
+  /// Steam no devolvio nada", que para el usuario son problemas distintos.
+  private(set) var lastSyncReturnedNoGames = false
 
-  init(service: SteamServicing) {
+  private let service: SteamServicing
+  private let defaults: UserDefaults
+
+  private static let lastSyncKey = "library.lastSyncedAt"
+
+  init(service: SteamServicing, defaults: UserDefaults = .standard) {
     self.service = service
+    self.defaults = defaults
+    self.lastSyncedAt = defaults.object(forKey: Self.lastSyncKey) as? Date
   }
 
   /// Crea el ViewModel con el servicio real.
@@ -56,9 +81,19 @@ final class LibraryViewModel {
     }
   }
 
+  /// Sincroniza solo si nunca se ha hecho.
+  ///
+  /// Se llama al abrir la pantalla: la primera vez trae la biblioteca sola, y
+  /// despues no molesta en cada arranque. Para forzarla esta `sync`.
+  func syncIfNeeded(into context: ModelContext) async {
+    guard lastSyncedAt == nil, !state.hasAttempted else { return }
+    await sync(into: context)
+  }
+
   /// Trae la biblioteca de Steam y la guarda.
   ///
   /// No propaga errores: los guarda en `state` para que la vista los muestre.
+  /// Un fallo **no borra** lo que ya estaba guardado.
   func sync(into context: ModelContext) async {
     guard !state.isSyncing else { return }
 
@@ -67,7 +102,9 @@ final class LibraryViewModel {
     do {
       let juegos = try await service.fetchOwnedGames()
       let resultado = try SteamLibrarySyncer.sync(juegos, into: context)
-      lastSyncedAt = Date()
+
+      lastSyncReturnedNoGames = juegos.isEmpty
+      registrarSincronizacion(at: Date())
       state = .succeeded(created: resultado.created, updated: resultado.updated)
     } catch let error as NetworkError {
       state = .failed(
@@ -82,6 +119,11 @@ final class LibraryViewModel {
     } catch {
       state = .failed(message: error.localizedDescription, suggestion: nil)
     }
+  }
+
+  private func registrarSincronizacion(at fecha: Date) {
+    lastSyncedAt = fecha
+    defaults.set(fecha, forKey: Self.lastSyncKey)
   }
 }
 

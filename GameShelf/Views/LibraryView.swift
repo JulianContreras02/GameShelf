@@ -36,9 +36,13 @@ struct LibraryView: View {
             }
           }
         }
-        // Deslizar hacia abajo para sincronizar
         .refreshable {
           await viewModel.sync(into: modelContext)
+        }
+        // Primera sincronizacion automatica: la biblioteca aparece sola al
+        // abrir por primera vez, sin tener que tocar nada.
+        .task {
+          await viewModel.syncIfNeeded(into: modelContext)
         }
     }
   }
@@ -46,37 +50,78 @@ struct LibraryView: View {
   @ViewBuilder
   private var contenido: some View {
     if games.isEmpty {
-      estadoVacio
+      estadoSinJuegos
     } else {
-      List {
-        if case .failed(let mensaje, _) = viewModel.state {
-          // Ya hay juegos guardados: el fallo se avisa sin tapar la biblioteca
-          Label(mensaje, systemImage: "exclamationmark.triangle")
-            .font(.footnote)
-            .foregroundStyle(.secondary)
-        }
-
-        Section {
-          ForEach(games) { game in
-            NavigationLink {
-              GameDetailView(game: game)
-            } label: {
-              GameRow(game: game)
-            }
-          }
-        } header: {
-          Text("\(games.count) juegos")
-        }
-      }
-      .listStyle(.plain)
+      listaDeJuegos
     }
   }
 
+  // MARK: - Con juegos
+
+  private var listaDeJuegos: some View {
+    List {
+      // Si la red falla pero hay datos guardados, se avisa sin tapar la
+      // biblioteca: los datos viejos siguen siendo utiles.
+      if case .failed(let mensaje, _) = viewModel.state {
+        avisoDeFallo(mensaje)
+      }
+
+      Section {
+        ForEach(games) { game in
+          NavigationLink {
+            GameDetailView(game: game)
+          } label: {
+            GameRow(game: game)
+          }
+        }
+      } header: {
+        HStack {
+          Text("\(games.count) juegos")
+          Spacer()
+          if let texto = textoUltimaSincronizacion {
+            Text(texto)
+              .textCase(nil)
+          }
+        }
+      }
+    }
+    .listStyle(.plain)
+  }
+
+  private func avisoDeFallo(_ mensaje: String) -> some View {
+    HStack(alignment: .top, spacing: 8) {
+      Image(systemName: "exclamationmark.triangle.fill")
+        .foregroundStyle(.orange)
+      VStack(alignment: .leading, spacing: 2) {
+        Text(mensaje)
+        Text("Estas viendo los datos guardados.")
+          .foregroundStyle(.secondary)
+      }
+      Spacer()
+      Button("Reintentar") {
+        Task { await viewModel.sync(into: modelContext) }
+      }
+      .buttonStyle(.bordered)
+      .controlSize(.small)
+    }
+    .font(.footnote)
+    .listRowBackground(Color.orange.opacity(0.12))
+    .accessibilityElement(children: .contain)
+  }
+
+  private var textoUltimaSincronizacion: String? {
+    guard let fecha = viewModel.lastSyncedAt else { return nil }
+    return "Actualizado \(LastPlayedFormatter.text(for: fecha).lowercased())"
+  }
+
+  // MARK: - Sin juegos
+
   @ViewBuilder
-  private var estadoVacio: some View {
+  private var estadoSinJuegos: some View {
     switch viewModel.state {
     case .syncing:
       ProgressView("Trayendo tu biblioteca…")
+        .controlSize(.large)
 
     case .failed(let mensaje, let sugerencia):
       ContentUnavailableView {
@@ -85,6 +130,29 @@ struct LibraryView: View {
         Text([mensaje, sugerencia].compactMap { $0 }.joined(separator: "\n\n"))
       } actions: {
         Button("Reintentar") {
+          Task { await viewModel.sync(into: modelContext) }
+        }
+        .buttonStyle(.borderedProminent)
+      }
+
+    case .succeeded where viewModel.lastSyncReturnedNoGames:
+      // Sincronizo bien pero Steam no devolvio nada. La causa mas comun es un
+      // perfil privado, y la API no permite distinguirlo de una biblioteca
+      // realmente vacia.
+      ContentUnavailableView {
+        Label("Steam no devolvio juegos", systemImage: "lock")
+      } description: {
+        Text(
+          """
+          La sincronizacion funciono, pero tu biblioteca llego vacia.
+
+          Suele pasar cuando el perfil de Steam es privado. En Steam, revisa \
+          Perfil > Editar perfil > Privacidad y deja "Detalles del juego" en \
+          publico.
+          """
+        )
+      } actions: {
+        Button("Volver a intentar") {
           Task { await viewModel.sync(into: modelContext) }
         }
         .buttonStyle(.borderedProminent)
@@ -104,6 +172,8 @@ struct LibraryView: View {
     }
   }
 }
+
+// MARK: - Vistas previas
 
 /// Contenedor en memoria con juegos de ejemplo, solo para las vistas previas.
 @MainActor
@@ -141,24 +211,52 @@ private func contenedorDeEjemplo() -> ModelContainer? {
   return contenedor
 }
 
+/// Servicio inerte para las vistas previas: no sale a la red.
+private struct PreviewSteamService: SteamServicing {
+  var error: Error?
+
+  func fetchOwnedGames() async throws -> [SteamGameDTO] {
+    if let error { throw error }
+    return []
+  }
+}
+
+/// UserDefaults aislado para que las vistas previas no toquen los del sistema.
+@MainActor
+private func defaultsDePrueba() -> UserDefaults {
+  UserDefaults(suiteName: "preview.\(UUID().uuidString)") ?? .standard
+}
+
 #Preview("Con juegos") {
   if let contenedor = contenedorDeEjemplo() {
-    LibraryView(viewModel: LibraryViewModel(service: PreviewSteamService()))
-      .modelContainer(contenedor)
+    LibraryView(
+      viewModel: LibraryViewModel(
+        service: PreviewSteamService(),
+        defaults: defaultsDePrueba()
+      )
+    )
+    .modelContainer(contenedor)
   } else {
     Text("No se pudo crear el contenedor de ejemplo")
   }
 }
 
 #Preview("Vacia") {
-  LibraryView(viewModel: LibraryViewModel(service: PreviewSteamService()))
-    .modelContainer(
-      for: [Game.self, StoreEntry.self],
-      inMemory: true
+  LibraryView(
+    viewModel: LibraryViewModel(
+      service: PreviewSteamService(),
+      defaults: defaultsDePrueba()
     )
+  )
+  .modelContainer(for: [Game.self, StoreEntry.self], inMemory: true)
 }
 
-/// Servicio inerte para las vistas previas: no sale a la red.
-private struct PreviewSteamService: SteamServicing {
-  func fetchOwnedGames() async throws -> [SteamGameDTO] { [] }
+#Preview("Error de red") {
+  LibraryView(
+    viewModel: LibraryViewModel(
+      service: PreviewSteamService(error: NetworkError.noConnection),
+      defaults: defaultsDePrueba()
+    )
+  )
+  .modelContainer(for: [Game.self, StoreEntry.self], inMemory: true)
 }
