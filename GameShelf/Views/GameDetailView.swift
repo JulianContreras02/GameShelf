@@ -17,6 +17,7 @@ struct GameDetailView: View {
 
   @State private var eligiendoColecciones = false
   @State private var editandoEtiquetas = false
+  @State private var editandoNotas = false
   @State private var statusViewModel = GameStatusViewModel()
   @State private var mensajeDeError: String?
 
@@ -33,11 +34,11 @@ struct GameDetailView: View {
           botonTienda(enlace)
         }
         Divider()
-        seccionColecciones
+        GameCollectionsSection(game: game) { eligiendoColecciones = true }
         Divider()
-        seccionEtiquetas
+        GameTagsSection(game: game) { editandoEtiquetas = true }
         Divider()
-        proximamente
+        GameNotesSection(game: game) { editandoNotas = true }
       }
       .padding()
     }
@@ -48,6 +49,9 @@ struct GameDetailView: View {
     }
     .sheet(isPresented: $editandoEtiquetas) {
       GameTagsEditor(juego: game)
+    }
+    .sheet(isPresented: $editandoNotas) {
+      GameNotesEditor(juego: game)
     }
     .alert(
       "No se pudo guardar",
@@ -108,47 +112,7 @@ struct GameDetailView: View {
     }
   }
 
-  // MARK: - Colecciones
-
-  private var seccionColecciones: some View {
-    VStack(alignment: .leading, spacing: 12) {
-      HStack {
-        Text("Colecciones")
-          .font(.headline)
-        Spacer()
-        Button("Editar") { eligiendoColecciones = true }
-          .font(.subheadline)
-      }
-
-      if game.collections.isEmpty {
-        Button {
-          eligiendoColecciones = true
-        } label: {
-          Label("Agregar a una coleccion", systemImage: "folder.badge.plus")
-            .font(.subheadline)
-        }
-      } else {
-        // Las etiquetas fluyen a varias lineas si no caben
-        FlowLayout(spacing: 8) {
-          ForEach(game.collections.sorted { $0.sortOrder < $1.sortOrder }) { coleccion in
-            Label(coleccion.name, systemImage: coleccion.symbolName)
-              .font(.caption.weight(.medium))
-              .padding(.horizontal, 10)
-              .padding(.vertical, 5)
-              .background(coleccion.color.swiftUIColor.opacity(0.18), in: Capsule())
-              .foregroundStyle(coleccion.color.swiftUIColor)
-          }
-        }
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(
-          "En \(game.collections.count) colecciones: "
-            + game.collections.map(\.name).joined(separator: ", ")
-        )
-      }
-    }
-  }
-
-  // MARK: - Partes
+    // MARK: - Partes
 
   private var caratula: some View {
     GameCoverLarge(urlString: game.coverImageURL)
@@ -217,71 +181,7 @@ struct GameDetailView: View {
     .accessibilityHint("Abre la ficha del juego en el navegador")
   }
 
-  private var proximamente: some View {
-    VStack(alignment: .leading, spacing: 10) {
-      Text("Proximamente")
-        .font(.headline)
-
-      ForEach(Self.pendientes, id: \.titulo) { pendiente in
-        HStack(spacing: 10) {
-          Image(systemName: pendiente.icono)
-            .frame(width: 24)
-            .foregroundStyle(.secondary)
-          Text(pendiente.titulo)
-          Spacer()
-        }
-        .foregroundStyle(.secondary)
-      }
     }
-    .accessibilityElement(children: .combine)
-    .accessibilityLabel(
-      "Proximamente: " + Self.pendientes.map(\.titulo).joined(separator: ", ")
-    )
-  }
-
-  // MARK: - Etiquetas
-
-  private var seccionEtiquetas: some View {
-    VStack(alignment: .leading, spacing: 12) {
-      HStack {
-        Text("Etiquetas")
-          .font(.headline)
-        Spacer()
-        Button("Editar") { editandoEtiquetas = true }
-          .font(.subheadline)
-      }
-
-      if game.tags.isEmpty {
-        Button {
-          editandoEtiquetas = true
-        } label: {
-          Label("Agregar etiquetas", systemImage: "tag")
-            .font(.subheadline)
-        }
-      } else {
-        FlowLayout(spacing: 8) {
-          ForEach(game.tags.sorted { $0.normalized < $1.normalized }) { etiqueta in
-            Text(etiqueta.name)
-              .font(.caption.weight(.medium))
-              .padding(.horizontal, 10)
-              .padding(.vertical, 5)
-              .background(.quaternary, in: Capsule())
-          }
-        }
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(
-          "\(game.tags.count) etiquetas: "
-            + game.tags.map(\.name).joined(separator: ", ")
-        )
-      }
-    }
-  }
-
-  /// Lo que va a vivir en esta pantalla mas adelante.
-  private static let pendientes: [(titulo: String, icono: String)] = [
-    ("Notas personales", "note.text")
-  ]
-}
 
 /// Una linea de "etiqueta: valor".
 private struct FilaDato: View {
@@ -343,32 +243,5 @@ struct GameCoverLarge: View {
         ProgressView()
       }
     }
-  }
-}
-
-#Preview("Con caratula") {
-  let game = Game(
-    name: "Red Dead Redemption 2",
-    coverImageURL: "https://cdn.cloudflare.steamstatic.com/steam/apps/1174180/header.jpg",
-    playtimeHours: 227.9
-  )
-  game.storeEntries = [
-    StoreEntry(
-      store: .steam,
-      storeGameID: "1174180",
-      storeURL: "https://store.steampowered.com/app/1174180",
-      playtimeHours: 227.9,
-      lastPlayedAt: Date().addingTimeInterval(-3 * 86_400)
-    )
-  ]
-
-  return NavigationStack {
-    GameDetailView(game: game)
-  }
-}
-
-#Preview("Sin jugar y sin caratula") {
-  NavigationStack {
-    GameDetailView(game: Game(name: "Un juego que nunca abri"))
   }
 }
