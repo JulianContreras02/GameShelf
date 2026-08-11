@@ -103,6 +103,16 @@ final class Game {
     playtimeHours <= 0
   }
 
+  /// Horas jugadas en las ultimas dos semanas, sumando todas las tiendas.
+  var recentPlaytimeHours: Double {
+    storeEntries.reduce(0) { $0 + $1.recentPlaytimeHours }
+  }
+
+  /// Si el juego se toco en las ultimas dos semanas.
+  var isRecentlyPlayed: Bool {
+    recentPlaytimeHours > 0
+  }
+
   /// Enlace a la ficha del juego en una tienda.
   ///
   /// Si esta en varias, prefiere la que se indique; si no, la primera que
