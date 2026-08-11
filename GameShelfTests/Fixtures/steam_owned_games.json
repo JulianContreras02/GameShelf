@@ -1,0 +1,50 @@
+{
+  "response": {
+    "game_count": 4,
+    "games": [
+      {
+        "appid": 440,
+        "name": "Team Fortress 2",
+        "playtime_forever": 1234,
+        "img_icon_url": "e3f595a92552da3d664ad00277fad2107345f743",
+        "has_community_visible_stats": true,
+        "playtime_windows_forever": 1200,
+        "playtime_mac_forever": 34,
+        "playtime_linux_forever": 0,
+        "playtime_deck_forever": 0,
+        "rtime_last_played": 1719878400,
+        "playtime_disconnected": 0
+      },
+      {
+        "appid": 367520,
+        "name": "Hollow Knight",
+        "playtime_forever": 90,
+        "img_icon_url": "d2a0fd4c9b8b1a1e4b3d5e5f2a1b0c9d8e7f6a5b",
+        "has_community_visible_stats": true,
+        "playtime_windows_forever": 90,
+        "playtime_mac_forever": 0,
+        "playtime_linux_forever": 0,
+        "playtime_deck_forever": 0,
+        "rtime_last_played": 1751414400,
+        "playtime_disconnected": 0
+      },
+      {
+        "appid": 413150,
+        "name": "Stardew Valley",
+        "playtime_forever": 0,
+        "img_icon_url": "",
+        "has_community_visible_stats": true,
+        "playtime_windows_forever": 0,
+        "playtime_mac_forever": 0,
+        "playtime_linux_forever": 0,
+        "playtime_deck_forever": 0,
+        "rtime_last_played": 0,
+        "playtime_disconnected": 0
+      },
+      {
+        "appid": 1245620,
+        "playtime_forever": 45
+      }
+    ]
+  }
+}
