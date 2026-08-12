@@ -59,6 +59,15 @@ final class StoreEntry {
   /// Cuantas veces se ha abierto el juego, si la tienda lo cuenta.
   var launchCount: Int?
 
+  /// Trofeos conseguidos, por tipo.
+  var earnedTrophies: TrophyCounts?
+
+  /// Trofeos que tiene el juego en total, por tipo.
+  ///
+  /// Va aparte de los conseguidos porque hacen falta los dos para decir
+  /// "llevas 52 de 58 bronces".
+  var definedTrophies: TrophyCounts?
+
   /// Si la tienda dice que el juego todavia no ha salido.
   ///
   /// No basta con mirar `Game.releaseDate`: Steam informa el lanzamiento de una
@@ -85,6 +94,8 @@ final class StoreEntry {
     comingSoon: Bool = false,
     trophyProgress: Int? = nil,
     launchCount: Int? = nil,
+    earnedTrophies: TrophyCounts? = nil,
+    definedTrophies: TrophyCounts? = nil,
     lastSyncedAt: Date? = nil
   ) {
     self.id = UUID()
@@ -98,6 +109,8 @@ final class StoreEntry {
     self.comingSoon = comingSoon
     self.trophyProgress = trophyProgress
     self.launchCount = launchCount
+    self.earnedTrophies = earnedTrophies
+    self.definedTrophies = definedTrophies
     self.lastSyncedAt = lastSyncedAt
   }
 }

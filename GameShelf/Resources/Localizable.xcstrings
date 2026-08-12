@@ -101,6 +101,34 @@
       },
       "shouldTranslate": false
     },
+    "%@: %lld de %lld": {
+      "comment": "Cuantos trofeos de un tipo se consiguieron",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: %lld of %lld"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@: %2$lld de %3$lld"
+          }
+        }
+      }
+    },
+    "%@: este juego no tiene": {
+      "comment": "Un tipo de trofeo que el juego no incluye",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: this game has none"
+          }
+        }
+      }
+    },
     "%lld": {
       "shouldTranslate": false
     },
@@ -985,6 +1013,17 @@
         }
       }
     },
+    "Bronce": {
+      "comment": "Tipo de trofeo",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bronze"
+          }
+        }
+      }
+    },
     "Buscar en tu biblioteca": {
       "localizations": {
         "en": {
@@ -1001,6 +1040,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cancel"
+          }
+        }
+      }
+    },
+    "Coleccion": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collection"
           }
         }
       }
@@ -1105,6 +1154,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Connect"
+          }
+        }
+      }
+    },
+    "Conseguidos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Earned"
           }
         }
       }
@@ -1434,6 +1493,16 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "El platino se consigue al completar todos los demas trofeos del juego.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The platinum is earned by completing every other trophy in the game."
           }
         }
       }
@@ -1807,6 +1876,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sign in to Epic Games in your browser."
+          }
+        }
+      }
+    },
+    "Juego": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game"
           }
         }
       }
@@ -2619,6 +2698,16 @@
         }
       }
     },
+    "No tiene": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "None"
+          }
+        }
+      }
+    },
     "Nombre": {
       "localizations": {
         "en": {
@@ -2743,6 +2832,17 @@
         }
       }
     },
+    "Oro": {
+      "comment": "Tipo de trofeo",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gold"
+          }
+        }
+      }
+    },
     "Pega el codigo aca": {
       "localizations": {
         "en": {
@@ -2764,6 +2864,38 @@
         }
       }
     },
+    "Plata": {
+      "comment": "Tipo de trofeo",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silver"
+          }
+        }
+      }
+    },
+    "Platino": {
+      "comment": "Tipo de trofeo",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Platinum"
+          }
+        }
+      }
+    },
+    "Platino conseguido": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Platinum earned"
+          }
+        }
+      }
+    },
     "PlayStation": {
       "localizations": {
         "en": {
@@ -2781,6 +2913,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "PlayStation returned something unexpected: %@"
+          }
+        }
+      }
+    },
+    "Por tipo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "By type"
           }
         }
       }
@@ -3019,6 +3161,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Set up with the project keys"
+          }
+        }
+      }
+    },
+    "Se consigue al tener todos los demas": {
+      "comment": "Que es el trofeo de platino",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Earned by getting all the others"
           }
         }
       }
@@ -3524,6 +3677,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Trophies"
+          }
+        }
+      }
+    },
+    "Trofeos: %lld %%. Toca para ver el desglose por tipo.": {
+      "comment": "Fila de trofeos, para VoiceOver",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trophies: %lld%%. Tap to see the breakdown by type."
           }
         }
       }

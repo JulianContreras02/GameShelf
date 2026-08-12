@@ -33,6 +33,8 @@ enum PSNGameMapper {
       lastPlayedAt: juego.lastPlayedAt,
       trophyProgress: juego.trophyProgress,
       launchCount: juego.playCount,
+      earnedTrophies: juego.earnedTrophies,
+      definedTrophies: juego.definedTrophies,
       lastSyncedAt: Date()
     )
   }
@@ -73,6 +75,12 @@ enum PSNGameMapper {
     }
     if let progreso = juego.trophyProgress {
       entrada.trophyProgress = progreso
+    }
+    if let conseguidos = juego.earnedTrophies {
+      entrada.earnedTrophies = conseguidos
+    }
+    if let definidos = juego.definedTrophies {
+      entrada.definedTrophies = definidos
     }
     if let veces = juego.playCount {
       entrada.launchCount = veces
