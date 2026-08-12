@@ -20,7 +20,14 @@ struct GameProgressView: View {
         Section {
           ForEach(PlayStatus.displayOrder, id: \.self) { estado in
             NavigationLink {
-              StatusGamesView(status: estado)
+              // La lista de deseos tiene pantalla propia: sincroniza con Steam
+              // y deja agregar juegos a mano, cosa que los demas estados no
+              // necesitan.
+              if estado == .wishlist {
+                WishlistView()
+              } else {
+                StatusGamesView(status: estado)
+              }
             } label: {
               fila(estado)
             }
