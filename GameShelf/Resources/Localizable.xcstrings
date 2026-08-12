@@ -104,6 +104,17 @@
     "%lld": {
       "shouldTranslate": false
     },
+    "%lld %% de descuento": {
+      "comment": "Descuento, para VoiceOver",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%% off"
+          }
+        }
+      }
+    },
     "%lld / %lld": {
       "localizations": {
         "es": {
@@ -291,6 +302,67 @@
                 "stringUnit": {
                   "state": "translated",
                   "value": "%lld juegos en total"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld juegos · %lld en minimo historico": {
+      "comment": "Cuantos juegos hay y cuantos estan al precio mas bajo de su historia",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%#@juegos@ · %2$lld at an all-time low"
+          },
+          "substitutions": {
+            "juegos": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg game"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg games"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%#@juegos@ · %2$lld en minimo historico"
+          },
+          "substitutions": {
+            "juegos": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg juego"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg juegos"
+                    }
+                  }
                 }
               }
             }
@@ -501,6 +573,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Updated %@"
+          }
+        }
+      }
+    },
+    "Actualizar precios": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh prices"
           }
         }
       }
@@ -869,6 +951,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "When you buy a game, Steam drops it from the list and it stops showing up here."
+          }
+        }
+      }
+    },
+    "Deseado hace poco": {
+      "comment": "Orden de la lista de deseos",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recently wanted"
           }
         }
       }
@@ -1414,6 +1507,17 @@
         }
       }
     },
+    "La lista se ve igual, solo sin los precios.": {
+      "comment": "Aviso cuando no se pudieron traer los precios",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The list still works, just without prices."
+          }
+        }
+      }
+    },
     "La mitad de tus horas": {
       "comment": "Dato de la distribucion",
       "localizations": {
@@ -1821,6 +1925,17 @@
         }
       }
     },
+    "Mayor descuento": {
+      "comment": "Orden de la lista de deseos",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biggest discount"
+          }
+        }
+      }
+    },
     "Menos de una hora: los abriste y ahi quedaron": {
       "comment": "Que agrupa la seccion",
       "localizations": {
@@ -1839,6 +1954,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Least played"
+          }
+        }
+      }
+    },
+    "Minimo historico": {
+      "comment": "El precio mas bajo de siempre",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All-time low"
           }
         }
       }
@@ -1912,6 +2038,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "There is no internet connection."
+          }
+        }
+      }
+    },
+    "No se pudieron consultar los precios.": {
+      "comment": "Error al traer precios",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not look up prices."
           }
         }
       }
@@ -2118,6 +2255,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Backlog"
+          }
+        }
+      }
+    },
+    "Precio mas bajo": {
+      "comment": "Orden de la lista de deseos",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lowest price"
           }
         }
       }
@@ -2863,6 +3011,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "You already have a collection called \"%@\"."
+          }
+        }
+      }
+    },
+    "en %@": {
+      "comment": "En que tienda esta la oferta",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "at %@"
           }
         }
       }

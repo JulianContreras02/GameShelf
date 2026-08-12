@@ -121,6 +121,16 @@ final class Game {
     return false
   }
 
+  /// El appid de Steam, si el juego viene de ahi.
+  ///
+  /// Hace falta para consultar precios: IsThereAnyDeal identifica los juegos
+  /// por el id de la tienda, no por el nuestro.
+  var steamAppID: Int? {
+    storeEntries
+      .first { $0.store == .steam }
+      .flatMap { Int($0.storeGameID) }
+  }
+
   /// Si alguna tienda lo tiene en su lista de deseos.
   ///
   /// Ojo: no es lo mismo que `status == .wishlist`. Esto es un dato de la

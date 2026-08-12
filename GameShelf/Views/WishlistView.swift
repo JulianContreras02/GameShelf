@@ -16,24 +16,15 @@ struct WishlistView: View {
   @Query private var todos: [Game]
 
   @State private var viewModel = WishlistViewModel.live()
+  @State private var preferencias = WishlistPreferences()
   @State private var agregandoAMano = false
 
-  /// Los deseados, los mas recientes primero.
-  ///
-  /// Se ordena por cuando los deseaste, no alfabeticamente: lo ultimo que
-  /// quisiste es lo que tienes mas presente. Los que agregaste a mano no traen
-  /// fecha de Steam, asi que caen al final por nombre.
+  /// Los deseados, en el orden elegido.
   private var juegos: [Game] {
-    todos
-      .filter { $0.status == .wishlist }
-      .sorted { izq, der in
-        switch (izq.wishlistedAt, der.wishlistedAt) {
-        case let (fechaIzq?, fechaDer?): fechaIzq > fechaDer
-        case (nil, _?): false
-        case (_?, nil): true
-        case (nil, nil): izq.name.localizedStandardCompare(der.name) == .orderedAscending
-        }
-      }
+    preferencias.sortOrder.sort(
+      todos.filter { $0.status == .wishlist },
+      precios: viewModel.prices
+    )
   }
 
   var body: some View {
@@ -54,18 +45,34 @@ struct WishlistView: View {
     .toolbar {
       ToolbarItem(placement: .primaryAction) {
         Menu {
+          Picker("Ordenar por", selection: $preferencias.sortOrder) {
+            ForEach(WishlistSortOrder.allCases, id: \.self) { orden in
+              Label(orden.displayName, systemImage: orden.symbolName).tag(orden)
+            }
+          }
+
+          Divider()
+
           Button("Sincronizar con Steam", systemImage: "arrow.clockwise", action: sincronizar)
             .disabled(viewModel.state.isSyncing)
+          Button("Actualizar precios", systemImage: "tag", action: cargarPrecios)
+            .disabled(viewModel.pricesState.isLoading)
           Button("Agregar a mano", systemImage: "plus") { agregandoAMano = true }
         } label: {
           Label("Opciones", systemImage: "ellipsis.circle")
         }
       }
     }
+    .task(id: juegos.count) {
+      await viewModel.loadPrices(for: juegos)
+    }
     .sheet(isPresented: $agregandoAMano) {
       WishlistManualAddView(viewModel: viewModel)
     }
-    .refreshable { await viewModel.sync(into: modelContext) }
+    .refreshable {
+      await viewModel.sync(into: modelContext)
+      await viewModel.loadPrices(for: juegos)
+    }
   }
 
   // MARK: - Lista
@@ -78,12 +85,26 @@ struct WishlistView: View {
         }
       }
 
+      // Que fallen los precios no impide ver la lista: se avisa y ya.
+      if case .failed(let mensaje) = viewModel.pricesState {
+        Section {
+          AvisoDeFallo(
+            mensaje: mensaje,
+            sugerencia: String(
+              localized: "La lista se ve igual, solo sin los precios.",
+              comment: "Aviso cuando no se pudieron traer los precios"
+            ),
+            alReintentar: cargarPrecios
+          )
+        }
+      }
+
       Section {
         ForEach(juegos) { juego in
           NavigationLink {
             GameDetailView(game: juego)
           } label: {
-            WishlistRow(game: juego)
+            WishlistRow(game: juego, prices: viewModel.prices(for: juego))
           }
           .swipeActions(edge: .trailing) {
             // Solo los agregados a mano: los de Steam volverian en la
@@ -97,9 +118,9 @@ struct WishlistView: View {
         }
       } header: {
         HStack {
-          Text("\(juegos.count) juegos")
-          if viewModel.state.isSyncing {
-            Spacer()
+          Text(encabezado)
+          Spacer()
+          if viewModel.state.isSyncing || viewModel.pricesState.isLoading {
             ProgressView().controlSize(.small)
           }
         }
@@ -135,6 +156,22 @@ struct WishlistView: View {
     )
   }
 
+  /// Cuantos juegos hay y, si aplica, cuantos estan en su minimo historico.
+  private var encabezado: String {
+    let enMinimo = viewModel.countAtHistoricalLow(among: juegos)
+    guard enMinimo > 0 else {
+      return String(localized: "\(juegos.count) juegos", comment: "Cuantos juegos hay")
+    }
+    return String(
+      localized: "\(juegos.count) juegos · \(enMinimo) en minimo historico",
+      comment: "Cuantos juegos hay y cuantos estan al precio mas bajo de su historia"
+    )
+  }
+
+  private func cargarPrecios() {
+    Task { await viewModel.loadPrices(for: juegos) }
+  }
+
   private func borrar(_ juego: Game) {
     try? viewModel.delete(juego, in: modelContext)
   }
@@ -151,6 +188,10 @@ struct WishlistView: View {
 struct WishlistRow: View {
   let game: Game
 
+  /// Precios, si ya se consultaron. `nil` mientras cargan o si no se pudieron
+  /// traer: la fila se ve igual, solo sin la linea del precio.
+  var prices: GamePrices?
+
   var body: some View {
     HStack(spacing: 12) {
       GameCover(urlString: game.coverImageURL)
@@ -159,6 +200,10 @@ struct WishlistRow: View {
         Text(game.name)
           .font(.headline)
           .lineLimit(2)
+
+        if let prices {
+          WishlistPriceLabel(prices: prices)
+        }
 
         if let detalle {
           Text(detalle)
