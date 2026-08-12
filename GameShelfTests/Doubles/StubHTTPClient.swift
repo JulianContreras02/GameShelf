@@ -37,9 +37,28 @@ final class StubHTTPClient: HTTPClient, @unchecked Sendable {
     self.init(.success(Data(json.utf8)))
   }
 
+  /// Cuerpos que se mandaron por POST, en orden y ya como JSON. Sirve para
+  /// comprobar que una consulta en lote mando todos los juegos de una vez.
+  private(set) var sentBodies: [String] = []
+
   func get<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T {
     requestedURLs.append(url)
+    return try responder(T.self)
+  }
 
+  func post<Response: Decodable, Body: Encodable>(
+    _ type: Response.Type,
+    to url: URL,
+    body: Body
+  ) async throws -> Response {
+    requestedURLs.append(url)
+    if let datos = try? JSONEncoder().encode(body), let texto = String(data: datos, encoding: .utf8) {
+      sentBodies.append(texto)
+    }
+    return try responder(Response.self)
+  }
+
+  private func responder<T: Decodable>(_ type: T.Type) throws -> T {
     switch behavior {
     case .failure(let error):
       throw error
