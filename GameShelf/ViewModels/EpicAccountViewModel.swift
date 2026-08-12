@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import SwiftData
 
 /// La conexion con la cuenta de Epic: conectar, renovar y desconectar.
 ///
@@ -110,6 +111,57 @@ final class EpicAccountViewModel {
     displayName = nil
     reconnectBy = nil
     state = .desconectado
+  }
+
+  // MARK: - Biblioteca
+
+  /// En que punto esta la sincronizacion de la biblioteca de Epic.
+  enum LibraryState: Equatable {
+    case idle
+    case syncing
+    case succeeded(created: Int, updated: Int, merged: Int)
+    case failed(message: String)
+
+    var isSyncing: Bool { self == .syncing }
+  }
+
+  private(set) var libraryState: LibraryState = .idle
+
+  /// Trae los juegos de Epic y los guarda.
+  ///
+  /// No propaga errores: los deja en `libraryState`. Si la sesion caduco, el
+  /// estado de la cuenta pasa a pedir un codigo nuevo.
+  func syncLibrary(into context: ModelContext, using client: HTTPClient = URLSessionHTTPClient()) async {
+    guard !libraryState.isSyncing else { return }
+    libraryState = .syncing
+
+    let servicio = EpicLibraryService(
+      client: client,
+      accessToken: { [weak self] in
+        guard let self else { throw EpicAuthError.sinCredenciales }
+        return try await self.validAccessToken()
+      },
+      accountID: { [weak self] in try self?.accountID() }
+    )
+
+    do {
+      let juegos = try await servicio.fetchOwnedGames()
+      let resultado = try EpicLibrarySyncer.sync(juegos, into: context)
+      libraryState = .succeeded(
+        created: resultado.created,
+        updated: resultado.updated,
+        merged: resultado.merged
+      )
+    } catch let error as EpicAuthError {
+      state = Self.estado(para: error)
+      libraryState = .failed(message: error.errorDescription ?? "")
+    } catch let error as NetworkError {
+      libraryState = .failed(
+        message: error.errorDescription ?? String(localized: "No se pudo sincronizar.", comment: "Error generico")
+      )
+    } catch {
+      libraryState = .failed(message: error.localizedDescription)
+    }
   }
 
   // MARK: - Guardado

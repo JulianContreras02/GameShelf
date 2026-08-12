@@ -37,51 +37,31 @@ struct PSNLibrarySyncer {
   ) throws -> Result {
     guard !juegos.isEmpty else { return Result() }
 
-    let porPSN = try indexarEntradasDePSN(in: context)
-    let todos = try context.fetch(FetchDescriptor<Game>())
-    var porNombre = Dictionary(
-      todos.map { ($0.name.normalizedForSearch, $0) },
-      uniquingKeysWith: { primero, _ in primero }
-    )
-
+    var matcher = try LibraryMatcher(store: .psn, context: context)
     var result = Result()
 
     for juego in juegos {
-      if let entrada = porPSN[juego.titleId], let game = entrada.game {
-        PSNGameMapper.update(game, from: juego)
+      switch matcher.buscar(storeGameID: juego.titleId, nombre: juego.name) {
+      case .mismaTienda(let existente):
+        PSNGameMapper.update(existente, from: juego)
         result.updated += 1
-        continue
-      }
 
-      if let existente = porNombre[juego.name.normalizedForSearch] {
-        // El mismo juego, ya guardado desde otra tienda.
+      case .otraTienda(let existente):
+        // El mismo juego, ya guardado desde otra tienda. Por aca entra tambien
+        // la version de PC de un juego de consola: mismo nombre, distinto
+        // titleId, y `update` le agrega su propia entrada.
         PSNGameMapper.update(existente, from: juego)
         result.merged += 1
-        continue
-      }
 
-      let nuevo = PSNGameMapper.makeGame(from: juego)
-      context.insert(nuevo)
-      porNombre[juego.name.normalizedForSearch] = nuevo
-      result.created += 1
+      case .nuevo:
+        let nuevo = PSNGameMapper.makeGame(from: juego)
+        context.insert(nuevo)
+        matcher.registrar(nuevo)
+        result.created += 1
+      }
     }
 
     try context.save()
     return result
-  }
-
-  /// Indexa las entradas de PSN ya guardadas por su id de tienda.
-  private static func indexarEntradasDePSN(
-    in context: ModelContext
-  ) throws -> [String: StoreEntry] {
-    let todas = try context.fetch(FetchDescriptor<StoreEntry>())
-
-    return todas
-      .filter { $0.store == .psn }
-      .reduce(into: [String: StoreEntry]()) { indice, entrada in
-        if indice[entrada.storeGameID] == nil {
-          indice[entrada.storeGameID] = entrada
-        }
-      }
   }
 }
