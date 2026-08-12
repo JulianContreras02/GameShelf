@@ -678,6 +678,16 @@
         }
       }
     },
+    "1. Iniciar sesion en Epic": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1. Sign in to Epic"
+          }
+        }
+      }
+    },
     "2. Abrir la pagina del codigo": {
       "localizations": {
         "en": {
@@ -715,6 +725,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Opens the game page in your browser"
+          }
+        }
+      }
+    },
+    "Abre la pagina del codigo. Veras un texto largo tras \"authorizationCode\".": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the code page. You will see a long piece of text after \"authorizationCode\"."
           }
         }
       }
@@ -1100,6 +1120,16 @@
         }
       }
     },
+    "Copia solo lo que hay entre comillas y pegalo abajo, sin demorarte.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy only what is inside the quotes and paste it below, without delay."
+          }
+        }
+      }
+    },
     "Copia solo lo que hay entre las comillas y pegalo abajo.": {
       "localizations": {
         "en": {
@@ -1181,6 +1211,16 @@
         }
       }
     },
+    "Cuenta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Account"
+          }
+        }
+      }
+    },
     "Cuenta conectada": {
       "localizations": {
         "en": {
@@ -1207,6 +1247,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Disconnect"
+          }
+        }
+      }
+    },
+    "Desconectar Epic": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnect Epic"
           }
         }
       }
@@ -1279,6 +1329,27 @@
           "stringUnit": {
             "state": "translated",
             "value": "Edit collection"
+          }
+        }
+      }
+    },
+    "El acceso se renueva solo mientras uses la app.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Access renews itself while you use the app."
+          }
+        }
+      }
+    },
+    "El codigo de Epic no sirve o ya se uso.": {
+      "comment": "Error de autenticacion con Epic",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That Epic code is wrong or has already been used."
           }
         }
       }
@@ -1431,6 +1502,27 @@
         }
       }
     },
+    "Epic Games": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Epic Games"
+          }
+        }
+      }
+    },
+    "Epic respondio algo inesperado: %@": {
+      "comment": "Error de autenticacion con Epic",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Epic returned something unexpected: %@"
+          }
+        }
+      }
+    },
     "Escribe lo que quieras recordar de este juego.": {
       "localizations": {
         "en": {
@@ -1508,6 +1600,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "You are seeing saved data."
+          }
+        }
+      }
+    },
+    "Este codigo da acceso completo a tu cuenta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This code grants full access to your account"
           }
         }
       }
@@ -1699,6 +1801,16 @@
         }
       }
     },
+    "Inicia sesion en Epic Games desde el navegador.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to Epic Games in your browser."
+          }
+        }
+      }
+    },
     "Juego de Steam %@": {
       "comment": "Nombre de respaldo cuando Steam no manda el titulo",
       "localizations": {
@@ -1828,6 +1940,17 @@
         }
       }
     },
+    "La sesion de Epic caduco.": {
+      "comment": "Error de autenticacion con Epic",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Epic session has expired."
+          }
+        }
+      }
+    },
     "La sesion de PlayStation caduco.": {
       "comment": "Error de autenticacion con PSN",
       "localizations": {
@@ -1897,6 +2020,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "You left it unfinished"
+          }
+        }
+      }
+    },
+    "Lo dice Epic en la pagina donde lo genera. Aca se guarda cifrado en el llavero del telefono y no se manda a ningun servidor, pero conviene que lo sepas: no lo pegues en ningun otro sitio.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Epic says so on the page that generates it. Here it is stored encrypted in your phone's keychain and never sent to any server, but you should know: do not paste it anywhere else."
           }
         }
       }
@@ -1993,6 +2126,17 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Los codigos caducan enseguida. Genera uno nuevo y pegalo sin demorarte.": {
+      "comment": "Como recuperarse de un codigo de Epic invalido",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codes expire within seconds. Generate a new one and paste it right away."
           }
         }
       }
@@ -2992,6 +3136,16 @@
         }
       }
     },
+    "Si la pagina dice `\"authorizationCode\": null`, falta el paso 1.\n\nLos codigos de Epic caducan en segundos, asi que conviene pegarlo enseguida. Si caduca, basta con recargar la pagina y copiar el nuevo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If the page says `\"authorizationCode\": null`, step 1 is missing.\n\nEpic codes expire within seconds, so paste it right away. If it expires, just reload that page and copy the new one."
+          }
+        }
+      }
+    },
     "Sin colecciones": {
       "localizations": {
         "en": {
@@ -3260,6 +3414,17 @@
         }
       }
     },
+    "Todavia no has conectado tu cuenta de Epic.": {
+      "comment": "Error de autenticacion con Epic",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have not connected your Epic account yet."
+          }
+        }
+      }
+    },
     "Todavia no has conectado tu cuenta de PlayStation.": {
       "comment": "Error de autenticacion con PSN",
       "localizations": {
@@ -3438,6 +3603,16 @@
         }
       }
     },
+    "Volver a generar el codigo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Generate the code again"
+          }
+        }
+      }
+    },
     "Volver a intentar": {
       "localizations": {
         "en": {
@@ -3455,6 +3630,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Copy the code from your browser again and paste it here."
+          }
+        }
+      }
+    },
+    "Vuelve a generar el codigo desde el navegador y pegalo aca.": {
+      "comment": "Como recuperarse de una sesion de Epic caducada",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Generate the code again in your browser and paste it here."
           }
         }
       }

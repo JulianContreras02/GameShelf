@@ -5,19 +5,22 @@
 
 import Foundation
 
-/// Las dos peticiones raras que necesita el inicio de sesion de PSN.
+/// Manda formularios, que es como piden los tokens casi todos los OAuth.
 ///
-/// No se reusa `HTTPClient` porque ninguna de las dos encaja: una necesita
-/// **leer una redireccion sin seguirla** (ahi viene el codigo de autorizacion)
-/// y la otra manda un formulario, no JSON.
-protocol PSNAuthTransporting: Sendable {
+/// No se reusa `HTTPClient` porque ese manda JSON, y estos endpoints esperan
+/// `application/x-www-form-urlencoded`. Lo usan PSN y Epic.
+protocol FormPostTransporting: Sendable {
+  /// Manda un formulario y devuelve la respuesta cruda.
+  func postForm(_ campos: [String: String], to url: URL, authorization: String) async throws -> Data
+}
+
+/// Lo que necesita el inicio de sesion de PSN, ademas del formulario.
+protocol PSNAuthTransporting: FormPostTransporting {
   /// Pide `url` con la cookie del NPSSO y devuelve a donde redirige, **sin ir**.
   ///
   /// El codigo de autorizacion viaja en esa redireccion. Si se sigue, se pierde.
+  /// Es propio de PSN: Epic entrega su codigo en una pagina normal.
   func redirectLocation(for url: URL, npsso: String) async throws -> URL
-
-  /// Manda un formulario y devuelve la respuesta cruda.
-  func postForm(_ campos: [String: String], to url: URL, authorization: String) async throws -> Data
 }
 
 /// Implementacion real sobre `URLSession`.
