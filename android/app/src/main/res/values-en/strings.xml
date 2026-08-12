@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Traduccion al ingles. El idioma base es el espanol, en values/strings.xml.
+
+  Los marcadores de formato NO se copiaron del catalogo de iOS: alla son
+  `%lld` y `%@`, y aca tienen que ser `%1$d` y `%1$s`. Traerlos tal cual
+  compila igual y revienta en tiempo de ejecucion, que es la peor forma de
+  fallar.
+-->
+<resources>
+    <string name="app_name">GameShelf</string>
+
+    <!-- Game status -->
+    <string name="status_backlog">Backlog</string>
+    <string name="status_playing">Playing</string>
+    <string name="status_finished">Finished</string>
+    <string name="status_abandoned">Abandoned</string>
+    <string name="status_wishlist">Wishlist</string>
+
+    <string name="status_backlog_explanation">You own it but haven\'t started it</string>
+    <string name="status_playing_explanation">You\'re playing it right now</string>
+    <string name="status_finished_explanation">You finished it</string>
+    <string name="status_abandoned_explanation">You dropped it before finishing</string>
+    <string name="status_wishlist_explanation">You want it but don\'t own it yet</string>
+
+    <!-- Collection colors -->
+    <string name="color_blue">Blue</string>
+    <string name="color_green">Green</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_red">Red</string>
+    <string name="color_teal">Teal</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_gray">Gray</string>
+
+    <!-- Trophies -->
+    <string name="trophy_bronze">Bronze</string>
+    <string name="trophy_silver">Silver</string>
+    <string name="trophy_gold">Gold</string>
+    <string name="trophy_platinum">Platinum</string>
+    <string name="trophy_platinum_explanation">The platinum unlocks once you earn every other trophy in the game.</string>
+
+    <!-- Playtime -->
+    <string name="playtime_unplayed">Not played</string>
+    <string name="playtime_minutes_short">%1$d min</string>
+    <string name="playtime_hours_short">%1$s h</string>
+    <plurals name="playtime_minutes_accessible">
+        <item quantity="one">%1$d minute played</item>
+        <item quantity="other">%1$d minutes played</item>
+    </plurals>
+    <plurals name="playtime_hours_accessible">
+        <item quantity="one">%1$d hour played</item>
+        <item quantity="other">%1$d hours played</item>
+    </plurals>
+
+    <!-- Last played -->
+    <string name="last_played_never">Never</string>
+    <string name="last_played_today">Today</string>
+    <string name="last_played_yesterday">Yesterday</string>
+    <plurals name="last_played_days_ago">
+        <item quantity="one">%1$d day ago</item>
+        <item quantity="other">%1$d days ago</item>
+    </plurals>
+
+    <!-- Network errors -->
+    <string name="error_no_connection">No internet connection.</string>
+    <string name="error_invalid_response">The server responded in an unexpected way.</string>
+    <string name="error_http">The server responded with code %1$d.</string>
+    <string name="error_decoding">The data that came back isn\'t in the expected format.</string>
+    <string name="error_invalid_url">That address isn\'t valid: %1$s</string>
+
+    <!-- Recovery -->
+    <string name="recovery_check_connection">Check your connection and try again.</string>
+    <string name="recovery_check_api_key">Check that your API key is correct and still valid.</string>
+    <string name="recovery_too_many_requests">Too many requests in a row. Wait a moment.</string>
+    <string name="recovery_server_problem">This one\'s on the server. Try again later.</string>
+    <string name="recovery_connect_from_settings">Connect your account from Settings.</string>
+
+    <!-- Configuration secrets -->
+    <string name="secret_missing">The %1$s key is missing.</string>
+    <string name="secret_missing_recovery">Copy Config/Secrets.example.xcconfig to Config/Secrets.xcconfig and fill in %1$s. The instructions are in the README.</string>
+
+    <!-- PlayStation Network -->
+    <string name="psn_error_npsso_invalid">That PlayStation code doesn\'t work, or it expired.</string>
+    <string name="psn_error_session_expired">Your PlayStation session expired.</string>
+    <string name="psn_error_unexpected">PlayStation responded with something unexpected: %1$s</string>
+    <string name="psn_error_not_connected">You haven\'t connected your PlayStation account yet.</string>
+    <string name="psn_recovery_copy_again">Copy the code from your browser again and paste it here.</string>
+
+    <!-- Epic Games -->
+    <string name="epic_error_code_invalid">That Epic code doesn\'t work, or it was already used.</string>
+    <string name="epic_error_session_expired">Your Epic session expired.</string>
+    <string name="epic_error_unexpected">Epic responded with something unexpected: %1$s</string>
+    <string name="epic_error_not_connected">You haven\'t connected your Epic account yet.</string>
+    <string name="epic_recovery_code_expires_fast">Codes expire almost immediately. Generate a new one and paste it without delay.</string>
+    <string name="epic_recovery_generate_again">Generate the code again in your browser and paste it here.</string>
+
+    <string name="steam_fallback_name">Steam game %1$s</string>
+
+    <!-- Library sort -->
+    <string name="sort_name_asc">Name (A-Z)</string>
+    <string name="sort_playtime_desc">Most played</string>
+    <string name="sort_playtime_asc">Least played</string>
+    <string name="sort_last_played">Recently played</string>
+    <string name="sort_release_date">Newest</string>
+    <string name="sort_recently_added">Recently added</string>
+    <string name="sort_release_date_unavailable">Steam doesn\'t send release dates, so this sort doesn\'t change anything yet.</string>
+
+    <!-- Wishlist sort -->
+    <string name="wishlist_sort_recent">Recently wishlisted</string>
+    <string name="wishlist_sort_discount">Biggest discount</string>
+    <string name="wishlist_sort_price">Lowest price</string>
+
+    <!-- Automatic groups -->
+    <string name="section_recently_played">Recently played</string>
+    <string name="section_recently_played_explanation">Played in the last two weeks</string>
+    <string name="section_most_played">The ones you play most</string>
+    <string name="section_most_played_explanation">Where most of your time goes</string>
+    <string name="section_barely_tried">Barely tried</string>
+    <string name="section_barely_tried_explanation">Under an hour: you opened them and that was that</string>
+    <string name="section_never_played">Never played</string>
+    <string name="section_never_played_explanation">You own them but never opened them</string>
+
+    <!-- Naming errors -->
+    <string name="collection_error_empty_name">The name can\'t be empty.</string>
+    <string name="collection_error_duplicate">You already have a collection called \"%1$s\".</string>
+    <string name="collection_error_too_long">The name can\'t be longer than %1$d characters.</string>
+    <string name="tag_error_empty">The tag can\'t be empty.</string>
+    <string name="tag_error_too_long">The tag can\'t be longer than %1$d characters.</string>
+
+    <!-- Generic errors -->
+    <string name="error_sync_generic">Couldn\'t sync.</string>
+    <string name="error_prices_generic">Couldn\'t look up prices.</string>
+    <string name="error_game_exists">\"%1$s\" is already in your library.</string>
+    <string name="error_name_empty">The name can\'t be empty.</string>
+
+    <!-- Sections -->
+    <string name="tab_library">Library</string>
+    <string name="tab_progress">Progress</string>
+    <string name="tab_collections">Collections</string>
+    <string name="tab_settings">Settings</string>
+    <string name="tab_wishlist">Wishlist</string>
+
+    <!-- Actions -->
+    <string name="action_retry">Retry</string>
+    <string name="action_sync">Sync</string>
+    <string name="action_sync_library">Sync library</string>
+    <string name="action_done">Done</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
+    <string name="action_add">Add</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_apply">Apply</string>
+    <string name="action_back">Back</string>
+    <string name="action_connect">Connect</string>
+    <string name="action_disconnect">Disconnect</string>
+    <string name="action_options">Options</string>
+    <string name="action_sort_by">Sort by</string>
+    <string name="action_filter">Filter</string>
+    <string name="action_clear_filters">Clear filters</string>
+    <string name="action_clear_search">Clear search</string>
+    <string name="action_select_games">Select games</string>
+    <string name="action_add_to_collection">Add to collection</string>
+    <string name="action_new_collection">New collection</string>
+    <string name="action_move_up">Move up</string>
+    <string name="action_move_down">Move down</string>
+    <string name="action_open_in_store">Open in store</string>
+    <string name="action_open_link">Open link</string>
+    <string name="action_remove_tag">Remove the %1$s tag</string>
+
+    <!-- Library -->
+    <string name="library_search_placeholder">Search your library</string>
+    <string name="library_no_results">No results</string>
+    <string name="library_no_results_detail">No game matches \"%1$s\".</string>
+    <string name="library_game_count">%1$d games</string>
+    <string name="library_result_count">%1$d results</string>
+    <string name="library_visible_of_total">%1$d of %2$d games</string>
+    <string name="library_select_games">Select games</string>
+    <string name="library_selected_count">%1$d selected</string>
+    <string name="library_updated">Updated %1$s</string>
+    <string name="library_syncing">Fetching your library</string>
+    <string name="library_syncing_detail">We\'re asking Steam which games you own.</string>
+    <string name="library_empty">Your library is empty</string>
+    <string name="library_empty_detail">Sync with Steam to bring in the games you already own.</string>
+    <string name="library_empty_after_sync">Steam returned no games</string>
+    <string name="library_empty_after_sync_detail">Your library may be empty, or your Steam profile may be private. Steam responds the same way in both cases.</string>
+    <string name="notice_showing_saved_data">You\'re seeing your saved data.</string>
+    <string name="trophy_progress_percent">%1$d%%</string>
+    <string name="trophy_earned_of_total">%1$d / %2$d</string>
+
+    <!-- Filters -->
+    <string name="filters_title">Filter</string>
+    <string name="filters_result_count">%1$d games match</string>
+    <string name="filters_store">Store</string>
+    <string name="filters_status">Status</string>
+    <string name="filters_collection">Collection</string>
+    <string name="filters_tag">Tag</string>
+
+    <!-- Insights -->
+    <string name="insights_title">Your library in numbers</string>
+    <string name="insights_empty">Nothing to report yet</string>
+    <string name="insights_empty_detail">Sync your library and your numbers will show up here.</string>
+    <string name="insights_summary">Summary</string>
+    <string name="insights_total_games">Games</string>
+    <string name="insights_total_hours">Hours played</string>
+    <string name="insights_average_hours">Average per played game</string>
+    <string name="insights_unplayed">Never played</string>
+    <string name="insights_unplayed_value">%1$d (%2$d%%)</string>
+    <string name="insights_concentration">Where your time goes</string>
+    <string name="insights_top_game_share">The one you play most</string>
+    <string name="insights_top_five_share">Your top five</string>
+    <string name="insights_section_more">of %1$d</string>
+    <string name="insights_mark_backlog_criteria">Only the ones with 0 hours and no status you set yourself</string>
+    <plurals name="insights_half_the_time">
+        <item quantity="one">A single game takes up half your hours.</item>
+        <item quantity="other">%1$d games take up half your hours.</item>
+    </plurals>
+    <plurals name="insights_mark_backlog">
+        <item quantity="one">Mark %1$d game as backlog</item>
+        <item quantity="other">Mark %1$d games as backlog</item>
+    </plurals>
+    <plurals name="insights_marked_backlog">
+        <item quantity="one">%1$d game marked as backlog.</item>
+        <item quantity="other">%1$d games marked as backlog.</item>
+    </plurals>
+
+    <!-- Game detail -->
+    <string name="detail_not_found">This game is gone</string>
+    <string name="detail_playtime">Playtime</string>
+    <string name="detail_last_played">Last played</string>
+    <string name="detail_coming_soon">Coming soon</string>
+    <string name="detail_status">Status</string>
+    <string name="detail_stores">Stores</string>
+    <string name="detail_no_stores">You added this game by hand; it doesn\'t come from any store.</string>
+    <string name="detail_trophies">Trophies</string>
+    <string name="detail_collections">Collections</string>
+    <string name="detail_no_collections">You don\'t have any collections yet.</string>
+    <string name="detail_tags">Tags</string>
+    <string name="detail_tags_placeholder">Type a tag</string>
+    <string name="detail_tags_create">Create \"%1$s\"</string>
+    <string name="detail_notes">Notes</string>
+    <string name="detail_notes_placeholder">Whatever you want to remember about this game</string>
+    <string name="detail_notes_counter">%1$d / %2$d</string>
+
+    <!-- Collections -->
+    <string name="collections_empty">You don\'t have any collections yet</string>
+    <string name="collections_empty_detail">A collection groups games from different stores together.</string>
+    <string name="collection_empty">This collection is empty</string>
+    <string name="collection_empty_detail">Add games from their detail page, or select several in your library.</string>
+    <string name="collection_new">New collection</string>
+    <string name="collection_edit">Edit collection</string>
+    <string name="collection_name">Name</string>
+    <string name="collection_icon">Icon</string>
+    <string name="collection_color">Color</string>
+    <string name="collection_delete_title">Delete \"%1$s\"</string>
+    <string name="collection_delete_message">The games inside aren\'t deleted: only the grouping goes away.</string>
+    <plurals name="collection_game_count">
+        <item quantity="one">%1$d game</item>
+        <item quantity="other">%1$d games</item>
+    </plurals>
+    <plurals name="bulk_add_title">
+        <item quantity="one">Add %1$d game to a collection</item>
+        <item quantity="other">Add %1$d games to a collection</item>
+    </plurals>
+
+    <!-- Progress -->
+    <string name="progress_empty">No games in \"%1$s\"</string>
+    <string name="progress_empty_detail">You can change a game\'s status from its detail page.</string>
+
+    <!-- Wishlist -->
+    <string name="wishlist_empty">Your wishlist is empty</string>
+    <string name="wishlist_empty_detail">Sync with Steam, or add a game by hand.</string>
+    <string name="wishlist_empty_after_sync">Steam returned no games</string>
+    <string name="wishlist_empty_after_sync_detail">Your wishlist may be empty, or it may be private. Steam responds the same way in both cases, so nothing you already had was removed.</string>
+    <string name="wishlist_add_manual">Add by hand</string>
+    <string name="wishlist_add_manual_detail">For games that aren\'t on Steam, or if its wishlist stops responding.</string>
+    <string name="wishlist_game_name">Game name</string>
+    <string name="wishlist_delete_title">Remove \"%1$s\" from the list</string>
+    <string name="wishlist_no_price">No price</string>
+    <string name="wishlist_loading_prices">Looking up prices…</string>
+    <string name="wishlist_at_historical_low">%1$d at their lowest price ever</string>
+    <string name="wishlist_historical_low">All-time low</string>
+    <string name="wishlist_lowest_was">Lowest: %1$s</string>
+    <string name="wishlist_price_now">Now %1$s</string>
+    <string name="wishlist_price_discount">%1$d percent off</string>
+
+    <!-- Settings -->
+    <string name="settings_missing_keys">Configuration keys are missing</string>
+    <string name="settings_missing_keys_detail">Copy Config/Secrets.example.xcconfig to Config/Secrets.xcconfig and fill in the values. The instructions are in the README.</string>
+    <string name="settings_accounts">Accounts</string>
+    <string name="settings_sections">Sections</string>
+    <string name="settings_playstation">PlayStation Network</string>
+    <string name="settings_epic">Epic Games</string>
+    <string name="settings_connected">Connected</string>
+    <string name="settings_not_connected">Not connected</string>
+    <string name="settings_wishlist_detail">The games you want, with their deals.</string>
+    <string name="settings_about">GameShelf keeps your game library in one place, no matter which store the games came from.</string>
+
+    <!-- Connecting accounts -->
+    <string name="account_how_to">How to connect it</string>
+    <string name="account_reconnect_by">You\'ll need to reconnect before %1$s</string>
+    <string name="account_sync_result">%1$d new, %2$d updated, %3$d merged into games you already had</string>
+    <string name="psn_step_1">Sign in at playstation.com</string>
+    <string name="psn_step_2">In the same browser, open the code page and copy what appears between quotes</string>
+    <string name="psn_step_3">Paste the code below</string>
+    <string name="psn_token_lifetime">Both steps have to happen in the same browser: what they share is the session. The code lasts about two months, and the app renews access on its own in the meantime.</string>
+    <string name="psn_code_label">PlayStation code (NPSSO)</string>
+    <string name="epic_step_1">Sign in to Epic Games</string>
+    <string name="epic_step_2">In the same browser, open the code page and copy what follows \"authorizationCode\"</string>
+    <string name="epic_step_3">Paste the code below right away</string>
+    <string name="epic_warning">Heads up: Epic warns on its own page that this code grants full access to your account. GameShelf stores it encrypted and never sends it to any server, but don\'t paste it anywhere else. Codes expire within seconds.</string>
+    <string name="epic_code_label">Epic authorization code</string>
+</resources>

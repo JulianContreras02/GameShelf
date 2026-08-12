@@ -1,7 +1,16 @@
 # GameShelf
 
-App personal para iOS que organiza tu biblioteca de videojuegos en un solo lugar,
-sin importar de que tienda vienen.
+App personal que organiza tu biblioteca de videojuegos en un solo lugar, sin
+importar de que tienda vienen.
+
+Hay dos versiones, y hacen lo mismo:
+
+- **iOS** (SwiftUI + SwiftData), en la raiz de este repositorio. Es la original.
+- **Android** (Jetpack Compose + Room), en [`android/`](android/README.md).
+  Comparte con la de iOS el archivo de secretos y los fixtures de las pruebas.
+
+Todo lo que sigue en este README vale para las dos, salvo la seccion "Correr",
+que tiene su equivalente en el README de Android.
 
 ## Que hace
 

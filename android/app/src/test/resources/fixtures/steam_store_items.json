@@ -1,0 +1,284 @@
+{
+  "response": {
+    "store_items": [
+      {
+        "success": 1,
+        "visible": true,
+        "name": "Cuphead",
+        "store_url_path": "app/268910/Cuphead",
+        "appid": 268910,
+        "type": 0,
+        "assets": {
+          "asset_url_format": "steam/apps/268910/${FILENAME}?t=1709068852",
+          "main_capsule": "capsule_616x353.jpg",
+          "small_capsule": "capsule_231x87.jpg",
+          "header": "header.jpg",
+          "header_2x": "header.jpg",
+          "page_background": "page_bg_generated_v6b.jpg",
+          "hero_capsule": "hero_capsule.jpg",
+          "library_capsule": "library_600x900.jpg",
+          "library_capsule_2x": "library_600x900_2x.jpg",
+          "library_hero": "library_hero.jpg",
+          "community_icon": "c19f1bd916b6d171e94089d03112ec4e4e4da84e",
+          "page_background_path": "app/268910?t=1709068852",
+          "raw_page_background": "page_bg_raw.jpg"
+        },
+        "release": {
+          "steam_release_date": 1506693600,
+          "mac_release_date": 1540018800
+        }
+      },
+      {
+        "success": 1,
+        "visible": true,
+        "name": "Horizon Zero Dawn™ Complete Edition",
+        "store_url_path": "app/1151640/Horizon_Zero_Dawn_Complete_Edition",
+        "appid": 1151640,
+        "type": 0,
+        "assets": {
+          "asset_url_format": "steam/apps/1151640/${FILENAME}?t=1776465788",
+          "main_capsule": "capsule_616x353.jpg",
+          "small_capsule": "capsule_231x87.jpg",
+          "header": "header.jpg",
+          "page_background": "page_bg_generated_v6b.jpg",
+          "hero_capsule": "hero_capsule.jpg",
+          "library_capsule": "library_600x900.jpg",
+          "library_capsule_2x": "library_600x900_2x.jpg",
+          "library_hero": "library_hero.jpg",
+          "community_icon": "08a1b6df68bdc8c28c974b79325ed8c89417af48",
+          "page_background_path": "app/1151640?t=1776465788",
+          "raw_page_background": "page_bg_raw.jpg"
+        },
+        "release": {
+          "steam_release_date": 1596812220
+        }
+      },
+      {
+        "success": 1,
+        "visible": true,
+        "name": "Forza Horizon 5",
+        "store_url_path": "app/1551360/Forza_Horizon_5",
+        "appid": 1551360,
+        "type": 0,
+        "assets": {
+          "asset_url_format": "steam/apps/1551360/${FILENAME}?t=1746471508",
+          "main_capsule": "capsule_616x353.jpg",
+          "small_capsule": "capsule_231x87.jpg",
+          "header": "header.jpg",
+          "page_background": "page_bg_generated_v6b.jpg",
+          "hero_capsule": "hero_capsule.jpg",
+          "library_capsule": "library_600x900.jpg",
+          "library_capsule_2x": "library_600x900_2x.jpg",
+          "library_hero": "library_hero.jpg",
+          "library_hero_2x": "library_hero_2x.jpg",
+          "community_icon": "6c1d20c62c4613263548323052c62cece488876b",
+          "page_background_path": "app/1551360?t=1746471508",
+          "raw_page_background": "page_bg_raw.jpg"
+        },
+        "release": {
+          "steam_release_date": 1636433940
+        }
+      },
+      {
+        "success": 1,
+        "visible": true,
+        "name": "UNCHARTED™: Colección Legado de los Ladrones",
+        "store_url_path": "app/1659420/UNCHARTED_Coleccion_Legado_de_los_Ladrones",
+        "appid": 1659420,
+        "type": 0,
+        "assets": {
+          "asset_url_format": "steam/apps/1659420/${FILENAME}?t=1779309472",
+          "main_capsule": "capsule_616x353_spanish.jpg",
+          "small_capsule": "capsule_231x87_spanish.jpg",
+          "header": "header_spanish.jpg",
+          "page_background": "page_bg_generated_v6b.jpg",
+          "hero_capsule": "hero_capsule_spanish.jpg",
+          "library_capsule": "library_600x900_spanish.jpg",
+          "library_capsule_2x": "library_600x900_spanish_2x.jpg",
+          "library_hero": "library_hero_latam.jpg",
+          "library_hero_2x": "library_hero_2x.jpg",
+          "community_icon": "b566a403067d6abf75136a3c19f9ed0d2e4fb5b1",
+          "page_background_path": "app/1659420?t=1779309472",
+          "raw_page_background": "page_bg_raw.jpg"
+        },
+        "release": {
+          "steam_release_date": 1666192050
+        }
+      },
+      {
+        "success": 1,
+        "visible": true,
+        "name": "Black Myth: Wukong",
+        "store_url_path": "app/2358720/Black_Myth_Wukong",
+        "appid": 2358720,
+        "type": 0,
+        "assets": {
+          "asset_url_format": "steam/apps/2358720/${FILENAME}?t=1760601605",
+          "main_capsule": "f40ef565c380c617020e559b4b4b089edd93ec09/capsule_616x353.jpg",
+          "main_capsule_2x": "f40ef565c380c617020e559b4b4b089edd93ec09/capsule_616x353_2x.jpg",
+          "small_capsule": "b7f722ddd5e23503f598586aa3700dd4d827bb2d/capsule_231x87.jpg",
+          "small_capsule_2x": "b7f722ddd5e23503f598586aa3700dd4d827bb2d/capsule_231x87_2x.jpg",
+          "header": "header.jpg",
+          "header_2x": "header_2x.jpg",
+          "page_background": "page_bg_generated_v6b.jpg",
+          "hero_capsule": "5a7113f29f2aff48e6c666360a40a899b0814e2a/hero_capsule.jpg",
+          "hero_capsule_2x": "5a7113f29f2aff48e6c666360a40a899b0814e2a/hero_capsule_2x.jpg",
+          "library_capsule": "library_600x900.jpg",
+          "library_capsule_2x": "library_600x900_2x.jpg",
+          "library_hero": "library_hero.jpg",
+          "library_hero_2x": "library_hero_2x.jpg",
+          "community_icon": "764ad8ff458f7020d63a3f7f0abf6ad8882c05df",
+          "page_background_path": "app/2358720?t=1760601605",
+          "raw_page_background": "page_bg_raw.jpg"
+        },
+        "release": {
+          "steam_release_date": 1724119114
+        }
+      },
+      {
+        "success": 1,
+        "visible": true,
+        "name": "Horizon Forbidden West™ Complete Edition",
+        "store_url_path": "app/2420110/Horizon_Forbidden_West_Complete_Edition",
+        "appid": 2420110,
+        "type": 0,
+        "assets": {
+          "asset_url_format": "steam/apps/2420110/${FILENAME}?t=1776465869",
+          "main_capsule": "capsule_616x353.jpg",
+          "small_capsule": "capsule_231x87.jpg",
+          "header": "header.jpg",
+          "hero_capsule": "hero_capsule.jpg",
+          "library_capsule": "library_600x900.jpg",
+          "library_hero": "library_hero.jpg",
+          "community_icon": "b06de101e39474f3c763a9b9aac8df876d4e482e",
+          "page_background_path": "app/2420110?t=1776465869"
+        },
+        "release": {
+          "steam_release_date": 1711032960
+        }
+      },
+      {
+        "success": 1,
+        "visible": true,
+        "name": "PRAGMATA",
+        "store_url_path": "app/3357650/PRAGMATA",
+        "appid": 3357650,
+        "type": 0,
+        "assets": {
+          "asset_url_format": "steam/apps/3357650/${FILENAME}?t=1777351016",
+          "main_capsule": "341da3fa5338fad44ae87b2d14edfe6be80ff4c3/capsule_616x353.jpg",
+          "main_capsule_2x": "341da3fa5338fad44ae87b2d14edfe6be80ff4c3/capsule_616x353_2x.jpg",
+          "small_capsule": "3e7cf55cf72a980ac94cf45d4212e8f0cb566f7f/capsule_231x87.jpg",
+          "small_capsule_2x": "3e7cf55cf72a980ac94cf45d4212e8f0cb566f7f/capsule_231x87_2x.jpg",
+          "header": "e32e168b25ed68a0cf6264c220c07e96c2abfb56/header.jpg",
+          "header_2x": "e32e168b25ed68a0cf6264c220c07e96c2abfb56/header_2x.jpg",
+          "page_background": "5ed21dc307cb775de7c6143b2222b423e6258067/page_bg_v6.jpg",
+          "hero_capsule": "c92ce667b6f11de4d031e32a0449a1ce198724c3/hero_capsule.jpg",
+          "hero_capsule_2x": "c92ce667b6f11de4d031e32a0449a1ce198724c3/hero_capsule_2x.jpg",
+          "library_capsule": "2c65f388cb3ac6631c8a38ff1a59903263fc70e9/library_capsule.jpg",
+          "library_capsule_2x": "2c65f388cb3ac6631c8a38ff1a59903263fc70e9/library_capsule_2x.jpg",
+          "library_hero": "91c6fc49c0d73d54e798a7a11ad5f6625734a703/library_hero.jpg",
+          "library_hero_2x": "91c6fc49c0d73d54e798a7a11ad5f6625734a703/library_hero_2x.jpg",
+          "community_icon": "5d35e316d15347f1bf378e756930909676d19054",
+          "page_background_path": "app/3357650?t=1777351016",
+          "raw_page_background": "5ed21dc307cb775de7c6143b2222b423e6258067/page_bg_raw.jpg"
+        },
+        "release": {
+          "steam_release_date": 1776398400
+        }
+      },
+      {
+        "success": 1,
+        "visible": true,
+        "name": "Totally Secure Airport",
+        "store_url_path": "app/4348760/Totally_Secure_Airport",
+        "appid": 4348760,
+        "type": 0,
+        "assets": {
+          "asset_url_format": "steam/apps/4348760/${FILENAME}?t=1781167408",
+          "main_capsule": "869a6b838fc510a0472e049755e6737048b493a7/capsule_616x353.jpg",
+          "main_capsule_2x": "869a6b838fc510a0472e049755e6737048b493a7/capsule_616x353_2x.jpg",
+          "small_capsule": "c8c7b8fd8aa4caef7b91d8743e842de3a62c73b9/capsule_231x87.jpg",
+          "small_capsule_2x": "c8c7b8fd8aa4caef7b91d8743e842de3a62c73b9/capsule_231x87_2x.jpg",
+          "header": "927c8308024d2461a680ad687efba5d500cc00cc/header.jpg",
+          "header_2x": "927c8308024d2461a680ad687efba5d500cc00cc/header_2x.jpg",
+          "page_background": "62e4a21d1444b74a4413d92e63231f0b6e830e33/page_bg_v6.jpg",
+          "hero_capsule": "e491d08fb10d281c55859502d35bd100a3e0e314/hero_capsule.jpg",
+          "hero_capsule_2x": "e491d08fb10d281c55859502d35bd100a3e0e314/hero_capsule_2x.jpg",
+          "library_capsule": "d1e88708ead78d42a362ef9ef47a52a42323ee02/library_capsule.jpg",
+          "library_capsule_2x": "d1e88708ead78d42a362ef9ef47a52a42323ee02/library_capsule_2x.jpg",
+          "library_hero": "3adb69e38e1948b26dba82c89028ecff8d89347d/library_hero.jpg",
+          "library_hero_2x": "3adb69e38e1948b26dba82c89028ecff8d89347d/library_hero_2x.jpg",
+          "community_icon": "fe29781c3683952565c19a5100de4b4cc71d4eb4",
+          "page_background_path": "app/4348760?t=1781167408",
+          "raw_page_background": "62e4a21d1444b74a4413d92e63231f0b6e830e33/page_bg_raw.jpg"
+        },
+        "release": {
+          "is_coming_soon": true,
+          "custom_release_date_message": "Próximamente",
+          "coming_soon_display": "text_comingsoon"
+        }
+      },
+      {
+        "success": 1,
+        "visible": true,
+        "name": "Dear Passengers",
+        "store_url_path": "app/4534960/Dear_Passengers",
+        "appid": 4534960,
+        "type": 0,
+        "assets": {
+          "asset_url_format": "steam/apps/4534960/${FILENAME}?t=1784401335",
+          "main_capsule": "e62d98831a294ec338c312a2824d8d607c0d169e/capsule_616x353.jpg",
+          "main_capsule_2x": "e62d98831a294ec338c312a2824d8d607c0d169e/capsule_616x353_2x.jpg",
+          "small_capsule": "d7b0a9376fb4cab61548730f3e98d3ba1935bc9d/capsule_231x87.jpg",
+          "small_capsule_2x": "d7b0a9376fb4cab61548730f3e98d3ba1935bc9d/capsule_231x87_2x.jpg",
+          "header": "7ddef53346afe3e3d4d479dbed740cdb38cfe09a/header.jpg",
+          "header_2x": "7ddef53346afe3e3d4d479dbed740cdb38cfe09a/header_2x.jpg",
+          "hero_capsule": "cff8eccb87c1e28ba44c95e7eb70498d0c2eb6ab/hero_capsule.jpg",
+          "hero_capsule_2x": "cff8eccb87c1e28ba44c95e7eb70498d0c2eb6ab/hero_capsule_2x.jpg",
+          "library_capsule": "215c905ee667e229cfd21280a335f4f049333276/library_capsule.jpg",
+          "library_capsule_2x": "215c905ee667e229cfd21280a335f4f049333276/library_capsule_2x.jpg",
+          "library_hero": "33892752c23df9e48c162ab7f8db8ee72d35ba34/library_hero.jpg",
+          "library_hero_2x": "33892752c23df9e48c162ab7f8db8ee72d35ba34/library_hero_2x.jpg",
+          "community_icon": "0786905d45e5b2e7387631ebbe3eb2eb7ae16f40",
+          "page_background_path": "app/4534960?t=1784401335"
+        },
+        "release": {
+          "steam_release_date": 1798704000,
+          "is_coming_soon": true,
+          "coming_soon_display": "date_year"
+        }
+      },
+      {
+        "success": 1,
+        "visible": true,
+        "name": "BOMBANANA!",
+        "store_url_path": "app/4656000/BOMBANANA",
+        "appid": 4656000,
+        "type": 0,
+        "assets": {
+          "asset_url_format": "steam/apps/4656000/${FILENAME}?t=1786438747",
+          "main_capsule": "5c8c9fb42a56e6fd25f2877053158fd207ffb028/capsule_616x353.jpg",
+          "main_capsule_2x": "5c8c9fb42a56e6fd25f2877053158fd207ffb028/capsule_616x353_2x.jpg",
+          "small_capsule": "4b28cb7e3572e7ab0ffcd6a53030b1a719ff3fff/capsule_231x87.jpg",
+          "small_capsule_2x": "4b28cb7e3572e7ab0ffcd6a53030b1a719ff3fff/capsule_231x87_2x.jpg",
+          "header": "99c086faba625a8d3bc459bab444087d257ccbe1/header.jpg",
+          "header_2x": "99c086faba625a8d3bc459bab444087d257ccbe1/header_2x.jpg",
+          "hero_capsule": "641c5b2c093a8af5cca204609fc9018ebfbbcaef/hero_capsule.jpg",
+          "hero_capsule_2x": "641c5b2c093a8af5cca204609fc9018ebfbbcaef/hero_capsule_2x.jpg",
+          "library_capsule": "feaeb8f6d4b829252a902f0acd2d8fd385271871/library_capsule.jpg",
+          "library_capsule_2x": "feaeb8f6d4b829252a902f0acd2d8fd385271871/library_capsule_2x.jpg",
+          "library_hero": "6432b9026df018c6db23dd752352a79faf880ebc/library_hero.jpg",
+          "library_hero_2x": "6432b9026df018c6db23dd752352a79faf880ebc/library_hero_2x.jpg",
+          "community_icon": "baf7df3f7ee5a54c02a4ee4092b13c84f36e769f",
+          "page_background_path": "app/4656000?t=1786438747"
+        },
+        "release": {
+          "steam_release_date": 1788159600,
+          "is_coming_soon": true,
+          "coming_soon_display": "date_month"
+        }
+      }
+    ]
+  }
+}
