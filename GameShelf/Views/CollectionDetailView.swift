@@ -97,10 +97,7 @@ struct CollectionDetailView: View {
   }
 
   private var textoCantidad: String {
-    switch juegos.count {
-    case 1: "1 juego"
-    default: "\(juegos.count) juegos"
-    }
+    String(localized: "\(juegos.count) juegos", comment: "Cuantos juegos hay")
   }
 
   private func quitar(_ juego: Game) {

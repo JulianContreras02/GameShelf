@@ -32,28 +32,31 @@ enum NetworkError: LocalizedError, Equatable {
   var errorDescription: String? {
     switch self {
     case .noConnection:
-      "No hay conexion a internet."
+      String(localized: "No hay conexion a internet.", comment: "Error de red")
     case .invalidResponse:
-      "El servidor respondio de una forma inesperada."
+      String(localized: "El servidor respondio de una forma inesperada.", comment: "Error de red")
     case .httpError(let statusCode):
-      "El servidor respondio con el codigo \(statusCode)."
+      String(localized: "El servidor respondio con el codigo \(statusCode).", comment: "Error de red")
     case .decodingFailed:
-      "Los datos que llegaron no tienen el formato esperado."
+      String(localized: "Los datos que llegaron no tienen el formato esperado.", comment: "Error de red")
     case .invalidURL(let url):
-      "La direccion no es valida: \(url)"
+      String(localized: "La direccion no es valida: \(url)", comment: "Error de red")
     }
   }
 
   var recoverySuggestion: String? {
     switch self {
     case .noConnection:
-      "Revisa tu conexion y vuelve a intentar."
+      String(localized: "Revisa tu conexion y vuelve a intentar.", comment: "Como recuperarse de un error")
     case .httpError(let statusCode) where statusCode == 401 || statusCode == 403:
-      "Revisa que tu API key sea correcta y siga vigente."
+      String(localized: "Revisa que tu API key sea correcta y siga vigente.", comment: "Como recuperarse de un error")
     case .httpError(let statusCode) where statusCode == 429:
-      "Hiciste demasiadas peticiones seguidas. Espera un momento."
+      String(
+        localized: "Hiciste demasiadas peticiones seguidas. Espera un momento.",
+        comment: "Como recuperarse de un error"
+      )
     case .httpError(let statusCode) where (500...599).contains(statusCode):
-      "El problema es del servidor. Intenta mas tarde."
+      String(localized: "El problema es del servidor. Intenta mas tarde.", comment: "Como recuperarse de un error")
     case .invalidResponse, .httpError, .decodingFailed, .invalidURL:
       nil
     }

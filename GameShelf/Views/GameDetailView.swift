@@ -147,13 +147,13 @@ struct GameDetailView: View {
   private var datos: some View {
     VStack(spacing: 12) {
       FilaDato(
-        etiqueta: "Tiempo jugado",
+        etiqueta: String(localized: "Tiempo jugado", comment: "Dato de la ficha"),
         valor: PlaytimeFormatter.short(hours: game.playtimeHours),
         valorAccesible: PlaytimeFormatter.accessible(hours: game.playtimeHours)
       )
 
       FilaDato(
-        etiqueta: "Ultima vez",
+        etiqueta: String(localized: "Ultima vez", comment: "Dato de la ficha"),
         valor: LastPlayedFormatter.text(for: game.lastPlayedAt)
       )
 

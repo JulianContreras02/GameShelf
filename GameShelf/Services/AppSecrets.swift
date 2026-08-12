@@ -37,15 +37,18 @@ enum AppSecrets {
     let key: Key
 
     var errorDescription: String? {
-      "Falta la clave \(key.xcconfigName)."
+      String(localized: "Falta la clave \(key.xcconfigName).", comment: "Falta un secreto de configuracion")
     }
 
     var recoverySuggestion: String? {
-      """
-      Copia Config/Secrets.example.xcconfig a Config/Secrets.xcconfig y \
-      escribe el valor de \(key.xcconfigName). Las instrucciones estan en el \
-      README.
-      """
+      String(
+        localized: """
+          Copia Config/Secrets.example.xcconfig a Config/Secrets.xcconfig y \
+          escribe el valor de \(key.xcconfigName). Las instrucciones estan en el \
+          README.
+          """,
+        comment: "Como configurar un secreto que falta"
+      )
     }
   }
 

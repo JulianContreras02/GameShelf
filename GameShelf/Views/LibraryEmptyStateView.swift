@@ -65,7 +65,7 @@ struct LibraryEmptyStateView: View {
     }
   }
 
-  private func botonPrincipal(_ titulo: String) -> some View {
+  private func botonPrincipal(_ titulo: LocalizedStringKey) -> some View {
     Button(titulo, action: onSync)
       .buttonStyle(.borderedProminent)
   }

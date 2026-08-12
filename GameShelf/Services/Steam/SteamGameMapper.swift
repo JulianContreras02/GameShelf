@@ -16,7 +16,12 @@ enum SteamGameMapper {
   /// Pasa cuando se consulta sin `include_appinfo=1`. Es preferible mostrar el
   /// appID a dejar la fila en blanco.
   static func fallbackName(for appID: Int) -> String {
-    "Juego de Steam \(appID)"
+    // El appID va como texto y no como numero: con %lld el catalogo le mete
+    // separador de miles y salia "Juego de Steam 1.245.620".
+    String(
+      localized: "Juego de Steam \(String(appID))",
+      comment: "Nombre de respaldo cuando Steam no manda el titulo"
+    )
   }
 
   /// Crea un `Game` nuevo con su `StoreEntry` de Steam.

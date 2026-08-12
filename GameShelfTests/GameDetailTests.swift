@@ -107,22 +107,26 @@ struct LastPlayedFormatterTests {
   private let calendario = Calendar(identifier: .gregorian)
   private let ahora = Date(timeIntervalSince1970: 1_754_870_400)
 
+  /// Estas pruebas miran la logica de fechas, no la traduccion: se fija el
+  /// idioma para que no dependan de como este puesto el simulador.
+  private let enEspanol = IdiomaDePrueba.espanol
+
   private func hace(dias: Int) -> Date {
     ahora.addingTimeInterval(TimeInterval(-dias * 86_400))
   }
 
   @Test("Nunca jugado no muestra una fecha inventada")
   func nunca() {
-    #expect(LastPlayedFormatter.text(for: nil) == "Nunca")
+    #expect(LastPlayedFormatter.text(for: nil, bundle: enEspanol) == "Nunca")
   }
 
   @Test("Hoy y ayer se dicen con palabras")
   func hoyYAyer() {
     #expect(
-      LastPlayedFormatter.text(for: ahora, relativeTo: ahora, calendar: calendario) == "Hoy"
+      LastPlayedFormatter.text(for: ahora, relativeTo: ahora, calendar: calendario, bundle: enEspanol) == "Hoy"
     )
     #expect(
-      LastPlayedFormatter.text(for: hace(dias: 1), relativeTo: ahora, calendar: calendario)
+      LastPlayedFormatter.text(for: hace(dias: 1), relativeTo: ahora, calendar: calendario, bundle: enEspanol)
         == "Ayer"
     )
   }
@@ -130,11 +134,11 @@ struct LastPlayedFormatterTests {
   @Test("Hasta un mes se cuenta en dias")
   func enDias() {
     #expect(
-      LastPlayedFormatter.text(for: hace(dias: 5), relativeTo: ahora, calendar: calendario)
+      LastPlayedFormatter.text(for: hace(dias: 5), relativeTo: ahora, calendar: calendario, bundle: enEspanol)
         == "Hace 5 dias"
     )
     #expect(
-      LastPlayedFormatter.text(for: hace(dias: 30), relativeTo: ahora, calendar: calendario)
+      LastPlayedFormatter.text(for: hace(dias: 30), relativeTo: ahora, calendar: calendario, bundle: enEspanol)
         == "Hace 30 dias"
     )
   }
@@ -157,7 +161,7 @@ struct LastPlayedFormatterTests {
     // Puede pasar si el reloj del equipo esta desajustado
     let manana = ahora.addingTimeInterval(2 * 86_400)
 
-    let texto = LastPlayedFormatter.text(for: manana, relativeTo: ahora, calendar: calendario)
+    let texto = LastPlayedFormatter.text(for: manana, relativeTo: ahora, calendar: calendario, bundle: enEspanol)
 
     #expect(!texto.contains("-"))
     #expect(texto == "Hoy")

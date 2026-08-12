@@ -166,9 +166,10 @@
 				};
 			};
 			buildConfigurationList = 3F6DE2BB302AC155008429DB /* Build configuration list for PBXProject "GameShelf" */;
-			developmentRegion = en;
+			developmentRegion = es;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				es,
 				en,
 				Base,
 			);

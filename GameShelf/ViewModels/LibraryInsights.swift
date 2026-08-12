@@ -86,19 +86,23 @@ enum LibraryInsights {
 
     var title: String {
       switch self {
-      case .recentlyPlayed: "Jugados hace poco"
-      case .mostPlayed: "Los que mas juegas"
-      case .barelyTried: "Apenas probados"
-      case .neverPlayed: "Nunca jugados"
+      case .recentlyPlayed: String(localized: "Jugados hace poco", comment: "Juegos con partidas recientes")
+      case .mostPlayed: String(localized: "Los que mas juegas", comment: "Grupo automatico")
+      case .barelyTried: String(localized: "Apenas probados", comment: "Grupo automatico")
+      case .neverPlayed: String(localized: "Nunca jugados", comment: "Juegos que nunca se abrieron")
       }
     }
 
     var explanation: String {
       switch self {
-      case .recentlyPlayed: "Con partidas en las ultimas dos semanas"
-      case .mostPlayed: "Donde se te va la mayor parte del tiempo"
-      case .barelyTried: "Menos de una hora: los abriste y ahi quedaron"
-      case .neverPlayed: "Los tienes pero nunca los abriste"
+      case .recentlyPlayed:
+        String(localized: "Con partidas en las ultimas dos semanas", comment: "Que agrupa la seccion")
+      case .mostPlayed:
+        String(localized: "Donde se te va la mayor parte del tiempo", comment: "Que agrupa la seccion")
+      case .barelyTried:
+        String(localized: "Menos de una hora: los abriste y ahi quedaron", comment: "Que agrupa la seccion")
+      case .neverPlayed:
+        String(localized: "Los tienes pero nunca los abriste", comment: "Que agrupa la seccion")
       }
     }
 
@@ -227,47 +231,60 @@ enum LibraryInsights {
 
   // MARK: - Textos de la sugerencia
   //
-  // Viven aca y no dentro de la vista por dos razones: el singular en espanol
-  // cambia el articulo y el verbo, no solo la "s" final ("los 2 juegos ... no lo
-  // estan" contra "el juego ... no lo esta"), asi que conviene poder probarlo; y
-  // cuando se haga la traduccion (#67) todos los textos estan en un solo sitio.
+  // El singular no es solo quitar la "s": en espanol cambia el verbo ("se
+  // marcaron" contra "se marco") y en ingles cambia el sustantivo. Quien decide
+  // cual usar es el String Catalog, con las reglas de plural de cada idioma, no
+  // un `if` aca: hay idiomas con mas de dos formas y esa cuenta no la sabe el
+  // codigo.
+  //
+  // El parametro `bundle` permite pedir un idioma concreto en las pruebas, sin
+  // tener que cambiarle el idioma al simulador.
 
-  /// Titulo del boton que ofrece marcar los candidatos como pendientes.
-  static func backlogSuggestionTitle(count: Int) -> String {
-    count == 1
-      ? "Marcar 1 juego como pendiente"
-      : "Marcar \(count) juegos como pendientes"
-  }
-
-  /// Titulo del dialogo de confirmacion.
-  static func backlogConfirmationTitle(count: Int) -> String {
-    count == 1 ? "Marcar como pendiente" : "Marcar como pendientes"
+  /// Titulo de la sugerencia. Se usa en el boton y en el dialogo.
+  static func backlogSuggestionTitle(count: Int, bundle: Bundle = .main) -> String {
+    String(
+      localized: "Marcar \(count) juegos como pendientes",
+      bundle: bundle,
+      comment: "Boton que ofrece marcar varios juegos como pendientes de una vez"
+    )
   }
 
   /// Segunda linea del boton, con el criterio que se uso para elegirlos.
-  static func backlogSuggestionSubtitle(count: Int) -> String {
-    count == 1
-      ? "Tiene 0 horas y todavia no esta marcado"
-      : "Tienen 0 horas y todavia no estan marcados"
+  ///
+  /// No menciona la cantidad a proposito: describe la regla, no el resultado,
+  /// asi que sirve igual para uno que para treinta.
+  static func backlogSuggestionSubtitle(bundle: Bundle = .main) -> String {
+    String(
+      localized: "Solo los que tienen 0 horas y ningun estado puesto por ti",
+      bundle: bundle,
+      comment: "Criterio con el que se eligieron los juegos de la sugerencia"
+    )
   }
 
   /// Texto del boton que confirma la accion dentro del dialogo.
-  static func backlogConfirmationAction(count: Int) -> String {
-    count == 1 ? "Marcar 1 juego" : "Marcar \(count) juegos"
+  static func backlogConfirmationAction(count: Int, bundle: Bundle = .main) -> String {
+    String(
+      localized: "Marcar \(count) juegos",
+      bundle: bundle,
+      comment: "Boton que confirma el marcado en lote"
+    )
   }
 
   /// Explicacion de lo que va a pasar, en el dialogo de confirmacion.
-  static func backlogConfirmationMessage(count: Int) -> String {
-    let queCambia = count == 1
-      ? "Se marcara como pendiente el juego con 0 horas que todavia no lo esta."
-      : "Se marcaran como pendientes los \(count) juegos con 0 horas que todavia no lo estan."
-    return queCambia + " No se tocan los que ya clasificaste a mano."
+  static func backlogConfirmationMessage(count: Int, bundle: Bundle = .main) -> String {
+    String(
+      localized: "Se marcaran \(count) juegos como pendientes. No se tocan los que ya clasificaste a mano.",
+      bundle: bundle,
+      comment: "Aviso antes de marcar varios juegos como pendientes"
+    )
   }
 
   /// Confirmacion de lo que se cambio, ya con la accion hecha.
-  static func backlogResultMessage(count: Int) -> String {
-    count == 1
-      ? "Se marco 1 juego como pendiente."
-      : "Se marcaron \(count) juegos como pendientes."
+  static func backlogResultMessage(count: Int, bundle: Bundle = .main) -> String {
+    String(
+      localized: "Se marcaron \(count) juegos como pendientes.",
+      bundle: bundle,
+      comment: "Confirmacion despues de marcar varios juegos como pendientes"
+    )
   }
 }

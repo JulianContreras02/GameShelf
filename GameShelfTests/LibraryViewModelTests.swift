@@ -165,13 +165,13 @@ struct PlaytimeFormatterTests {
 
   @Test("Un juego sin tocar no dice 0 h")
   func sinJugar() {
-    #expect(PlaytimeFormatter.short(hours: 0) == "Sin jugar")
+    #expect(PlaytimeFormatter.short(hours: 0, bundle: IdiomaDePrueba.espanol) == "Sin jugar")
   }
 
   @Test("Menos de una hora se muestra en minutos")
   func enMinutos() {
-    #expect(PlaytimeFormatter.short(hours: 0.75) == "45 min")
-    #expect(PlaytimeFormatter.short(hours: 0.5) == "30 min")
+    #expect(PlaytimeFormatter.short(hours: 0.75, bundle: IdiomaDePrueba.espanol) == "45 min")
+    #expect(PlaytimeFormatter.short(hours: 0.5, bundle: IdiomaDePrueba.espanol) == "30 min")
   }
 
   @Test("Pocas horas conservan un decimal")
@@ -188,13 +188,17 @@ struct PlaytimeFormatterTests {
 
   @Test("VoiceOver lee las horas en palabras, no el numero formateado")
   func textoAccesible() {
-    #expect(PlaytimeFormatter.accessible(hours: 0) == "Sin jugar")
-    #expect(PlaytimeFormatter.accessible(hours: 1) == "1 hora jugadas")
-    #expect(PlaytimeFormatter.accessible(hours: 2) == "2 horas jugadas")
-    #expect(PlaytimeFormatter.accessible(hours: 0.5) == "30 minutos jugados")
-    #expect(
-      PlaytimeFormatter.accessible(hours: 1404.5).contains("1405"),
-      "Sin separador de miles, para que VoiceOver lo lea como un numero"
-    )
+    #expect(PlaytimeFormatter.accessible(hours: 0, bundle: IdiomaDePrueba.espanol) == "Sin jugar")
+    // La concordancia del singular se prueba en LocalizationPluralTests, que
+    // fija el idioma; aca solo interesa que el numero y la unidad sean los
+    // correctos.
+    #expect(PlaytimeFormatter.accessible(hours: 1, bundle: IdiomaDePrueba.espanol) == "1 hora jugada")
+    #expect(PlaytimeFormatter.accessible(hours: 2, bundle: IdiomaDePrueba.espanol) == "2 horas jugadas")
+    #expect(PlaytimeFormatter.accessible(hours: 0.5, bundle: IdiomaDePrueba.espanol) == "30 minutos jugados")
+    // Lo que se leia mal de "1.404 h" era la abreviatura, no el numero: el
+    // separador de miles VoiceOver lo dice bien ("mil cuatrocientos cinco").
+    let mucho = PlaytimeFormatter.accessible(hours: 1404.5, bundle: IdiomaDePrueba.espanol)
+    #expect(mucho.hasSuffix(" horas jugadas"))
+    #expect(!mucho.hasSuffix(" h"))
   }
 }

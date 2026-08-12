@@ -142,7 +142,7 @@ struct GameTagsEditor: View {
   }
 
   private func textoUso(_ etiqueta: GameTag) -> String {
-    etiqueta.gameCount == 1 ? "1 juego" : "\(etiqueta.gameCount) juegos"
+    String(localized: "\(etiqueta.gameCount) juegos", comment: "Cuantos juegos hay")
   }
 
   // MARK: - Acciones

@@ -146,20 +146,24 @@ struct CollectionsView: View {
   // MARK: - Textos
 
   private func textoCantidad(_ coleccion: GameCollection) -> String {
-    switch coleccion.gameCount {
-    case 0: "Vacia"
-    case 1: "1 juego"
-    default: "\(coleccion.gameCount) juegos"
+    // El caso vacio no es una forma de plural, es otro mensaje: por eso va
+    // aparte y no como variante de "%lld juegos".
+    guard coleccion.gameCount > 0 else {
+      return String(localized: "Vacia", comment: "Coleccion sin juegos")
     }
+    return String(localized: "\(coleccion.gameCount) juegos", comment: "Cuantos juegos hay")
   }
 
   private func mensajeDeBorrado(for coleccion: GameCollection) -> String {
-    coleccion.isEmpty
-      ? "Esta accion no se puede deshacer."
-      : """
+    let noSeDeshace = String(localized: "Esta accion no se puede deshacer.", comment: "Aviso al borrar")
+    guard !coleccion.isEmpty else { return noSeDeshace }
+    return String(
+      localized: """
         Los \(coleccion.gameCount) juegos que contiene seguiran en tu biblioteca: \
         solo se deshace la agrupacion. Esta accion no se puede deshacer.
-        """
+        """,
+      comment: "Aviso al borrar una coleccion que tiene juegos"
+    )
   }
 
   // MARK: - Acciones

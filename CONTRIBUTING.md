@@ -96,6 +96,43 @@ Reglas:
 - El `README.md` se actualiza cuando cambia la forma de instalar o correr
   el proyecto.
 
+## Textos e idiomas
+
+Los textos visibles viven en `GameShelf/Resources/Localizable.xcstrings`.
+El idioma base es espanol; el ingles es traduccion.
+
+Al agregar un texto nuevo:
+
+1. En una vista, un literal dentro de `Text`, `Button`, `Label` o
+   `.navigationTitle` se extrae solo: no hay que hacer nada especial.
+2. Fuera de una vista, o cuando el texto se guarda en una variable `String`
+   antes de mostrarlo, hay que envolverlo:
+   `String(localized: "Hola", comment: "Para que sirve")`.
+   Sin eso el texto **no** se traduce y no da error: simplemente sale en
+   espanol siempre.
+3. Si un parametro de una vista propia solo se usa como etiqueta, declaralo
+   `LocalizedStringKey` en vez de `String` y se extrae solo.
+4. Despues de compilar, actualiza el catalogo:
+
+   ```
+   ./scripts/sincronizar-traducciones.sh
+   ```
+
+5. Escribe la traduccion al ingles en el catalogo y comprueba que no quedaron
+   huecos:
+
+   ```
+   python3 scripts/verificar-traducciones.py
+   ```
+
+Los textos con numeros **no** se pluralizan con un `if` en Swift: se escribe
+una sola clave con el numero (`"\(n) juegos"`) y las formas singular y plural
+se ponen en el catalogo, que aplica las reglas de cada idioma.
+
+Un `%lld` en el catalogo se formatea con separador de miles. Para un
+identificador (un appID, por ejemplo) pasa el numero como texto —
+`\(String(appID))`— para que no salga "1.245.620".
+
 ## Orden de construccion del proyecto
 
 1. Conector de Steam (biblioteca + wishlist), solo lectura.

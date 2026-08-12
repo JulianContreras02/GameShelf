@@ -23,11 +23,11 @@ enum PlayStatus: String, Codable, CaseIterable, Sendable {
   /// Nombre para mostrar en pantalla.
   var displayName: String {
     switch self {
-    case .backlog: "Pendiente"
-    case .playing: "Jugando"
-    case .finished: "Terminado"
-    case .abandoned: "Abandonado"
-    case .wishlist: "Lista de deseos"
+    case .backlog: String(localized: "Pendiente", comment: "Estado de un juego")
+    case .playing: String(localized: "Jugando", comment: "Estado de un juego")
+    case .finished: String(localized: "Terminado", comment: "Estado de un juego")
+    case .abandoned: String(localized: "Abandonado", comment: "Estado de un juego")
+    case .wishlist: String(localized: "Lista de deseos", comment: "Estado de un juego")
     }
   }
 
@@ -52,11 +52,11 @@ enum PlayStatus: String, Codable, CaseIterable, Sendable {
   /// Frase corta que explica que significa el estado.
   var explanation: String {
     switch self {
-    case .backlog: "Lo tienes pero no lo has empezado"
-    case .playing: "Lo estas jugando ahora"
-    case .finished: "Lo terminaste"
-    case .abandoned: "Lo dejaste sin terminar"
-    case .wishlist: "Lo quieres pero todavia no lo tienes"
+    case .backlog: String(localized: "Lo tienes pero no lo has empezado", comment: "Que significa el estado")
+    case .playing: String(localized: "Lo estas jugando ahora", comment: "Que significa el estado")
+    case .finished: String(localized: "Lo terminaste", comment: "Que significa el estado")
+    case .abandoned: String(localized: "Lo dejaste sin terminar", comment: "Que significa el estado")
+    case .wishlist: String(localized: "Lo quieres pero todavia no lo tienes", comment: "Que significa el estado")
     }
   }
 
