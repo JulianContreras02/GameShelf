@@ -33,3 +33,11 @@ Pods/
 # Secretos - NUNCA se comitea una API key
 Secrets.xcconfig
 *.env
+
+# Android
+android/local.properties
+android/.gradle/
+android/build/
+android/app/build/
+android/.idea/
+*.iml

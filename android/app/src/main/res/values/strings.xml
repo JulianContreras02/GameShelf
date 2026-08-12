@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Idioma base de la app: espanol, igual que en la version de iOS.
+  La traduccion al ingles vive en values-en/strings.xml.
+-->
+<resources>
+    <string name="app_name">GameShelf</string>
+
+    <!-- Estados de un juego -->
+    <string name="status_backlog">Pendiente</string>
+    <string name="status_playing">Jugando</string>
+    <string name="status_finished">Terminado</string>
+    <string name="status_abandoned">Abandonado</string>
+    <string name="status_wishlist">Lista de deseos</string>
+
+    <!-- Que significa cada estado -->
+    <string name="status_backlog_explanation">Lo tienes pero no lo has empezado</string>
+    <string name="status_playing_explanation">Lo estas jugando ahora</string>
+    <string name="status_finished_explanation">Lo terminaste</string>
+    <string name="status_abandoned_explanation">Lo dejaste sin terminar</string>
+    <string name="status_wishlist_explanation">Lo quieres pero todavia no lo tienes</string>
+
+    <!-- Colores de una coleccion -->
+    <string name="color_blue">Azul</string>
+    <string name="color_green">Verde</string>
+    <string name="color_orange">Naranja</string>
+    <string name="color_pink">Rosa</string>
+    <string name="color_purple">Morado</string>
+    <string name="color_red">Rojo</string>
+    <string name="color_teal">Turquesa</string>
+    <string name="color_yellow">Amarillo</string>
+    <string name="color_gray">Gris</string>
+
+    <!-- Trofeos -->
+    <string name="trophy_bronze">Bronce</string>
+    <string name="trophy_silver">Plata</string>
+    <string name="trophy_gold">Oro</string>
+    <string name="trophy_platinum">Platino</string>
+    <string name="trophy_platinum_explanation">El platino se consigue al completar todos los demas trofeos del juego.</string>
+
+    <!-- Tiempo jugado -->
+    <string name="playtime_unplayed">Sin jugar</string>
+    <string name="playtime_minutes_short">%1$d min</string>
+    <string name="playtime_hours_short">%1$s h</string>
+    <plurals name="playtime_minutes_accessible">
+        <item quantity="one">%1$d minuto jugado</item>
+        <item quantity="other">%1$d minutos jugados</item>
+    </plurals>
+    <plurals name="playtime_hours_accessible">
+        <item quantity="one">%1$d hora jugada</item>
+        <item quantity="other">%1$d horas jugadas</item>
+    </plurals>
+
+    <!-- Ultima vez que se jugo -->
+    <string name="last_played_never">Nunca</string>
+    <string name="last_played_today">Hoy</string>
+    <string name="last_played_yesterday">Ayer</string>
+    <plurals name="last_played_days_ago">
+        <item quantity="one">Hace %1$d dia</item>
+        <item quantity="other">Hace %1$d dias</item>
+    </plurals>
+
+    <!-- Errores de red -->
+    <string name="error_no_connection">No hay conexion a internet.</string>
+    <string name="error_invalid_response">El servidor respondio de una forma inesperada.</string>
+    <string name="error_http">El servidor respondio con el codigo %1$d.</string>
+    <string name="error_decoding">Los datos que llegaron no tienen el formato esperado.</string>
+    <string name="error_invalid_url">La direccion no es valida: %1$s</string>
+
+    <!-- Como recuperarse -->
+    <string name="recovery_check_connection">Revisa tu conexion y vuelve a intentar.</string>
+    <string name="recovery_check_api_key">Revisa que tu API key sea correcta y siga vigente.</string>
+    <string name="recovery_too_many_requests">Hiciste demasiadas peticiones seguidas. Espera un momento.</string>
+    <string name="recovery_server_problem">El problema es del servidor. Intenta mas tarde.</string>
+    <string name="recovery_connect_from_settings">Conecta tu cuenta desde Ajustes.</string>
+
+    <!-- Secretos de configuracion -->
+    <string name="secret_missing">Falta la clave %1$s.</string>
+    <string name="secret_missing_recovery">Copia Config/Secrets.example.xcconfig a Config/Secrets.xcconfig y escribe el valor de %1$s. Las instrucciones estan en el README.</string>
+
+    <!-- PlayStation Network -->
+    <string name="psn_error_npsso_invalid">El codigo de PlayStation no sirve o ya caduco.</string>
+    <string name="psn_error_session_expired">La sesion de PlayStation caduco.</string>
+    <string name="psn_error_unexpected">PlayStation respondio algo inesperado: %1$s</string>
+    <string name="psn_error_not_connected">Todavia no has conectado tu cuenta de PlayStation.</string>
+    <string name="psn_recovery_copy_again">Vuelve a copiar el codigo desde el navegador y pegalo aca.</string>
+
+    <!-- Epic Games -->
+    <string name="epic_error_code_invalid">El codigo de Epic no sirve o ya se uso.</string>
+    <string name="epic_error_session_expired">La sesion de Epic caduco.</string>
+    <string name="epic_error_unexpected">Epic respondio algo inesperado: %1$s</string>
+    <string name="epic_error_not_connected">Todavia no has conectado tu cuenta de Epic.</string>
+    <string name="epic_recovery_code_expires_fast">Los codigos caducan enseguida. Genera uno nuevo y pegalo sin demorarte.</string>
+    <string name="epic_recovery_generate_again">Vuelve a generar el codigo desde el navegador y pegalo aca.</string>
+
+    <!-- Nombre de respaldo cuando una tienda no manda el titulo -->
+    <string name="steam_fallback_name">Juego de Steam %1$s</string>
+</resources>
