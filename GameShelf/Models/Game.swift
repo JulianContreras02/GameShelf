@@ -129,6 +129,20 @@ final class Game {
     storeEntries.compactMap(\.trophyProgress).max()
   }
 
+  /// Desglose de trofeos, si alguna tienda lo lleva.
+  ///
+  /// Se toma el de la entrada con mas progreso: si un juego esta en PS4 y en
+  /// PS5 con dos listas, la que interesa es la mas avanzada, que es la misma
+  /// de la que sale `trophyProgress`.
+  var trophyBreakdown: (earned: TrophyCounts, defined: TrophyCounts)? {
+    let conTrofeos = storeEntries
+      .filter { $0.definedTrophies?.isEmpty == false }
+      .max { ($0.trophyProgress ?? 0) < ($1.trophyProgress ?? 0) }
+
+    guard let entrada = conTrofeos, let definidos = entrada.definedTrophies else { return nil }
+    return (entrada.earnedTrophies ?? TrophyCounts(), definidos)
+  }
+
   /// El appid de Steam, si el juego viene de ahi.
   ///
   /// Hace falta para consultar precios: IsThereAnyDeal identifica los juegos

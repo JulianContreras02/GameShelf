@@ -24,6 +24,12 @@ struct PSNGame: Sendable, Equatable {
 
   /// Porcentaje de trofeos, de 0 a 100. `nil` si el juego no tiene.
   let trophyProgress: Int?
+
+  /// Cuantos trofeos se consiguieron, por tipo.
+  var earnedTrophies: TrophyCounts?
+
+  /// Cuantos tiene el juego en total, por tipo.
+  var definedTrophies: TrophyCounts?
 }
 
 /// Trae la biblioteca de PlayStation del usuario.
@@ -86,7 +92,9 @@ struct PSNLibraryService: PSNLibraryServicing {
         playCount: titulo.playCount,
         lastPlayedAt: titulo.lastPlayedAt,
         firstPlayedAt: titulo.firstPlayedAt,
-        trophyProgress: trofeos[titulo.titleId]?.progress
+        trophyProgress: trofeos[titulo.titleId]?.progress,
+        earnedTrophies: trofeos[titulo.titleId]?.earnedTrophies?.counts,
+        definedTrophies: trofeos[titulo.titleId]?.definedTrophies?.counts
       )
     }
   }

@@ -11,6 +11,7 @@ import SwiftUI
 /// Solo muestra: no llama a servicios ni sincroniza. Las secciones de estado,
 /// colecciones y notas quedan reservadas para los issues #16, #15 y #20.
 struct GameDetailView: View {
+  @State private var mostrandoTrofeos = false
   @Environment(\.modelContext) private var modelContext
 
   let game: Game
@@ -160,10 +161,50 @@ struct GameDetailView: View {
       // Solo PlayStation lleva la cuenta de trofeos, asi que este dato aparece
       // unicamente en los juegos que vienen de ahi.
       if let trofeos = game.trophyProgress {
-        FilaDato(
-          etiqueta: String(localized: "Trofeos", comment: "Dato de la ficha"),
-          valor: trofeos.formatted(.percent.scale(1))
-        )
+        if let desglose = game.trophyBreakdown {
+          // Con desglose el porcentaje se puede tocar: el numero dice cuanto
+          // falta, y el desglose dice de que.
+          Button {
+            mostrandoTrofeos = true
+          } label: {
+            HStack(alignment: .firstTextBaseline) {
+              Text("Trofeos")
+                .foregroundStyle(.secondary)
+              Spacer(minLength: 12)
+              Text(trofeos.formatted(.percent.scale(1)))
+              Image(systemName: "chevron.right")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.tertiary)
+            }
+          }
+          .buttonStyle(.plain)
+          // Sin esto solo responde al tocar el texto, y la fila parece
+          // pulsable en todo su ancho: tocar el hueco del medio no hacia nada.
+          .contentShape(Rectangle())
+          .accessibilityElement(children: .combine)
+          .accessibilityLabel(
+            String(
+              localized: "Trofeos: \(trofeos) %. Toca para ver el desglose por tipo.",
+              comment: "Fila de trofeos, para VoiceOver"
+            )
+          )
+          .accessibilityAddTraits(.isButton)
+          .sheet(isPresented: $mostrandoTrofeos) {
+            TrophyBreakdownView(
+              gameName: game.name,
+              earned: desglose.earned,
+              defined: desglose.defined,
+              progress: trofeos
+            )
+          }
+        } else {
+          // Sin desglose guardado (por ejemplo antes de re-sincronizar) se
+          // muestra solo el porcentaje, sin prometer algo que no hay.
+          FilaDato(
+            etiqueta: String(localized: "Trofeos", comment: "Dato de la ficha"),
+            valor: trofeos.formatted(.percent.scale(1))
+          )
+        }
       }
 
       if game.storeEntries.count > 1 {

@@ -146,4 +146,14 @@ struct PSNTrophyCountsDTO: Decodable, Sendable {
   var total: Int {
     (bronze ?? 0) + (silver ?? 0) + (gold ?? 0) + (platinum ?? 0)
   }
+
+  /// El mismo dato como valor de dominio.
+  var counts: TrophyCounts {
+    TrophyCounts(
+      bronze: bronze ?? 0,
+      silver: silver ?? 0,
+      gold: gold ?? 0,
+      platinum: platinum ?? 0
+    )
+  }
 }
