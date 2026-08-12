@@ -224,22 +224,23 @@ struct LibraryView: View {
 
   private var textoEncabezado: String {
     if modoSeleccion.isEditing {
-      switch seleccionados.count {
-      case 0: return "Selecciona juegos"
-      case 1: return "1 seleccionado"
-      default: return "\(seleccionados.count) seleccionados"
+      guard !seleccionados.isEmpty else {
+        return String(localized: "Selecciona juegos", comment: "Encabezado cuando no hay nada seleccionado")
       }
+      return String(localized: "\(seleccionados.count) seleccionados", comment: "Cuantos juegos seleccionados")
     }
 
     // Con la lista recortada hay que decir cuantos se ven Y cuantos hay, o
     // parece que faltan juegos.
-    guard consulta.isNarrowing else { return "\(games.count) juegos" }
+    guard consulta.isNarrowing else {
+      return String(localized: "\(games.count) juegos", comment: "Cuantos juegos hay")
+    }
 
     let visibles = juegosVisibles.count
     if buscando {
-      return visibles == 1 ? "1 resultado" : "\(visibles) resultados"
+      return String(localized: "\(visibles) resultados", comment: "Resultados de una busqueda")
     }
-    return "\(visibles) de \(games.count) juegos"
+    return String(localized: "\(visibles) de \(games.count) juegos", comment: "Cuantos se ven de cuantos hay")
   }
 
   private func avisoDeFallo(_ mensaje: String) -> some View {
@@ -271,7 +272,8 @@ struct LibraryView: View {
 
   private var textoUltimaSincronizacion: String? {
     guard let fecha = viewModel.lastSyncedAt else { return nil }
-    return "Actualizado \(LastPlayedFormatter.text(for: fecha).lowercased())"
+    let cuando = LastPlayedFormatter.text(for: fecha).lowercased()
+    return String(localized: "Actualizado \(cuando)", comment: "Cuando se sincronizo por ultima vez")
   }
 
 }

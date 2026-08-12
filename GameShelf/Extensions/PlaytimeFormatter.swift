@@ -18,16 +18,21 @@ enum PlaytimeFormatter {
   /// - Menos de 1 hora: "45 min"
   /// - Menos de 10 horas: "1,5 h"
   /// - Mas: "1.404 h", redondeado y con separador de miles
-  static func short(hours: Double, locale: Locale = .current) -> String {
-    guard hours > 0 else { return "Sin jugar" }
+  static func short(hours: Double, locale: Locale = .current, bundle: Bundle = .main) -> String {
+    let sinJugar = String(localized: "Sin jugar", bundle: bundle, comment: "Un juego con 0 horas")
+    guard hours > 0 else { return sinJugar }
 
     let minutos = hours * 60
     if minutos < 1 {
-      return "Sin jugar"
+      return sinJugar
     }
 
     if hours < 1 {
-      return "\(Int(minutos.rounded())) min"
+      return String(
+        localized: "\(Int(minutos.rounded())) min",
+        bundle: bundle,
+        comment: "Tiempo jugado, abreviado en minutos"
+      )
     }
 
     let formatter = NumberFormatter()
@@ -46,21 +51,35 @@ enum PlaytimeFormatter {
     }
 
     let numero = formatter.string(from: NSNumber(value: hours)) ?? "\(Int(hours))"
-    return "\(numero) h"
+    return String(localized: "\(numero) h", bundle: bundle, comment: "Tiempo jugado, abreviado en horas")
   }
 
   /// Texto para leer en voz alta con VoiceOver.
   ///
-  /// "1.404 h" se lee mal; esto dice "1404 horas jugadas".
-  static func accessible(hours: Double) -> String {
-    guard hours > 0 else { return "Sin jugar" }
+  /// Lo que se lee mal de "1.404 h" es la abreviatura, no el numero: VoiceOver
+  /// dice "hache". Esto dice "1.404 horas jugadas", que se lee entero.
+  ///
+  /// El separador de miles se deja: quitarlo obligaria a pasar el numero como
+  /// texto, y entonces el catalogo ya no podria elegir singular o plural.
+  static func accessible(hours: Double, bundle: Bundle = .main) -> String {
+    guard hours > 0 else {
+      return String(localized: "Sin jugar", bundle: bundle, comment: "Un juego con 0 horas")
+    }
 
     let minutos = Int((hours * 60).rounded())
     if minutos < 60 {
-      return "\(minutos) \(minutos == 1 ? "minuto" : "minutos") jugados"
+      return String(
+        localized: "\(minutos) minutos jugados",
+        bundle: bundle,
+        comment: "Tiempo jugado, para VoiceOver"
+      )
     }
 
     let horasEnteras = Int(hours.rounded())
-    return "\(horasEnteras) \(horasEnteras == 1 ? "hora" : "horas") jugadas"
+    return String(
+      localized: "\(horasEnteras) horas jugadas",
+      bundle: bundle,
+      comment: "Tiempo jugado, para VoiceOver"
+    )
   }
 }

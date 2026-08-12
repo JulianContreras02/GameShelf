@@ -189,10 +189,22 @@ struct BulkAddToCollectionView: View {
   /// numero final sea menor si algunos ya estaban.
   private func textoNuevos(en coleccion: GameCollection) -> String {
     let nuevos = juegos.filter { !coleccion.contains($0) }.count
+    // Las dos mitades se traducen por separado para que cada una elija su
+    // singular: juntarlas en una sola cadena obligaria a pluralizar por dos
+    // numeros a la vez.
+    let seAgregan = String(localized: "Se agregan \(nuevos)", comment: "Cuantos juegos se van a agregar")
+
     switch nuevos {
-    case 0: return "Ya estan todos aqui"
-    case juegos.count: return "Se agregan \(nuevos)"
-    default: return "Se agregan \(nuevos), \(juegos.count - nuevos) ya estaban"
+    case 0:
+      return String(localized: "Ya estan todos aqui", comment: "Todos los juegos ya estaban en la coleccion")
+    case juegos.count:
+      return seAgregan
+    default:
+      let repetidos = String(
+        localized: "\(juegos.count - nuevos) ya estaban",
+        comment: "Cuantos juegos ya estaban en la coleccion"
+      )
+      return "\(seAgregan), \(repetidos)"
     }
   }
 

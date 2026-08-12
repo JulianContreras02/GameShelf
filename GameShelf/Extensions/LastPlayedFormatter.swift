@@ -22,9 +22,12 @@ enum LastPlayedFormatter {
     for date: Date?,
     relativeTo referencia: Date = Date(),
     calendar: Calendar = .current,
-    locale: Locale = .current
+    locale: Locale = .current,
+    bundle: Bundle = .main
   ) -> String {
-    guard let date else { return "Nunca" }
+    guard let date else {
+      return String(localized: "Nunca", bundle: bundle, comment: "Nunca se ha jugado")
+    }
 
     // Se comparan dias de calendario contra `referencia`, no contra la fecha
     // del sistema: asi la funcion es predecible y se puede probar. Usar
@@ -37,11 +40,11 @@ enum LastPlayedFormatter {
 
     // Fechas futuras: puede pasar si el reloj del equipo esta desajustado.
     // Mejor decir "Hoy" que "hace -2 dias".
-    if dias <= 0 { return "Hoy" }
-    if dias == 1 { return "Ayer" }
+    if dias <= 0 { return String(localized: "Hoy", bundle: bundle, comment: "Ultima vez que se jugo") }
+    if dias == 1 { return String(localized: "Ayer", bundle: bundle, comment: "Ultima vez que se jugo") }
 
     if dias <= 30 {
-      return "Hace \(dias) dias"
+      return String(localized: "Hace \(dias) dias", bundle: bundle, comment: "Ultima vez que se jugo")
     }
 
     let formatter = DateFormatter()

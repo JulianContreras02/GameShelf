@@ -21,12 +21,12 @@ enum GameSortOrder: String, CaseIterable, Codable, Sendable {
 
   var displayName: String {
     switch self {
-    case .nameAscending: "Nombre (A-Z)"
-    case .playtimeDescending: "Mas jugados"
-    case .playtimeAscending: "Menos jugados"
-    case .lastPlayedDescending: "Jugados hace poco"
-    case .releaseDateDescending: "Mas recientes"
-    case .recentlyAdded: "Agregados hace poco"
+    case .nameAscending: String(localized: "Nombre (A-Z)", comment: "Criterio de orden")
+    case .playtimeDescending: String(localized: "Mas jugados", comment: "Criterio de orden")
+    case .playtimeAscending: String(localized: "Menos jugados", comment: "Criterio de orden")
+    case .lastPlayedDescending: String(localized: "Jugados hace poco", comment: "Juegos con partidas recientes")
+    case .releaseDateDescending: String(localized: "Mas recientes", comment: "Criterio de orden")
+    case .recentlyAdded: String(localized: "Agregados hace poco", comment: "Criterio de orden")
     }
   }
 
@@ -50,7 +50,10 @@ enum GameSortOrder: String, CaseIterable, Codable, Sendable {
   var unavailableNote: String? {
     switch self {
     case .releaseDateDescending:
-      "Steam no manda la fecha de lanzamiento, asi que este orden todavia no cambia nada."
+      String(
+        localized: "Steam no manda la fecha de lanzamiento, asi que este orden todavia no cambia nada.",
+        comment: "Aviso de que un orden no puede funcionar todavia"
+      )
     default:
       nil
     }

@@ -112,8 +112,8 @@ struct GameNotesSection: View {
 // MARK: - Piezas comunes
 
 private struct CabeceraDeSeccion: View {
-  let titulo: String
-  let accion: String
+  let titulo: LocalizedStringKey
+  let accion: LocalizedStringKey
   let alTocar: () -> Void
 
   var body: some View {
@@ -128,7 +128,7 @@ private struct CabeceraDeSeccion: View {
 }
 
 private struct BotonVacio: View {
-  let titulo: String
+  let titulo: LocalizedStringKey
   let icono: String
   let alTocar: () -> Void
 

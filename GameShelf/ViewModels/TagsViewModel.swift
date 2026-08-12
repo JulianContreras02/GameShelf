@@ -21,9 +21,12 @@ final class TagsViewModel {
     var errorDescription: String? {
       switch self {
       case .emptyName:
-        "La etiqueta no puede estar vacia."
+        String(localized: "La etiqueta no puede estar vacia.", comment: "Error al crear una etiqueta")
       case .tooLong(let max):
-        "La etiqueta no puede pasar de \(max) caracteres."
+        String(
+          localized: "La etiqueta no puede pasar de \(max) caracteres.",
+          comment: "Error al crear una etiqueta demasiado larga"
+        )
       }
     }
   }

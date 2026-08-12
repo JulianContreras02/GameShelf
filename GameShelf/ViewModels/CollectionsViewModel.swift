@@ -24,11 +24,17 @@ final class CollectionsViewModel {
     var errorDescription: String? {
       switch self {
       case .emptyName:
-        "El nombre no puede estar vacio."
+        String(localized: "El nombre no puede estar vacio.", comment: "Error al nombrar una coleccion")
       case .duplicateName(let nombre):
-        "Ya tienes una coleccion llamada \"\(nombre)\"."
+        String(
+          localized: "Ya tienes una coleccion llamada \"\(nombre)\".",
+          comment: "Error: ya existe una coleccion con ese nombre"
+        )
       case .tooLong(let max):
-        "El nombre no puede pasar de \(max) caracteres."
+        String(
+          localized: "El nombre no puede pasar de \(max) caracteres.",
+          comment: "Error: nombre de coleccion demasiado largo"
+        )
       }
     }
   }

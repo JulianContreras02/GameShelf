@@ -141,7 +141,7 @@ struct StatusGamesView: View {
           }
         }
       } header: {
-        Text(juegos.count == 1 ? "1 juego" : "\(juegos.count) juegos")
+        Text("\(juegos.count) juegos")
       } footer: {
         Text("Manten pulsado un juego para cambiarle el estado.")
       }

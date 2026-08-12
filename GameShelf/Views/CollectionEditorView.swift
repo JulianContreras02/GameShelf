@@ -129,7 +129,9 @@ struct CollectionEditorView: View {
 
   private var vistaPrevia: some View {
     Label {
-      Text(nombre.isEmpty ? "Nombre de la coleccion" : nombre)
+      Text(nombre.isEmpty
+        ? String(localized: "Nombre de la coleccion", comment: "Marcador en la vista previa")
+        : nombre)
         .foregroundStyle(nombre.isEmpty ? .secondary : .primary)
     } icon: {
       Image(systemName: simbolo)

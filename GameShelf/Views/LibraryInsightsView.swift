@@ -50,7 +50,7 @@ struct LibraryInsightsView: View {
     .navigationTitle("Analisis")
     .navigationBarTitleDisplayMode(.inline)
     .confirmationDialog(
-      LibraryInsights.backlogConfirmationTitle(count: candidatos.count),
+      LibraryInsights.backlogSuggestionTitle(count: candidatos.count),
       isPresented: $confirmandoBacklog,
       titleVisibility: .visible
     ) {
@@ -79,20 +79,20 @@ struct LibraryInsightsView: View {
   private var seccionResumen: some View {
     Section {
       FilaDeDato(
-        etiqueta: "Juegos",
+        etiqueta: String(localized: "Juegos", comment: "Dato del resumen"),
         valor: "\(resumen.totalGames)"
       )
       FilaDeDato(
-        etiqueta: "Tiempo total",
+        etiqueta: String(localized: "Tiempo total", comment: "Dato del resumen"),
         valor: PlaytimeFormatter.short(hours: resumen.totalHours),
         valorAccesible: PlaytimeFormatter.accessible(hours: resumen.totalHours)
       )
       FilaDeDato(
-        etiqueta: "Nunca jugados",
+        etiqueta: String(localized: "Nunca jugados", comment: "Juegos que nunca se abrieron"),
         valor: "\(resumen.unplayedCount) · \(porcentaje(resumen.unplayedFraction))"
       )
       FilaDeDato(
-        etiqueta: "Promedio por juego jugado",
+        etiqueta: String(localized: "Promedio por juego jugado", comment: "Dato del resumen"),
         valor: PlaytimeFormatter.short(hours: resumen.averageHoursPerPlayedGame)
       )
     } header: {
@@ -111,18 +111,19 @@ struct LibraryInsightsView: View {
     if reparto.gamesForHalfTheTime > 0 {
       Section("Como repartes tu tiempo") {
         FilaDeDato(
-          etiqueta: "La mitad de tus horas",
-          valor: reparto.gamesForHalfTheTime == 1
-            ? "en 1 juego"
-            : "en \(reparto.gamesForHalfTheTime) juegos"
+          etiqueta: String(localized: "La mitad de tus horas", comment: "Dato de la distribucion"),
+          valor: String(
+            localized: "en \(reparto.gamesForHalfTheTime) juegos",
+            comment: "En cuantos juegos se concentra la mitad del tiempo"
+          )
         )
         FilaDeDato(
-          etiqueta: "El que mas juegas",
-          valor: porcentaje(reparto.topGameShare) + " del total"
+          etiqueta: String(localized: "El que mas juegas", comment: "Dato de la distribucion"),
+          valor: delTotal(reparto.topGameShare)
         )
         FilaDeDato(
-          etiqueta: "Tus cinco favoritos",
-          valor: porcentaje(reparto.topFiveShare) + " del total"
+          etiqueta: String(localized: "Tus cinco favoritos", comment: "Dato de la distribucion"),
+          valor: delTotal(reparto.topFiveShare)
         )
       }
     }
@@ -138,7 +139,7 @@ struct LibraryInsightsView: View {
         Label {
           VStack(alignment: .leading, spacing: 2) {
             Text(LibraryInsights.backlogSuggestionTitle(count: candidatos.count))
-            Text(LibraryInsights.backlogSuggestionSubtitle(count: candidatos.count))
+            Text(LibraryInsights.backlogSuggestionSubtitle())
               .font(.caption)
               .foregroundStyle(.secondary)
           }
@@ -182,6 +183,11 @@ struct LibraryInsightsView: View {
   }
 
   // MARK: - Apoyo
+
+  /// "51 % del total", con el porcentaje ya formateado segun el idioma.
+  private func delTotal(_ fraccion: Double) -> String {
+    String(localized: "\(porcentaje(fraccion)) del total", comment: "Que parte del tiempo se lleva")
+  }
 
   private func porcentaje(_ fraccion: Double) -> String {
     fraccion.formatted(.percent.precision(.fractionLength(0)))
