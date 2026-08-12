@@ -40,8 +40,25 @@ struct PSNAuthService: PSNAuthenticating {
   static let authorizeURL = URL(string: "https://ca.account.sony.com/api/authz/v3/oauth/authorize")!
   static let tokenURL = URL(string: "https://ca.account.sony.com/api/authz/v3/oauth/token")!
 
-  /// Donde el usuario ve su NPSSO. Se muestra en la pantalla de conexion.
+  /// Donde el usuario ve su NPSSO.
+  ///
+  /// **Solo responde con el codigo si ya hay sesion iniciada en ese
+  /// navegador.** Sin sesion devuelve `{"error":"invalid_grant",
+  /// "error_description":"Invalid login","error_code":20}`, que despista
+  /// bastante: parece que la direccion esta mal cuando lo que falta es
+  /// iniciar sesion. Por eso la pantalla ofrece los dos enlaces en orden.
   static let npssoURL = URL(string: "https://ca.account.sony.com/api/v1/ssocookie")!
+
+  /// Donde iniciar sesion, que es el paso previo.
+  ///
+  /// Es la pagina normal de PlayStation, con su boton de "Iniciar sesion". No
+  /// se usa la pantalla de login suelta
+  /// (`my.account.sony.com/sonyacct/signin/`) porque sin los parametros de
+  /// OAuth que Sony le pasa por dentro se queda en "Algo salio mal".
+  ///
+  /// Los dos pasos tienen que hacerse en el **mismo navegador**: lo que
+  /// comparten es la sesion.
+  static let signInURL = URL(string: "https://www.playstation.com/")!
 
   private let transport: PSNAuthTransporting
   private let ahora: @Sendable () -> Date

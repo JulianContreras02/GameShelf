@@ -100,6 +100,36 @@ struct PSNRedirectTests {
   }
 }
 
+@Suite("PSN: las direcciones que ve el usuario")
+struct PSNUserFacingURLTests {
+
+  // Estas dos se equivocaron dos veces seguidas antes de quedar bien, y el
+  // fallo no lo detecta ninguna otra prueba: la app compila igual y solo se ve
+  // al abrirlas en un navegador. Por eso se fijan aca.
+
+  @Test("El paso 1 lleva a la pagina normal de PlayStation")
+  func paginaDeInicioDeSesion() {
+    // No sirve la pantalla de login suelta de Sony
+    // (my.account.sony.com/sonyacct/signin/): sin los parametros de OAuth que
+    // ella espera, se queda en "Algo salio mal".
+    #expect(PSNAuthService.signInURL.absoluteString == "https://www.playstation.com/")
+    #expect(!PSNAuthService.signInURL.absoluteString.contains("sonyacct"))
+  }
+
+  @Test("El paso 2 lleva al endpoint del codigo")
+  func paginaDelCodigo() {
+    // Devuelve {"npsso":"..."} solo si ya hay sesion en el mismo navegador; sin
+    // ella responde {"error":"invalid_grant","error_code":20}.
+    #expect(PSNAuthService.npssoURL.absoluteString == "https://ca.account.sony.com/api/v1/ssocookie")
+  }
+
+  @Test("Las dos son https")
+  func ambasSeguras() {
+    #expect(PSNAuthService.signInURL.scheme == "https")
+    #expect(PSNAuthService.npssoURL.scheme == "https")
+  }
+}
+
 @Suite("PSN: iniciar sesion")
 struct PSNSignInTests {
 

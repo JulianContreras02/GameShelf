@@ -545,6 +545,26 @@
         }
       }
     },
+    "1. Abrir PlayStation e iniciar sesion": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1. Open PlayStation and sign in"
+          }
+        }
+      }
+    },
+    "2. Abrir la pagina del codigo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2. Open the code page"
+          }
+        }
+      }
+    },
     "Abandonado": {
       "comment": "Estado de un juego",
       "localizations": {
@@ -556,12 +576,12 @@
         }
       }
     },
-    "Abre la direccion del codigo. Veras un texto corto entre comillas.": {
+    "Abre PlayStation y toca \"Iniciar sesion\". Este paso no se puede saltar.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open the code page. You will see a short piece of text in quotes."
+            "value": "Open PlayStation and tap \"Sign In\". This step cannot be skipped."
           }
         }
       }
@@ -572,16 +592,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Opens the game page in your browser"
-          }
-        }
-      }
-    },
-    "Abrir la pagina del codigo": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open the code page"
           }
         }
       }
@@ -1586,16 +1596,6 @@
         }
       }
     },
-    "Inicia sesion en PlayStation desde el navegador.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sign in to PlayStation in your browser."
-          }
-        }
-      }
-    },
     "Juego de Steam %@": {
       "comment": "Nombre de respaldo cuando Steam no manda el titulo",
       "localizations": {
@@ -1911,6 +1911,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "The data that arrived is not in the expected format."
+          }
+        }
+      }
+    },
+    "Los dos pasos tienen que ser en el **mismo navegador**: lo que comparten es la sesion. Si la pagina del codigo dice \"Invalid login\", es que falta el paso 1.\n\nSony no ofrece un boton de \"conectar\" para apps de otros, asi que este rodeo es el unico camino. El codigo se guarda cifrado en el llavero del telefono y no sale de aca.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both steps have to happen in the **same browser**: what they share is the session. If the code page says \"Invalid login\", step 1 is missing.\n\nSony offers no \"connect\" button for third-party apps, so this detour is the only way. The code is stored encrypted in your phone's keychain and never leaves it."
           }
         }
       }
@@ -2992,16 +3002,6 @@
         }
       }
     },
-    "Sony no ofrece un boton de \"conectar\" para apps de otros, asi que este rodeo es el unico camino. El codigo se guarda cifrado en el llavero del telefono y no sale de aca.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sony offers no \"connect\" button for third-party apps, so this detour is the only way. The code is stored encrypted in your phone's keychain and never leaves it."
-          }
-        }
-      }
-    },
     "Steam no devolvio juegos": {
       "localizations": {
         "en": {
@@ -3301,6 +3301,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Copy the code from your browser again and paste it here."
+          }
+        }
+      }
+    },
+    "Vuelve aca y abre la pagina del codigo. Veras un texto corto entre comillas.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Come back here and open the code page. You will see a short piece of text in quotes."
           }
         }
       }

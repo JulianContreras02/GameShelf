@@ -82,18 +82,28 @@ struct PSNConnectView: View {
 
   private var seccionInstrucciones: some View {
     Section {
-      Paso(numero: 1, texto: "Inicia sesion en PlayStation desde el navegador.")
-      Paso(numero: 2, texto: "Abre la direccion del codigo. Veras un texto corto entre comillas.")
-      Paso(numero: 3, texto: "Copia solo lo que hay entre las comillas y pegalo abajo.")
+      Paso(numero: 1, texto: "Abre PlayStation y toca \"Iniciar sesion\". Este paso no se puede saltar.")
 
-      Button("Abrir la pagina del codigo", systemImage: "safari") {
+      Button("1. Abrir PlayStation e iniciar sesion", systemImage: "person.crop.circle") {
+        openURL(PSNAuthService.signInURL)
+      }
+
+      Paso(numero: 2, texto: "Vuelve aca y abre la pagina del codigo. Veras un texto corto entre comillas.")
+
+      Button("2. Abrir la pagina del codigo", systemImage: "safari") {
         openURL(PSNAuthService.npssoURL)
       }
+
+      Paso(numero: 3, texto: "Copia solo lo que hay entre las comillas y pegalo abajo.")
     } header: {
       Text("Como obtener el codigo")
     } footer: {
       Text(
         """
+        Los dos pasos tienen que ser en el **mismo navegador**: lo que \
+        comparten es la sesion. Si la pagina del codigo dice "Invalid login", \
+        es que falta el paso 1.
+
         Sony no ofrece un boton de "conectar" para apps de otros, asi que este \
         rodeo es el unico camino. El codigo se guarda cifrado en el llavero del \
         telefono y no sale de aca.
