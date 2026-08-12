@@ -103,6 +103,30 @@ final class Game {
     playtimeHours <= 0
   }
 
+  /// Cuando se agrego a la lista de deseos de alguna tienda.
+  ///
+  /// Si esta en varias, la fecha mas antigua: es cuando empezaste a quererlo.
+  /// `nil` si no esta en ninguna.
+  var wishlistedAt: Date? {
+    storeEntries.compactMap(\.wishlistedAt).min()
+  }
+
+  /// Si el juego todavia no ha salido, segun alguna tienda o segun su fecha.
+  ///
+  /// Se miran las dos cosas porque Steam no siempre manda fecha: a veces solo
+  /// dice "Proximamente".
+  var isComingSoon: Bool {
+    if storeEntries.contains(where: { $0.comingSoon }) { return true }
+    if let releaseDate { return releaseDate > Date() }
+    return false
+  }
+
+  /// Si alguna tienda lo tiene en su lista de deseos.
+  ///
+  /// Ojo: no es lo mismo que `status == .wishlist`. Esto es un dato de la
+  /// tienda y aquello una decision tuya, y pueden no coincidir.
+  var isWishlistedInStore: Bool { wishlistedAt != nil }
+
   /// Horas jugadas en las ultimas dos semanas, sumando todas las tiendas.
   var recentPlaytimeHours: Double {
     storeEntries.reduce(0) { $0 + $1.recentPlaytimeHours }

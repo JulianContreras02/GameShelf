@@ -1,0 +1,56 @@
+{
+  "response": {
+    "items": [
+      {
+        "appid": 268910,
+        "priority": 0,
+        "date_added": 1758333422
+      },
+      {
+        "appid": 1151640,
+        "priority": 0,
+        "date_added": 1747661931
+      },
+      {
+        "appid": 1551360,
+        "priority": 0,
+        "date_added": 1702003825
+      },
+      {
+        "appid": 1659420,
+        "priority": 0,
+        "date_added": 1759329913
+      },
+      {
+        "appid": 2358720,
+        "priority": 0,
+        "date_added": 1725827630
+      },
+      {
+        "appid": 2420110,
+        "priority": 0,
+        "date_added": 1747661924
+      },
+      {
+        "appid": 3357650,
+        "priority": 0,
+        "date_added": 1778300896
+      },
+      {
+        "appid": 4348760,
+        "priority": 0,
+        "date_added": 1771088311
+      },
+      {
+        "appid": 4534960,
+        "priority": 0,
+        "date_added": 1784130223
+      },
+      {
+        "appid": 4656000,
+        "priority": 0,
+        "date_added": 1782351496
+      }
+    ]
+  }
+}

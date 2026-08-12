@@ -182,7 +182,9 @@ struct LibraryView: View {
       // Si la red falla pero hay datos guardados, se avisa sin tapar la
       // biblioteca: los datos viejos siguen siendo utiles.
       if case .failed(let mensaje, _) = viewModel.state {
-        avisoDeFallo(mensaje)
+        AvisoDeFallo(mensaje: mensaje) {
+          Task { await viewModel.sync(into: modelContext) }
+        }
       }
 
       Section {
@@ -241,27 +243,6 @@ struct LibraryView: View {
       return String(localized: "\(visibles) resultados", comment: "Resultados de una busqueda")
     }
     return String(localized: "\(visibles) de \(games.count) juegos", comment: "Cuantos se ven de cuantos hay")
-  }
-
-  private func avisoDeFallo(_ mensaje: String) -> some View {
-    HStack(alignment: .top, spacing: 8) {
-      Image(systemName: "exclamationmark.triangle.fill")
-        .foregroundStyle(.orange)
-      VStack(alignment: .leading, spacing: 2) {
-        Text(mensaje)
-        Text("Estas viendo los datos guardados.")
-          .foregroundStyle(.secondary)
-      }
-      Spacer()
-      Button("Reintentar") {
-        Task { await viewModel.sync(into: modelContext) }
-      }
-      .buttonStyle(.bordered)
-      .controlSize(.small)
-    }
-    .font(.footnote)
-    .listRowBackground(Color.orange.opacity(0.12))
-    .accessibilityElement(children: .contain)
   }
 
   private func cambiarEstado(de juego: Game, a estado: PlayStatus) {
