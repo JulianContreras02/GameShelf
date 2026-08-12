@@ -45,6 +45,27 @@ Si el SDK no esta en la ruta por defecto, se indica en `android/local.properties
 sdk.dir=/ruta/a/tu/Android/Sdk
 ```
 
+### El emulador, sin ventana, revienta
+
+En Fedora 44 (kernel 7.1) el emulador **en modo headless** se cae con SIGSEGV
+antes de terminar de arrancar Android, con y sin GPU:
+
+```
+qemu-system-x86_64-headless   SIGSEGV
+```
+
+Con ventana funciona sin problema, porque es **otro binario**
+(`qemu-system-x86_64`, sin el sufijo) y otra ruta de renderizado:
+
+```bash
+emulator -avd <nombre> -gpu host        # arranca en ~30 s
+emulator -avd <nombre> -no-window       # SIGSEGV
+```
+
+Asi que si la idea es probar en CI sin pantalla, este emulador no sirve tal
+cual en esta distribucion: hace falta un servidor X virtual por delante, o un
+dispositivo real.
+
 ## Como se hizo el puerto
 
 | iOS | Android | Por que |
