@@ -41,13 +41,42 @@ final class WishlistViewModel {
   /// explica las dos posibilidades.
   private(set) var lastSyncReturnedNoGames = false
 
+  /// En que punto esta la consulta de precios.
+  ///
+  /// Va aparte del estado de la sincronizacion porque son dos servicios
+  /// distintos: que IsThereAnyDeal falle no puede impedir ver la lista, que es
+  /// lo que de verdad importa en esta pantalla.
+  enum PricesState: Equatable {
+    case idle
+    case loading
+    case loaded
+    case failed(message: String)
+
+    var isLoading: Bool { self == .loading }
+  }
+
+  private(set) var pricesState: PricesState = .idle
+
+  /// Precios ya consultados, indexados por appid de Steam.
+  ///
+  /// Se guardan solo en memoria, no en la base: un precio de hace una semana
+  /// es peor que no mostrar precio, porque invita a comprar por un descuento
+  /// que ya se acabo.
+  private(set) var prices: [Int: GamePrices] = [:]
+
   private let service: SteamWishlistServicing
+  private let priceService: ITADServicing?
   private let defaults: UserDefaults
 
   private static let lastSyncKey = "wishlist.lastSyncedAt"
 
-  init(service: SteamWishlistServicing, defaults: UserDefaults = .standard) {
+  init(
+    service: SteamWishlistServicing,
+    priceService: ITADServicing? = nil,
+    defaults: UserDefaults = .standard
+  ) {
     self.service = service
+    self.priceService = priceService
     self.defaults = defaults
     self.lastSyncedAt = defaults.object(forKey: Self.lastSyncKey) as? Date
   }
@@ -57,11 +86,59 @@ final class WishlistViewModel {
   /// Si falta el SteamID no lanza: deja el estado listo para fallar con las
   /// instrucciones cuando se intente sincronizar.
   static func live() -> WishlistViewModel {
+    // Los precios son opcionales a proposito: si falta la clave de
+    // IsThereAnyDeal, la lista de deseos sigue funcionando sin ellos.
+    let precios = try? ITADService.live()
+
     do {
-      return WishlistViewModel(service: try SteamWishlistService.live())
+      return WishlistViewModel(service: try SteamWishlistService.live(), priceService: precios)
     } catch {
-      return WishlistViewModel(service: UnavailableWishlistService(error: error))
+      return WishlistViewModel(
+        service: UnavailableWishlistService(error: error),
+        priceService: precios
+      )
     }
+  }
+
+  // MARK: - Precios
+
+  /// Consulta los precios de los juegos que vengan de Steam.
+  ///
+  /// No propaga errores: los deja en `pricesState`. Si falla, la lista se
+  /// muestra igual, solo que sin precios.
+  func loadPrices(for juegos: [Game]) async {
+    guard let priceService, !pricesState.isLoading else { return }
+
+    let appIDs = juegos.compactMap(\.steamAppID)
+    guard !appIDs.isEmpty else {
+      pricesState = .loaded
+      return
+    }
+
+    pricesState = .loading
+
+    do {
+      prices = try await priceService.prices(forSteamAppIDs: appIDs)
+      pricesState = .loaded
+    } catch let error as NetworkError {
+      pricesState = .failed(
+        message: error.errorDescription
+          ?? String(localized: "No se pudieron consultar los precios.", comment: "Error al traer precios")
+      )
+    } catch {
+      pricesState = .failed(message: error.localizedDescription)
+    }
+  }
+
+  /// El precio de un juego, si ya se consulto.
+  func prices(for juego: Game) -> GamePrices? {
+    guard let appID = juego.steamAppID else { return nil }
+    return prices[appID]
+  }
+
+  /// Cuantos de los juegos dados estan en su minimo historico.
+  func countAtHistoricalLow(among juegos: [Game]) -> Int {
+    juegos.filter { prices(for: $0)?.isAtHistoricalLow == true }.count
   }
 
   /// Trae la lista de deseos de Steam y la guarda.
