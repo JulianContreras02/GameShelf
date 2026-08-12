@@ -1,0 +1,196 @@
+{
+  "titles": [
+    {
+      "npTitleId": "PPSA28183_00",
+      "trophyTitles": [
+        {
+          "npServiceName": "trophy2",
+          "npCommunicationId": "NPWR50213_00",
+          "trophyTitleName": "Assassin's Creed Black Flag Resynced",
+          "trophyTitleIconUrl": "https://psnobj.prod.dl.playstation.net/psnobj/NPWR50213_00/0bec0e44-7cdd-4e3f-9adf-a488426cb0db.png",
+          "hasTrophyGroups": false,
+          "trophyGroupCount": 1,
+          "rarestTrophies": [
+            {
+              "trophyId": 42,
+              "trophyHidden": false,
+              "trophyType": "silver",
+              "trophyName": "Ship This",
+              "trophyDetail": "Fully upgrade the Jackdaw",
+              "trophyIconUrl": "https://psnobj.prod.dl.playstation.net/psnobj/NPWR50213_00/d3c96a3a-aa7e-4021-9500-4baffd7e88ea.png",
+              "trophyRare": 1,
+              "trophyEarnedRate": "14.1",
+              "earned": true,
+              "earnedDateTime": "2026-07-19T17:43:46Z"
+            }
+          ],
+          "progress": 60,
+          "earnedTrophies": {
+            "bronze": 25,
+            "silver": 4,
+            "gold": 1,
+            "platinum": 0
+          },
+          "definedTrophies": {
+            "bronze": 37,
+            "silver": 11,
+            "gold": 1,
+            "platinum": 1
+          },
+          "lastUpdatedDateTime": "2026-07-19T19:08:46Z"
+        }
+      ]
+    },
+    {
+      "npTitleId": "PPSA28038_00",
+      "trophyTitles": [
+        {
+          "npServiceName": "trophy2",
+          "npCommunicationId": "NPWR49518_00",
+          "trophyTitleName": "Halo: Campaign Evolved",
+          "trophyTitleIconUrl": "https://psnobj.prod.dl.playstation.net/psnobj/NPWR49518_00/b10db9e9-a4a8-4921-80f1-627c3d31c075.png",
+          "hasTrophyGroups": false,
+          "trophyGroupCount": 1,
+          "rarestTrophies": [
+            {
+              "trophyId": 34,
+              "trophyHidden": false,
+              "trophyType": "silver",
+              "trophyName": "Mix Master",
+              "trophyDetail": "Complete an entire Remixed Campaign without dying.",
+              "trophyIconUrl": "https://psnobj.prod.dl.playstation.net/psnobj/NPWR49518_00/2c588096-b488-4176-8d4d-01c1b924adf2.png",
+              "trophyRare": 0,
+              "trophyEarnedRate": "0.9",
+              "earned": true,
+              "earnedDateTime": "2026-08-08T06:47:25Z"
+            }
+          ],
+          "progress": 88,
+          "earnedTrophies": {
+            "bronze": 52,
+            "silver": 2,
+            "gold": 1,
+            "platinum": 0
+          },
+          "definedTrophies": {
+            "bronze": 52,
+            "silver": 3,
+            "gold": 2,
+            "platinum": 1
+          },
+          "lastUpdatedDateTime": "2026-08-08T06:47:26Z"
+        }
+      ]
+    },
+    {
+      "npTitleId": "PPSA03420_00",
+      "trophyTitles": [
+        {
+          "npServiceName": "trophy2",
+          "npCommunicationId": "NPWR21647_00",
+          "trophyTitleName": "Grand Theft Auto V",
+          "trophyTitleIconUrl": "https://psnobj.prod.dl.playstation.net/psnobj/NPWR21647_00/26efdb55-9e6d-4de9-943f-6b95768ae607.png",
+          "hasTrophyGroups": true,
+          "trophyGroupCount": 4,
+          "rarestTrophies": [
+            {
+              "trophyId": 29,
+              "trophyHidden": false,
+              "trophyType": "bronze",
+              "trophyName": "Pimp My Sidearm",
+              "trophyDetail": "Fully mod a weapon.",
+              "trophyIconUrl": "https://psnobj.prod.dl.playstation.net/psnobj/NPWR21647_00/00ccca7f-19d2-4dd3-aff3-c06f7f391bca.png",
+              "trophyRare": 2,
+              "trophyEarnedRate": "29.0",
+              "earned": true,
+              "earnedDateTime": "2025-12-15T03:40:03Z"
+            }
+          ],
+          "progress": 3,
+          "earnedTrophies": {
+            "bronze": 4,
+            "silver": 0,
+            "gold": 0,
+            "platinum": 0
+          },
+          "definedTrophies": {
+            "bronze": 59,
+            "silver": 15,
+            "gold": 3,
+            "platinum": 1
+          },
+          "lastUpdatedDateTime": "2025-12-15T03:40:03Z"
+        }
+      ]
+    },
+    {
+      "npTitleId": "PPSA01576_00",
+      "trophyTitles": [
+        {
+          "npServiceName": "trophy2",
+          "npCommunicationId": "NPWR21143_00",
+          "trophyTitleName": "Avatar: Frontiers of Pandora™",
+          "trophyTitleIconUrl": "https://psnobj.prod.dl.playstation.net/psnobj/NPWR21143_00/689fd754-8e7d-4f3f-8b3e-e85ee5a7ab97.png",
+          "hasTrophyGroups": true,
+          "trophyGroupCount": 4,
+          "rarestTrophies": [],
+          "progress": 0,
+          "earnedTrophies": {
+            "bronze": 0,
+            "silver": 0,
+            "gold": 0,
+            "platinum": 0
+          },
+          "definedTrophies": {
+            "bronze": 25,
+            "silver": 21,
+            "gold": 6,
+            "platinum": 1
+          },
+          "lastUpdatedDateTime": "2026-07-23T01:40:45Z"
+        }
+      ]
+    },
+    {
+      "npTitleId": "PPSA34502_00",
+      "trophyTitles": [
+        {
+          "npServiceName": "trophy2",
+          "npCommunicationId": "NPWR59721_00",
+          "trophyTitleName": "Call of Duty®: Black Ops II",
+          "trophyTitleIconUrl": "https://psnobj.prod.dl.playstation.net/psnobj/NPWR59721_00/ce5b85d0-9672-4f3e-8b51-f26df36b85c3.png",
+          "hasTrophyGroups": true,
+          "trophyGroupCount": 5,
+          "rarestTrophies": [
+            {
+              "trophyId": 36,
+              "trophyHidden": false,
+              "trophyType": "bronze",
+              "trophyName": "Welcome to the Club",
+              "trophyDetail": "Reach Sergeant (Level 10) in multiplayer Public Match.",
+              "trophyIconUrl": "https://psnobj.prod.dl.playstation.net/psnobj/NPWR59721_00/1a2488f7-4175-4531-961a-20013b9c8a32.PNG",
+              "trophyRare": 3,
+              "trophyEarnedRate": "55.6",
+              "earned": true,
+              "earnedDateTime": "2026-07-31T01:21:12Z"
+            }
+          ],
+          "progress": 1,
+          "earnedTrophies": {
+            "bronze": 1,
+            "silver": 0,
+            "gold": 0,
+            "platinum": 0
+          },
+          "definedTrophies": {
+            "bronze": 78,
+            "silver": 10,
+            "gold": 2,
+            "platinum": 1
+          },
+          "lastUpdatedDateTime": "2026-07-31T01:21:13Z"
+        }
+      ]
+    }
+  ]
+}

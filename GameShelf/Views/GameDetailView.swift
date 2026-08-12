@@ -157,6 +157,15 @@ struct GameDetailView: View {
         valor: LastPlayedFormatter.text(for: game.lastPlayedAt)
       )
 
+      // Solo PlayStation lleva la cuenta de trofeos, asi que este dato aparece
+      // unicamente en los juegos que vienen de ahi.
+      if let trofeos = game.trophyProgress {
+        FilaDato(
+          etiqueta: String(localized: "Trofeos", comment: "Dato de la ficha"),
+          valor: trofeos.formatted(.percent.scale(1))
+        )
+      }
+
       if game.storeEntries.count > 1 {
         // Con varias tiendas, el desglose explica de donde salen las horas
         ForEach(game.storeEntries.sorted { $0.store.rawValue < $1.store.rawValue }) { entrada in

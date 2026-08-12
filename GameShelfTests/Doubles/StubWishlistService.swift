@@ -61,8 +61,12 @@ final class RoutingHTTPClient: HTTPClient, @unchecked Sendable {
   /// Cuerpos mandados por POST, en orden y ya como JSON.
   private(set) var sentBodies: [String] = []
 
-  func get<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T {
+  /// Cabeceras que se mandaron, en orden.
+  private(set) var sentHeaders: [[String: String]] = []
+
+  func get<T: Decodable>(_ type: T.Type, from url: URL, headers: [String: String]) async throws -> T {
     requestedURLs.append(url)
+    sentHeaders.append(headers)
     return try responder(T.self, para: url)
   }
 

@@ -16,8 +16,10 @@ import Foundation
 protocol HTTPClient: Sendable {
   /// Pide los datos de `url` y los decodifica como `T`.
   ///
+  /// - Parameter headers: Cabeceras extra. Hacen falta para las APIs que piden
+  ///   un token de sesion, como la de PlayStation.
   /// - Throws: `NetworkError` con el motivo del fallo.
-  func get<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T
+  func get<T: Decodable>(_ type: T.Type, from url: URL, headers: [String: String]) async throws -> T
 
   /// Manda `body` como JSON a `url` y decodifica la respuesta como `T`.
   ///
@@ -47,9 +49,12 @@ struct URLSessionHTTPClient: HTTPClient {
     self.decoder = decoder
   }
 
-  func get<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T {
+  func get<T: Decodable>(_ type: T.Type, from url: URL, headers: [String: String]) async throws -> T {
     var peticion = URLRequest(url: url)
     peticion.httpMethod = "GET"
+    for (clave, valor) in headers {
+      peticion.setValue(valor, forHTTPHeaderField: clave)
+    }
     return try await enviar(T.self, peticion)
   }
 
@@ -133,5 +138,12 @@ struct URLSessionHTTPClient: HTTPClient {
 
   private static func path(of context: DecodingError.Context) -> String {
     context.codingPath.map(\.stringValue).joined(separator: ".")
+  }
+}
+
+extension HTTPClient {
+  /// Atajo para las APIs que no piden cabeceras.
+  func get<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T {
+    try await get(type, from: url, headers: [:])
   }
 }

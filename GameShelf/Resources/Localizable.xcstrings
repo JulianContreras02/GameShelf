@@ -126,6 +126,47 @@
       },
       "shouldTranslate": false
     },
+    "%lld actualizados": {
+      "comment": "Resultado de sincronizar con PSN",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld updated"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld updated"
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld actualizado"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld actualizados"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld de %lld juegos": {
       "comment": "Cuantos se ven de cuantos hay",
       "localizations": {
@@ -309,6 +350,47 @@
         }
       }
     },
+    "%lld juegos nuevos": {
+      "comment": "Resultado de sincronizar con PSN",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld new game"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld new games"
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld juego nuevo"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld juegos nuevos"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld juegos · %lld en minimo historico": {
       "comment": "Cuantos juegos hay y cuantos estan al precio mas bajo de su historia",
       "localizations": {
@@ -415,6 +497,47 @@
                 "stringUnit": {
                   "state": "translated",
                   "value": "%lld minutos jugados"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld que ya tenias en otra tienda": {
+      "comment": "Juegos que ya estaban y ahora tambien tienen PSN",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld you already had on another store"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld you already had on other stores"
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld que ya tenias en otra tienda"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld que ya tenias en otras tiendas"
                 }
               }
             }
@@ -3179,6 +3302,16 @@
         }
       }
     },
+    "Traer mis juegos de PlayStation": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bring in my PlayStation games"
+          }
+        }
+      }
+    },
     "Trayendo tu biblioteca…": {
       "localizations": {
         "en": {
@@ -3195,6 +3328,27 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fetching your wishlist…"
+          }
+        }
+      }
+    },
+    "Trayendo tus juegos…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fetching your games…"
+          }
+        }
+      }
+    },
+    "Trofeos": {
+      "comment": "Dato de la ficha",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trophies"
           }
         }
       }

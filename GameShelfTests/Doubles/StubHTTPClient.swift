@@ -41,8 +41,13 @@ final class StubHTTPClient: HTTPClient, @unchecked Sendable {
   /// comprobar que una consulta en lote mando todos los juegos de una vez.
   private(set) var sentBodies: [String] = []
 
-  func get<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T {
+  /// Cabeceras que se mandaron, en orden. Sirve para comprobar que un
+  /// servicio puso el token donde debia.
+  private(set) var sentHeaders: [[String: String]] = []
+
+  func get<T: Decodable>(_ type: T.Type, from url: URL, headers: [String: String]) async throws -> T {
     requestedURLs.append(url)
+    sentHeaders.append(headers)
     return try responder(T.self)
   }
 
