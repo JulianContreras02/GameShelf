@@ -58,9 +58,27 @@ final class RoutingHTTPClient: HTTPClient, @unchecked Sendable {
     self.rutas = rutas
   }
 
+  /// Cuerpos mandados por POST, en orden y ya como JSON.
+  private(set) var sentBodies: [String] = []
+
   func get<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T {
     requestedURLs.append(url)
+    return try responder(T.self, para: url)
+  }
 
+  func post<Response: Decodable, Body: Encodable>(
+    _ type: Response.Type,
+    to url: URL,
+    body: Body
+  ) async throws -> Response {
+    requestedURLs.append(url)
+    if let datos = try? JSONEncoder().encode(body), let texto = String(data: datos, encoding: .utf8) {
+      sentBodies.append(texto)
+    }
+    return try responder(Response.self, para: url)
+  }
+
+  private func responder<T: Decodable>(_ type: T.Type, para url: URL) throws -> T {
     let texto = url.absoluteString
     guard let json = rutas.first(where: { texto.contains($0.0) })?.1 else {
       throw NetworkError.invalidURL("Ninguna ruta del doble coincide con \(texto)")

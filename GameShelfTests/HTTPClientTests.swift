@@ -119,3 +119,55 @@ struct NetworkErrorTests {
     #expect(sugerencia?.contains("API key") == true)
   }
 }
+
+@Suite("Cliente HTTP (peticion real, sin red)", .serialized)
+struct URLSessionHTTPClientTests {
+
+  // Estas pruebas usan el cliente de verdad contra un URLProtocol falso. Las de
+  // arriba reemplazan el cliente entero, asi que no verian un POST mal armado.
+
+  private let url = URL(string: "https://api.ejemplo.com/precios")!
+
+  @Test("Un POST manda el metodo, la cabecera y el cuerpo")
+  func postCompleto() async throws {
+    let session = URLProtocolStub.session(devolviendo: #"{"id": 1, "nombre": "Hades"}"#)
+    let client = URLSessionHTTPClient(session: session)
+
+    let juego = try await client.post(Juego.self, to: url, body: ["abc", "def"])
+
+    #expect(juego == Juego(id: 1, nombre: "Hades"))
+
+    let peticion = try #require(URLProtocolStub.peticiones.last)
+    #expect(peticion.httpMethod == "POST")
+    #expect(peticion.value(forHTTPHeaderField: "Content-Type") == "application/json")
+
+    // Lo que mas importa: que el cuerpo llegue. Sin esto, una consulta en lote
+    // preguntaria por cero juegos y la API respondería una lista vacia, que es
+    // un fallo silencioso.
+    #expect(URLProtocolStub.ultimoCuerpo() == #"["abc","def"]"#)
+  }
+
+  @Test("Un GET no manda cuerpo")
+  func getSinCuerpo() async throws {
+    let session = URLProtocolStub.session(devolviendo: #"{"id": 2, "nombre": "Celeste"}"#)
+    let client = URLSessionHTTPClient(session: session)
+
+    _ = try await client.get(Juego.self, from: url)
+
+    let peticion = try #require(URLProtocolStub.peticiones.last)
+    #expect(peticion.httpMethod == "GET")
+    #expect(URLProtocolStub.ultimoCuerpo() == nil)
+  }
+
+  @Test("Un codigo de error se traduce, venga de GET o de POST")
+  func codigoDeError() async throws {
+    let session = URLProtocolStub.session(devolviendo: "{}", codigo: 403)
+    let client = URLSessionHTTPClient(session: session)
+
+    let error = await #expect(throws: NetworkError.self) {
+      try await client.post(Juego.self, to: url, body: ["x"])
+    }
+
+    #expect(error == .httpError(statusCode: 403))
+  }
+}

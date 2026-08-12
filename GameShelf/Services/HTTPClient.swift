@@ -18,6 +18,19 @@ protocol HTTPClient: Sendable {
   ///
   /// - Throws: `NetworkError` con el motivo del fallo.
   func get<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T
+
+  /// Manda `body` como JSON a `url` y decodifica la respuesta como `T`.
+  ///
+  /// Hace falta porque hay APIs que solo aceptan consultas en lote por POST:
+  /// IsThereAnyDeal, por ejemplo, recibe la lista de juegos en el cuerpo. Pedir
+  /// uno por uno con GET seria una peticion por juego.
+  ///
+  /// - Throws: `NetworkError` con el motivo del fallo.
+  func post<Response: Decodable, Body: Encodable>(
+    _ type: Response.Type,
+    to url: URL,
+    body: Body
+  ) async throws -> Response
 }
 
 /// Implementacion real, sobre `URLSession`.
@@ -35,11 +48,38 @@ struct URLSessionHTTPClient: HTTPClient {
   }
 
   func get<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T {
+    var peticion = URLRequest(url: url)
+    peticion.httpMethod = "GET"
+    return try await enviar(T.self, peticion)
+  }
+
+  func post<Response: Decodable, Body: Encodable>(
+    _ type: Response.Type,
+    to url: URL,
+    body: Body
+  ) async throws -> Response {
+    var peticion = URLRequest(url: url)
+    peticion.httpMethod = "POST"
+    peticion.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+    do {
+      peticion.httpBody = try JSONEncoder().encode(body)
+    } catch {
+      // Codificar el cuerpo no depende de la red: si falla es un error de
+      // programacion, y decir "no hay conexion" despistaria.
+      throw NetworkError.decodingFailed(description: "No se pudo armar el cuerpo: \(error)")
+    }
+
+    return try await enviar(Response.self, peticion)
+  }
+
+  /// Lo comun a GET y POST: mandar, traducir errores y decodificar.
+  private func enviar<T: Decodable>(_ type: T.Type, _ peticion: URLRequest) async throws -> T {
     let data: Data
     let response: URLResponse
 
     do {
-      (data, response) = try await session.data(from: url)
+      (data, response) = try await session.data(for: peticion)
     } catch let error as URLError {
       // Se traducen los errores de red a los nuestros para que las capas de
       // arriba no tengan que conocer URLError.
