@@ -556,12 +556,32 @@
         }
       }
     },
+    "Abre la direccion del codigo. Veras un texto corto entre comillas.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the code page. You will see a short piece of text in quotes."
+          }
+        }
+      }
+    },
     "Abre la ficha del juego en el navegador": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Opens the game page in your browser"
+          }
+        }
+      }
+    },
+    "Abrir la pagina del codigo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the code page"
           }
         }
       }
@@ -684,6 +704,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Group your games however you like, no matter which store they came from."
+          }
+        }
+      }
+    },
+    "Ajustes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
           }
         }
       }
@@ -852,6 +882,16 @@
         }
       }
     },
+    "Como obtener el codigo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How to get the code"
+          }
+        }
+      }
+    },
     "Como repartes tu tiempo": {
       "localizations": {
         "en": {
@@ -873,6 +913,49 @@
         }
       }
     },
+    "Conecta tu cuenta desde Ajustes.": {
+      "comment": "Como conectar PSN",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect your account from Settings."
+          }
+        }
+      }
+    },
+    "Conectado": {
+      "comment": "Estado de una cuenta",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connected"
+          }
+        }
+      }
+    },
+    "Conectando…": {
+      "comment": "Estado de una cuenta",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connecting…"
+          }
+        }
+      }
+    },
+    "Conectar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect"
+          }
+        }
+      }
+    },
     "Copia Config/Secrets.example.xcconfig a Config/Secrets.xcconfig y escribe el valor de %@. Las instrucciones estan en el README.": {
       "comment": "Como configurar un secreto que falta",
       "localizations": {
@@ -880,6 +963,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Copy Config/Secrets.example.xcconfig to Config/Secrets.xcconfig and fill in %@. The instructions are in the README."
+          }
+        }
+      }
+    },
+    "Copia solo lo que hay entre las comillas y pegalo abajo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy only what is inside the quotes and paste it below."
           }
         }
       }
@@ -955,6 +1048,46 @@
         }
       }
     },
+    "Cuenta conectada": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Account connected"
+          }
+        }
+      }
+    },
+    "Cuentas": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accounts"
+          }
+        }
+      }
+    },
+    "Desconectar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnect"
+          }
+        }
+      }
+    },
+    "Desconectar PlayStation": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnect PlayStation"
+          }
+        }
+      }
+    },
     "Deseado hace poco": {
       "comment": "Orden de la lista de deseos",
       "localizations": {
@@ -1013,6 +1146,48 @@
           "stringUnit": {
             "state": "translated",
             "value": "Edit collection"
+          }
+        }
+      }
+    },
+    "El acceso se renueva solo mientras uses la app. Cada dos meses, mas o menos, Sony pide volver a copiar el codigo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Access renews itself while you use the app. Every couple of months or so, Sony asks you to copy the code again."
+          }
+        }
+      }
+    },
+    "El acceso vence": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Access expires"
+          }
+        }
+      }
+    },
+    "El codigo de PlayStation no sirve o ya caduco.": {
+      "comment": "Error de autenticacion con PSN",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That PlayStation code is wrong or has expired."
+          }
+        }
+      }
+    },
+    "El dato guardado no se pudo leer.": {
+      "comment": "Error al leer del Keychain",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The stored value could not be read."
           }
         }
       }
@@ -1368,6 +1543,17 @@
         }
       }
     },
+    "Hay que volver a conectarla": {
+      "comment": "Estado de una cuenta",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Needs reconnecting"
+          }
+        }
+      }
+    },
     "Hiciste demasiadas peticiones seguidas. Espera un momento.": {
       "comment": "Como recuperarse de un error",
       "localizations": {
@@ -1396,6 +1582,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Icon"
+          }
+        }
+      }
+    },
+    "Inicia sesion en PlayStation desde el navegador.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to PlayStation in your browser."
           }
         }
       }
@@ -1525,6 +1721,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Half your hours"
+          }
+        }
+      }
+    },
+    "La sesion de PlayStation caduco.": {
+      "comment": "Error de autenticacion con PSN",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your PlayStation session has expired."
           }
         }
       }
@@ -1683,6 +1890,16 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Los codigos de acceso se guardan en el llavero del sistema, cifrados.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Access codes are stored encrypted in the system keychain."
           }
         }
       }
@@ -2053,6 +2270,17 @@
         }
       }
     },
+    "No se pudo acceder al llavero (codigo %lld).": {
+      "comment": "Error al leer o guardar en el Keychain",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not reach the keychain (code %lld)."
+          }
+        }
+      }
+    },
     "No se pudo agregar": {
       "localizations": {
         "en": {
@@ -2248,6 +2476,16 @@
         }
       }
     },
+    "Pega el codigo aca": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paste the code here"
+          }
+        }
+      }
+    },
     "Pendiente": {
       "comment": "Estado de un juego",
       "localizations": {
@@ -2255,6 +2493,27 @@
           "stringUnit": {
             "state": "translated",
             "value": "Backlog"
+          }
+        }
+      }
+    },
+    "PlayStation": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PlayStation"
+          }
+        }
+      }
+    },
+    "PlayStation respondio algo inesperado: %@": {
+      "comment": "Error de autenticacion con PSN",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PlayStation returned something unexpected: %@"
           }
         }
       }
@@ -2456,6 +2715,16 @@
         }
       }
     },
+    "Se borra el codigo del llavero. Tus juegos guardados no se tocan.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The code is removed from the keychain. Your saved games are left alone."
+          }
+        }
+      }
+    },
     "Se calcula con las horas que reporta cada tienda, no con el estado que pusiste tu.": {
       "localizations": {
         "en": {
@@ -2472,6 +2741,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Worked out automatically, from the hours each store reports."
+          }
+        }
+      }
+    },
+    "Se configura con las claves del proyecto": {
+      "comment": "Como se conecta Steam",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set up with the project keys"
           }
         }
       }
@@ -2599,6 +2879,17 @@
         }
       }
     },
+    "Sin conectar": {
+      "comment": "Estado de una cuenta",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not connected"
+          }
+        }
+      }
+    },
     "Sin etiquetas": {
       "localizations": {
         "en": {
@@ -2697,6 +2988,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Only the ones with 0 hours and no status set by you"
+          }
+        }
+      }
+    },
+    "Sony no ofrece un boton de \"conectar\" para apps de otros, asi que este rodeo es el unico camino. El codigo se guarda cifrado en el llavero del telefono y no sale de aca.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sony offers no \"connect\" button for third-party apps, so this detour is the only way. The code is stored encrypted in your phone's keychain and never leaves it."
           }
         }
       }
@@ -2846,6 +3147,17 @@
         }
       }
     },
+    "Todavia no has conectado tu cuenta de PlayStation.": {
+      "comment": "Error de autenticacion con PSN",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have not connected your PlayStation account yet."
+          }
+        }
+      }
+    },
     "Todavia no sale": {
       "comment": "Juego sin lanzar",
       "localizations": {
@@ -2978,6 +3290,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Try again"
+          }
+        }
+      }
+    },
+    "Vuelve a copiar el codigo desde el navegador y pegalo aca.": {
+      "comment": "Como recuperarse de un token de PSN caducado",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy the code from your browser again and paste it here."
           }
         }
       }

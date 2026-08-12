@@ -24,6 +24,10 @@ struct RootView: View {
       Tab("Colecciones", systemImage: "folder") {
         CollectionsView()
       }
+
+      Tab("Ajustes", systemImage: "gearshape") {
+        SettingsView()
+      }
     }
   }
 }
