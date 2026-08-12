@@ -1160,26 +1160,6 @@
         }
       }
     },
-    "El acceso se renueva solo mientras uses la app. Cada dos meses, mas o menos, Sony pide volver a copiar el codigo.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Access renews itself while you use the app. Every couple of months or so, Sony asks you to copy the code again."
-          }
-        }
-      }
-    },
-    "El acceso vence": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Access expires"
-          }
-        }
-      }
-    },
     "El codigo de PlayStation no sirve o ya caduco.": {
       "comment": "Error de autenticacion con PSN",
       "localizations": {
@@ -2269,6 +2249,16 @@
         }
       }
     },
+    "No hay que hacer nada mientras tanto: el acceso se renueva solo. Cuando Sony deje de aceptarlo, la app te lo dice aca y solo hay que repetir los tres pasos.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing to do in the meantime: access renews itself. When Sony stops accepting it, the app will tell you here and you just repeat the three steps."
+          }
+        }
+      }
+    },
     "No se pudieron consultar los precios.": {
       "comment": "Error al traer precios",
       "localizations": {
@@ -3280,6 +3270,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Green"
+          }
+        }
+      }
+    },
+    "Volver a copiar el codigo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy the code again"
           }
         }
       }

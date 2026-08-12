@@ -13,10 +13,20 @@ struct PSNTokenResponse: Decodable, Sendable {
   /// Segundos que le quedan de vida al token de acceso. Suele ser 3600.
   let expiresIn: Int?
 
+  /// Segundos de vida del token de refresco, si Sony lo dice.
+  ///
+  /// Es el dato que de verdad le importa al usuario: mientras este siga vivo,
+  /// la app renueva sola y no hay que hacer nada. No esta documentado en
+  /// ningun sitio publico que se pueda consultar, asi que se lee de la
+  /// respuesta y, si no viene, no se muestra ninguna fecha en vez de
+  /// inventarse uno.
+  let refreshTokenExpiresIn: Int?
+
   enum CodingKeys: String, CodingKey {
     case accessToken = "access_token"
     case refreshToken = "refresh_token"
     case expiresIn = "expires_in"
+    case refreshTokenExpiresIn = "refresh_token_expires_in"
   }
 
   /// Convierte la respuesta en credenciales, o `nil` si venia incompleta.
@@ -34,7 +44,10 @@ struct PSNTokenResponse: Decodable, Sendable {
     return PSNCredentials(
       accessToken: accessToken,
       refreshToken: refreshToken,
-      expiresAt: ahora.addingTimeInterval(duracion)
+      expiresAt: ahora.addingTimeInterval(duracion),
+      refreshExpiresAt: refreshTokenExpiresIn.map {
+        ahora.addingTimeInterval(TimeInterval($0))
+      }
     )
   }
 }

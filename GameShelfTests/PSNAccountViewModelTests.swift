@@ -225,6 +225,35 @@ struct PSNAccountRefreshTests {
     #expect(viewModel.state == .conectado)
   }
 
+  @Test("Renovar no borra la fecha de reconexion que ya se conocia")
+  func conservaLaFechaDeReconexion() async throws {
+    // La respuesta de una renovacion no siempre repite
+    // `refresh_token_expires_in`. Borrarla dejaria la pantalla sin la unica
+    // fecha util.
+    let conFecha = PSNCredentials(
+      accessToken: "A",
+      refreshToken: "R",
+      expiresAt: Date().addingTimeInterval(-10),
+      refreshExpiresAt: Date(timeIntervalSince1970: 9_000_000)
+    )
+    let sinFecha = PSNCredentials(
+      accessToken: "NUEVO",
+      refreshToken: "R2",
+      expiresAt: Date().addingTimeInterval(3600)
+    )
+
+    let viewModel = PSNAccountViewModel(
+      service: StubPSNAuthService(alIniciar: .success(conFecha), alRenovar: .success(sinFecha)),
+      keychain: InMemoryKeychainStore()
+    )
+    await viewModel.connect(npsso: "X")
+    #expect(viewModel.reconnectBy == Date(timeIntervalSince1970: 9_000_000))
+
+    _ = try await viewModel.validAccessToken()
+
+    #expect(viewModel.reconnectBy == Date(timeIntervalSince1970: 9_000_000))
+  }
+
   @Test("Si el refresco tampoco sirve, se pide un codigo nuevo")
   func refrescoMuerto() async {
     let servicio = StubPSNAuthService(

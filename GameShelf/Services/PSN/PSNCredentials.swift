@@ -22,6 +22,13 @@ struct PSNCredentials: Sendable, Equatable {
   /// Cuando deja de servir el token de acceso.
   let expiresAt: Date
 
+  /// Cuando deja de servir el token de refresco, si Sony lo dijo.
+  ///
+  /// Es la fecha que le importa al usuario: hasta entonces la app se renueva
+  /// sola. `nil` si la respuesta no lo traia, y en ese caso no se muestra
+  /// ninguna fecha en vez de estimar uno.
+  var refreshExpiresAt: Date?
+
   /// Si el token de acceso ya no sirve, o le queda muy poco.
   ///
   /// Se adelanta un minuto al vencimiento real: pedir con un token que expira

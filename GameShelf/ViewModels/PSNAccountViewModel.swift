@@ -34,8 +34,17 @@ final class PSNAccountViewModel {
 
   private(set) var state: State = .desconectado
 
-  /// Cuando caduca el token de acceso actual. Solo para mostrarlo.
+  /// Cuando caduca el token de acceso actual.
+  ///
+  /// Es un dato tecnico: dura una hora y la app lo renueva sola. No es lo que
+  /// hay que ponerle delante al usuario.
   private(set) var expiresAt: Date?
+
+  /// Cuando habra que volver a copiar el codigo, si Sony lo dijo.
+  ///
+  /// **Esta si es la fecha que importa.** Hasta entonces no hay que hacer
+  /// nada. `nil` si la respuesta no lo traia.
+  private(set) var reconnectBy: Date?
 
   private let service: PSNAuthenticating
   private let keychain: KeychainStoring
@@ -45,6 +54,7 @@ final class PSNAccountViewModel {
     static let accessToken = "psn.accessToken"
     static let refreshToken = "psn.refreshToken"
     static let expiresAt = "psn.expiresAt"
+    static let refreshExpiresAt = "psn.refreshExpiresAt"
   }
 
   init(service: PSNAuthenticating = PSNAuthService(), keychain: KeychainStoring = KeychainStore()) {
@@ -107,7 +117,9 @@ final class PSNAccountViewModel {
     try? keychain.remove(for: Clave.accessToken)
     try? keychain.remove(for: Clave.refreshToken)
     try? keychain.remove(for: Clave.expiresAt)
+    try? keychain.remove(for: Clave.refreshExpiresAt)
     expiresAt = nil
+    reconnectBy = nil
     state = .desconectado
   }
 
@@ -121,6 +133,7 @@ final class PSNAccountViewModel {
     }
 
     expiresAt = credenciales.expiresAt
+    reconnectBy = credenciales.refreshExpiresAt
 
     // Un token de acceso vencido no es problema: se renueva solo en la primera
     // peticion. Se muestra como conectado porque, de cara al usuario, lo esta.
@@ -134,10 +147,16 @@ final class PSNAccountViewModel {
           let segundos = TimeInterval(vence)
     else { return nil }
 
+    let refrescoVence = (try? keychain.string(for: Clave.refreshExpiresAt))
+      .flatMap { $0 }
+      .flatMap(TimeInterval.init)
+      .map(Date.init(timeIntervalSince1970:))
+
     return PSNCredentials(
       accessToken: access,
       refreshToken: refresh,
-      expiresAt: Date(timeIntervalSince1970: segundos)
+      expiresAt: Date(timeIntervalSince1970: segundos),
+      refreshExpiresAt: refrescoVence
     )
   }
 
@@ -146,6 +165,13 @@ final class PSNAccountViewModel {
     try keychain.set(credenciales.refreshToken, for: Clave.refreshToken)
     try keychain.set(String(credenciales.expiresAt.timeIntervalSince1970), for: Clave.expiresAt)
     expiresAt = credenciales.expiresAt
+
+    // Renovar no siempre trae fecha nueva de refresco: si no viene, se
+    // conserva la que ya se conocia en vez de borrarla.
+    if let vence = credenciales.refreshExpiresAt {
+      try keychain.set(String(vence.timeIntervalSince1970), for: Clave.refreshExpiresAt)
+      reconnectBy = vence
+    }
   }
 
   /// Traduce un error al estado que corresponde.

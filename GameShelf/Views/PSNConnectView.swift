@@ -61,9 +61,11 @@ struct PSNConnectView: View {
       Label("Cuenta conectada", systemImage: "checkmark.circle.fill")
         .foregroundStyle(.green)
 
-      if let vence = viewModel.expiresAt {
-        LabeledContent("El acceso vence") {
-          Text(vence, style: .relative)
+      // Solo se muestra la fecha que exige hacer algo. La del token de acceso
+      // es de una hora y se renueva sola: ponerla aqui solo preocupa.
+      if let volver = viewModel.reconnectBy {
+        LabeledContent("Volver a copiar el codigo") {
+          Text(volver, style: .relative)
         }
       }
 
@@ -71,8 +73,9 @@ struct PSNConnectView: View {
     } footer: {
       Text(
         """
-        El acceso se renueva solo mientras uses la app. Cada dos meses, mas o \
-        menos, Sony pide volver a copiar el codigo.
+        No hay que hacer nada mientras tanto: el acceso se renueva solo. Cuando \
+        Sony deje de aceptarlo, la app te lo dice aca y solo hay que repetir \
+        los tres pasos.
         """
       )
     }

@@ -233,6 +233,31 @@ struct PSNRefreshTests {
     #expect(error?.necesitaTokenNuevo == true)
   }
 
+  @Test("Se guarda cuando habra que volver a copiar el codigo, si Sony lo dice")
+  func fechaDeReconexion() async throws {
+    let transporte = StubPSNTransport(
+      responde: #"{"access_token":"A","refresh_token":"R","expires_in":3600,"refresh_token_expires_in":5184000}"#
+    )
+    let ahora = Date(timeIntervalSince1970: 1000)
+
+    let credenciales = try await PSNAuthService(transport: transporte, ahora: { ahora })
+      .refresh(using: "X")
+
+    // Es la fecha que importa: hasta entonces la app renueva sola.
+    #expect(credenciales.refreshExpiresAt == ahora.addingTimeInterval(5_184_000))
+  }
+
+  @Test("Si Sony no dice cuanto dura el refresco, no se inventa una fecha")
+  func sinFechaDeReconexion() async throws {
+    let transporte = StubPSNTransport(responde: #"{"access_token":"A","refresh_token":"R"}"#)
+
+    let credenciales = try await PSNAuthService(transport: transporte).refresh(using: "X")
+
+    // Mostrar una fecha estimada seria peor que no mostrar ninguna: el usuario
+    // planificaria con un dato inventado.
+    #expect(credenciales.refreshExpiresAt == nil)
+  }
+
   @Test("Sin expires_in se asume una hora en vez de tratarlo como eterno")
   func sinDuracion() async throws {
     let transporte = StubPSNTransport(responde: #"{"access_token":"A","refresh_token":"R"}"#)
