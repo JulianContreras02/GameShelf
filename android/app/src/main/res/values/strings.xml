@@ -95,4 +95,219 @@
 
     <!-- Nombre de respaldo cuando una tienda no manda el titulo -->
     <string name="steam_fallback_name">Juego de Steam %1$s</string>
+
+    <!-- Orden de la biblioteca -->
+    <string name="sort_name_asc">Nombre (A-Z)</string>
+    <string name="sort_playtime_desc">Mas jugados</string>
+    <string name="sort_playtime_asc">Menos jugados</string>
+    <string name="sort_last_played">Jugados hace poco</string>
+    <string name="sort_release_date">Mas recientes</string>
+    <string name="sort_recently_added">Agregados hace poco</string>
+    <string name="sort_release_date_unavailable">Steam no manda la fecha de lanzamiento, asi que este orden todavia no cambia nada.</string>
+
+    <!-- Orden de la lista de deseos -->
+    <string name="wishlist_sort_recent">Deseado hace poco</string>
+    <string name="wishlist_sort_discount">Mayor descuento</string>
+    <string name="wishlist_sort_price">Precio mas bajo</string>
+
+    <!-- Grupos automaticos de la biblioteca -->
+    <string name="section_recently_played">Jugados hace poco</string>
+    <string name="section_recently_played_explanation">Con partidas en las ultimas dos semanas</string>
+    <string name="section_most_played">Los que mas juegas</string>
+    <string name="section_most_played_explanation">Donde se te va la mayor parte del tiempo</string>
+    <string name="section_barely_tried">Apenas probados</string>
+    <string name="section_barely_tried_explanation">Menos de una hora: los abriste y ahi quedaron</string>
+    <string name="section_never_played">Nunca jugados</string>
+    <string name="section_never_played_explanation">Los tienes pero nunca los abriste</string>
+
+    <!-- Errores al nombrar colecciones y etiquetas -->
+    <string name="collection_error_empty_name">El nombre no puede estar vacio.</string>
+    <string name="collection_error_duplicate">Ya tienes una coleccion llamada \"%1$s\".</string>
+    <string name="collection_error_too_long">El nombre no puede pasar de %1$d caracteres.</string>
+    <string name="tag_error_empty">La etiqueta no puede estar vacia.</string>
+    <string name="tag_error_too_long">La etiqueta no puede pasar de %1$d caracteres.</string>
+
+    <!-- Errores genericos de las pantallas -->
+    <string name="error_sync_generic">No se pudo sincronizar.</string>
+    <string name="error_prices_generic">No se pudieron consultar los precios.</string>
+    <string name="error_game_exists">Ya tienes \"%1$s\" en tu biblioteca.</string>
+    <string name="error_name_empty">El nombre no puede estar vacio.</string>
+
+    <!-- Secciones de la app -->
+    <string name="tab_library">Biblioteca</string>
+    <string name="tab_progress">Progreso</string>
+    <string name="tab_collections">Colecciones</string>
+    <string name="tab_settings">Ajustes</string>
+    <string name="tab_wishlist">Lista de deseos</string>
+
+    <!-- Acciones -->
+    <string name="action_retry">Reintentar</string>
+    <string name="action_sync">Sincronizar</string>
+    <string name="action_sync_library">Sincronizar biblioteca</string>
+    <string name="action_done">Listo</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_add">Agregar</string>
+    <string name="action_edit">Editar</string>
+    <string name="action_delete">Borrar</string>
+    <string name="action_apply">Aplicar</string>
+    <string name="action_back">Volver</string>
+    <string name="action_connect">Conectar</string>
+    <string name="action_disconnect">Desconectar</string>
+    <string name="action_options">Opciones</string>
+    <string name="action_sort_by">Ordenar por</string>
+    <string name="action_filter">Filtrar</string>
+    <string name="action_clear_filters">Quitar filtros</string>
+    <string name="action_clear_search">Limpiar busqueda</string>
+    <string name="action_select_games">Seleccionar juegos</string>
+    <string name="action_add_to_collection">Agregar a coleccion</string>
+    <string name="action_new_collection">Nueva coleccion</string>
+    <string name="action_move_up">Subir</string>
+    <string name="action_move_down">Bajar</string>
+    <string name="action_open_in_store">Abrir en la tienda</string>
+    <string name="action_open_link">Abrir enlace</string>
+    <string name="action_remove_tag">Quitar la etiqueta %1$s</string>
+
+    <!-- Biblioteca -->
+    <string name="library_search_placeholder">Buscar en tu biblioteca</string>
+    <string name="library_no_results">Sin resultados</string>
+    <string name="library_no_results_detail">Ningun juego coincide con \"%1$s\".</string>
+    <string name="library_game_count">%1$d juegos</string>
+    <string name="library_result_count">%1$d resultados</string>
+    <string name="library_visible_of_total">%1$d de %2$d juegos</string>
+    <string name="library_select_games">Selecciona juegos</string>
+    <string name="library_selected_count">%1$d seleccionados</string>
+    <string name="library_updated">Actualizado %1$s</string>
+    <string name="library_syncing">Trayendo tu biblioteca</string>
+    <string name="library_syncing_detail">Estamos preguntandole a Steam que juegos tienes.</string>
+    <string name="library_empty">Tu biblioteca esta vacia</string>
+    <string name="library_empty_detail">Sincroniza con Steam para traer los juegos que ya tienes.</string>
+    <string name="library_empty_after_sync">Steam no devolvio ningun juego</string>
+    <string name="library_empty_after_sync_detail">Puede que tu biblioteca este vacia, o que tu perfil de Steam sea privado. Steam responde igual en los dos casos.</string>
+    <string name="notice_showing_saved_data">Estas viendo los datos guardados.</string>
+    <string name="trophy_progress_percent">%1$d%%</string>
+    <string name="trophy_earned_of_total">%1$d / %2$d</string>
+
+    <!-- Filtros -->
+    <string name="filters_title">Filtrar</string>
+    <string name="filters_result_count">%1$d juegos coinciden</string>
+    <string name="filters_store">Tienda</string>
+    <string name="filters_status">Estado</string>
+    <string name="filters_collection">Coleccion</string>
+    <string name="filters_tag">Etiqueta</string>
+
+    <!-- Insights -->
+    <string name="insights_title">Tu biblioteca en numeros</string>
+    <string name="insights_empty">Todavia no hay nada que contar</string>
+    <string name="insights_empty_detail">Sincroniza tu biblioteca y aca apareceran tus numeros.</string>
+    <string name="insights_summary">Resumen</string>
+    <string name="insights_total_games">Juegos</string>
+    <string name="insights_total_hours">Horas jugadas</string>
+    <string name="insights_average_hours">Promedio por juego jugado</string>
+    <string name="insights_unplayed">Sin jugar</string>
+    <string name="insights_unplayed_value">%1$d (%2$d%%)</string>
+    <string name="insights_concentration">Donde se te va el tiempo</string>
+    <string name="insights_top_game_share">El que mas juegas</string>
+    <string name="insights_top_five_share">Los cinco que mas juegas</string>
+    <string name="insights_section_more">de %1$d</string>
+    <string name="insights_mark_backlog_criteria">Solo los que tienen 0 horas y ningun estado puesto por ti</string>
+    <plurals name="insights_half_the_time">
+        <item quantity="one">Un solo juego se lleva la mitad de tus horas.</item>
+        <item quantity="other">%1$d juegos se llevan la mitad de tus horas.</item>
+    </plurals>
+    <plurals name="insights_mark_backlog">
+        <item quantity="one">Marcar %1$d juego como pendiente</item>
+        <item quantity="other">Marcar %1$d juegos como pendientes</item>
+    </plurals>
+    <plurals name="insights_marked_backlog">
+        <item quantity="one">Se marco %1$d juego como pendiente.</item>
+        <item quantity="other">Se marcaron %1$d juegos como pendientes.</item>
+    </plurals>
+
+    <!-- Ficha de un juego -->
+    <string name="detail_not_found">Este juego ya no esta</string>
+    <string name="detail_playtime">Tiempo jugado</string>
+    <string name="detail_last_played">Ultima vez</string>
+    <string name="detail_coming_soon">Proximamente</string>
+    <string name="detail_status">Estado</string>
+    <string name="detail_stores">Tiendas</string>
+    <string name="detail_no_stores">Este juego lo agregaste a mano, no viene de ninguna tienda.</string>
+    <string name="detail_trophies">Trofeos</string>
+    <string name="detail_collections">Colecciones</string>
+    <string name="detail_no_collections">Todavia no tienes colecciones.</string>
+    <string name="detail_tags">Etiquetas</string>
+    <string name="detail_tags_placeholder">Escribe una etiqueta</string>
+    <string name="detail_tags_create">Crear \"%1$s\"</string>
+    <string name="detail_notes">Notas</string>
+    <string name="detail_notes_placeholder">Lo que quieras recordar de este juego</string>
+    <string name="detail_notes_counter">%1$d / %2$d</string>
+
+    <!-- Colecciones -->
+    <string name="collections_empty">Todavia no tienes colecciones</string>
+    <string name="collections_empty_detail">Una coleccion junta juegos de distintas tiendas en un mismo grupo.</string>
+    <string name="collection_empty">Esta coleccion esta vacia</string>
+    <string name="collection_empty_detail">Agrega juegos desde su ficha, o marca varios en la biblioteca.</string>
+    <string name="collection_new">Nueva coleccion</string>
+    <string name="collection_edit">Editar coleccion</string>
+    <string name="collection_name">Nombre</string>
+    <string name="collection_icon">Icono</string>
+    <string name="collection_color">Color</string>
+    <string name="collection_delete_title">Borrar \"%1$s\"</string>
+    <string name="collection_delete_message">Los juegos que contiene no se borran: solo se deshace la agrupacion.</string>
+    <plurals name="collection_game_count">
+        <item quantity="one">%1$d juego</item>
+        <item quantity="other">%1$d juegos</item>
+    </plurals>
+    <plurals name="bulk_add_title">
+        <item quantity="one">Agregar %1$d juego a una coleccion</item>
+        <item quantity="other">Agregar %1$d juegos a una coleccion</item>
+    </plurals>
+
+    <!-- Progreso -->
+    <string name="progress_empty">No tienes juegos en \"%1$s\"</string>
+    <string name="progress_empty_detail">Puedes cambiar el estado de un juego desde su ficha.</string>
+
+    <!-- Lista de deseos -->
+    <string name="wishlist_empty">Tu lista de deseos esta vacia</string>
+    <string name="wishlist_empty_detail">Sincroniza con Steam, o agrega un juego a mano.</string>
+    <string name="wishlist_empty_after_sync">Steam no devolvio ningun juego</string>
+    <string name="wishlist_empty_after_sync_detail">Puede que tu lista este vacia, o que sea privada. Steam responde igual en los dos casos, asi que no se quito nada de lo que ya tenias.</string>
+    <string name="wishlist_add_manual">Agregar a mano</string>
+    <string name="wishlist_add_manual_detail">Para juegos que no estan en Steam, o si su lista de deseos deja de responder.</string>
+    <string name="wishlist_game_name">Nombre del juego</string>
+    <string name="wishlist_delete_title">Quitar \"%1$s\" de la lista</string>
+    <string name="wishlist_no_price">Sin precio</string>
+    <string name="wishlist_loading_prices">Consultando precios…</string>
+    <string name="wishlist_at_historical_low">%1$d en su precio mas bajo de siempre</string>
+    <string name="wishlist_historical_low">Minimo historico</string>
+    <string name="wishlist_lowest_was">Minimo: %1$s</string>
+    <string name="wishlist_price_now">Ahora %1$s</string>
+    <string name="wishlist_price_discount">%1$d por ciento de descuento</string>
+
+    <!-- Ajustes -->
+    <string name="settings_missing_keys">Faltan claves de configuracion</string>
+    <string name="settings_missing_keys_detail">Copia Config/Secrets.example.xcconfig a Config/Secrets.xcconfig y llena los valores. Las instrucciones estan en el README.</string>
+    <string name="settings_accounts">Cuentas</string>
+    <string name="settings_sections">Secciones</string>
+    <string name="settings_playstation">PlayStation Network</string>
+    <string name="settings_epic">Epic Games</string>
+    <string name="settings_connected">Conectado</string>
+    <string name="settings_not_connected">Sin conectar</string>
+    <string name="settings_wishlist_detail">Los juegos que quieres, con sus ofertas.</string>
+    <string name="settings_about">GameShelf organiza tu biblioteca de videojuegos en un solo lugar, sin importar de que tienda vienen.</string>
+
+    <!-- Conectar cuentas -->
+    <string name="account_how_to">Como conectarla</string>
+    <string name="account_reconnect_by">Habra que volver a conectar antes de %1$s</string>
+    <string name="account_sync_result">%1$d nuevos, %2$d actualizados, %3$d unidos a juegos que ya tenias</string>
+    <string name="psn_step_1">Inicia sesion en playstation.com</string>
+    <string name="psn_step_2">En el mismo navegador, abre la pagina del codigo y copia lo que aparece entre comillas</string>
+    <string name="psn_step_3">Pega el codigo aca abajo</string>
+    <string name="psn_token_lifetime">Los dos pasos tienen que ser en el mismo navegador: lo que comparten es la sesion. El codigo dura unos dos meses y mientras tanto la app renueva el acceso sola.</string>
+    <string name="psn_code_label">Codigo de PlayStation (NPSSO)</string>
+    <string name="epic_step_1">Inicia sesion en Epic Games</string>
+    <string name="epic_step_2">En el mismo navegador, abre la pagina del codigo y copia lo que hay tras \"authorizationCode\"</string>
+    <string name="epic_step_3">Pega el codigo aca abajo enseguida</string>
+    <string name="epic_warning">Ojo: Epic avisa en su propia pagina de que ese codigo da acceso completo a la cuenta. Aca se guarda cifrado y no se manda a ningun servidor, pero no conviene pegarlo en ningun otro sitio. Los codigos caducan en segundos.</string>
+    <string name="epic_code_label">Codigo de autorizacion de Epic</string>
 </resources>
