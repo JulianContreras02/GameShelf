@@ -132,15 +132,25 @@ final class Game {
   /// Desglose de trofeos, si alguna tienda lo lleva.
   ///
   /// Se toma el de la entrada con mas progreso: si un juego esta en PS4 y en
-  /// PS5 con dos listas, la que interesa es la mas avanzada, que es la misma
-  /// de la que sale `trophyProgress`.
-  var trophyBreakdown: (earned: TrophyCounts, defined: TrophyCounts)? {
+  /// PS5 con dos listas, la que interesa es la mas avanzada.
+  ///
+  /// El porcentaje viaja junto con los conteos y **no** se lee de
+  /// `trophyProgress`: aquel mira todas las entradas y este solo las que
+  /// tienen desglose, asi que pueden salir de listas distintas. Pasa con una
+  /// entrada guardada antes de que se guardaran los conteos, que tiene
+  /// porcentaje pero no desglose. Si la ficha mezclara los dos, ensenaria un
+  /// "90%" encima de un "15 / 38" de otra lista.
+  var trophyBreakdown: TrophyBreakdown? {
     let conTrofeos = storeEntries
       .filter { $0.definedTrophies?.isEmpty == false }
       .max { ($0.trophyProgress ?? 0) < ($1.trophyProgress ?? 0) }
 
     guard let entrada = conTrofeos, let definidos = entrada.definedTrophies else { return nil }
-    return (entrada.earnedTrophies ?? TrophyCounts(), definidos)
+    return TrophyBreakdown(
+      earned: entrada.earnedTrophies ?? TrophyCounts(),
+      defined: definidos,
+      progress: entrada.trophyProgress
+    )
   }
 
   /// El appid de Steam, si el juego viene de ahi.

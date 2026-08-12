@@ -190,12 +190,9 @@ struct GameDetailView: View {
           )
           .accessibilityAddTraits(.isButton)
           .sheet(isPresented: $mostrandoTrofeos) {
-            TrophyBreakdownView(
-              gameName: game.name,
-              earned: desglose.earned,
-              defined: desglose.defined,
-              progress: trofeos
-            )
+            // El desglose viaja entero: lleva su propio porcentaje, que es el
+            // que corresponde a los conteos que la hoja ensena.
+            TrophyBreakdownView(gameName: game.name, breakdown: desglose)
           }
         } else {
           // Sin desglose guardado (por ejemplo antes de re-sincronizar) se
