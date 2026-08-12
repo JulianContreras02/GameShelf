@@ -40,6 +40,7 @@ enum SteamGameMapper {
       storeGameID: String(dto.appID),
       storeURL: dto.storeURL?.absoluteString,
       playtimeHours: dto.playtimeHours,
+      recentPlaytimeHours: dto.playtimeLast2WeeksHours,
       lastPlayedAt: dto.lastPlayed,
       lastSyncedAt: Date()
     )
@@ -69,6 +70,7 @@ enum SteamGameMapper {
       entrada.storeGameID = String(dto.appID)
       entrada.storeURL = dto.storeURL?.absoluteString
       entrada.playtimeHours = dto.playtimeHours
+      entrada.recentPlaytimeHours = dto.playtimeLast2WeeksHours
       entrada.lastPlayedAt = dto.lastPlayed
       entrada.lastSyncedAt = Date()
     } else {

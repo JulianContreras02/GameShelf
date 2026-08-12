@@ -28,6 +28,12 @@ final class StoreEntry {
   /// Horas jugadas registradas por esta tienda en particular.
   var playtimeHours: Double = 0
 
+  /// Horas jugadas en las ultimas dos semanas, segun la tienda.
+  ///
+  /// `0` si no hubo actividad. Viene de `playtime_2weeks` en Steam, que solo
+  /// manda el campo cuando el juego se toco hace poco.
+  var recentPlaytimeHours: Double = 0
+
   /// Ultima vez que el usuario jugo, segun la tienda.
   ///
   /// `nil` si nunca lo jugo ahi. Viene de `rtime_last_played` en Steam.
@@ -44,6 +50,7 @@ final class StoreEntry {
     storeGameID: String,
     storeURL: String? = nil,
     playtimeHours: Double = 0,
+    recentPlaytimeHours: Double = 0,
     lastPlayedAt: Date? = nil,
     lastSyncedAt: Date? = nil
   ) {
@@ -52,6 +59,7 @@ final class StoreEntry {
     self.storeGameID = storeGameID
     self.storeURL = storeURL
     self.playtimeHours = playtimeHours
+    self.recentPlaytimeHours = recentPlaytimeHours
     self.lastPlayedAt = lastPlayedAt
     self.lastSyncedAt = lastSyncedAt
   }

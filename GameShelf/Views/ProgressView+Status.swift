@@ -30,6 +30,26 @@ struct GameProgressView: View {
         } footer: {
           Text("El estado lo pones tu: ninguna sincronizacion con Steam lo cambia.")
         }
+
+        Section {
+          NavigationLink {
+            LibraryInsightsView()
+          } label: {
+            Label {
+              VStack(alignment: .leading, spacing: 2) {
+                Text("Analisis de la biblioteca")
+                Text("Que juegas, que no, y donde se va tu tiempo")
+                  .font(.caption)
+                  .foregroundStyle(.secondary)
+              }
+            } icon: {
+              Image(systemName: "chart.bar.xaxis")
+                .foregroundStyle(.tint)
+            }
+          }
+        } footer: {
+          Text("Se calcula solo, con las horas que reporta cada tienda.")
+        }
       }
       .navigationTitle("Progreso")
     }
