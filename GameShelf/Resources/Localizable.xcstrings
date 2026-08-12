@@ -3467,6 +3467,16 @@
         }
       }
     },
+    "Traer mis juegos de Epic": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bring in my Epic games"
+          }
+        }
+      }
+    },
     "Traer mis juegos de PlayStation": {
       "localizations": {
         "en": {

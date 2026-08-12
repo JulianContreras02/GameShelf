@@ -3,6 +3,7 @@
 //  GameShelf
 //
 
+import SwiftData
 import SwiftUI
 
 /// Conectar la cuenta de Epic pegando un codigo de autorizacion.
@@ -13,6 +14,7 @@ import SwiftUI
 /// repite aca: el usuario tiene que poder decidir con la informacion delante.
 struct EpicConnectView: View {
   @Environment(\.openURL) private var openURL
+  @Environment(\.modelContext) private var modelContext
 
   let viewModel: EpicAccountViewModel
 
@@ -95,6 +97,30 @@ struct EpicConnectView: View {
         }
       }
 
+      Button(action: sincronizar) {
+        if viewModel.libraryState.isSyncing {
+          HStack(spacing: 8) {
+            ProgressView().controlSize(.small)
+            Text("Trayendo tus juegos…")
+          }
+        } else {
+          Label("Traer mis juegos de Epic", systemImage: "arrow.down.circle")
+        }
+      }
+      .disabled(viewModel.libraryState.isSyncing)
+
+      if case .succeeded(let creados, let actualizados, let unidos) = viewModel.libraryState {
+        Text(resumen(creados: creados, actualizados: actualizados, unidos: unidos))
+          .font(.footnote)
+          .foregroundStyle(.secondary)
+      }
+
+      if case .failed(let mensaje) = viewModel.libraryState {
+        Label(mensaje, systemImage: "exclamationmark.triangle.fill")
+          .font(.footnote)
+          .foregroundStyle(.orange)
+      }
+
       Button("Desconectar", role: .destructive) { confirmandoDesconexion = true }
     } footer: {
       Text("El acceso se renueva solo mientras uses la app.")
@@ -168,6 +194,27 @@ struct EpicConnectView: View {
       }
       .font(.subheadline)
     }
+  }
+
+  private func sincronizar() {
+    Task { await viewModel.syncLibrary(into: modelContext) }
+  }
+
+  /// Que cambio en la ultima sincronizacion.
+  private func resumen(creados: Int, actualizados: Int, unidos: Int) -> String {
+    var partes = [
+      String(localized: "\(creados) juegos nuevos", comment: "Resultado de sincronizar con PSN"),
+      String(localized: "\(actualizados) actualizados", comment: "Resultado de sincronizar con PSN")
+    ]
+    if unidos > 0 {
+      partes.append(
+        String(
+          localized: "\(unidos) que ya tenias en otra tienda",
+          comment: "Juegos que ya estaban y ahora tambien tienen PSN"
+        )
+      )
+    }
+    return partes.joined(separator: " · ")
   }
 
   private func conectar() {
