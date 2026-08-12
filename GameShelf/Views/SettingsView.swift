@@ -8,6 +8,7 @@ import SwiftUI
 /// Ajustes de la app. Por ahora, las cuentas conectadas.
 struct SettingsView: View {
   @State private var psn = PSNAccountViewModel()
+  @State private var epic = EpicAccountViewModel()
 
   var body: some View {
     NavigationStack {
@@ -33,6 +34,16 @@ struct SettingsView: View {
               conectado: psn.state.isConnected
             )
           }
+          NavigationLink {
+            EpicConnectView(viewModel: epic)
+          } label: {
+            FilaDeTienda(
+              nombre: "Epic Games",
+              simbolo: "gamecontroller.fill",
+              detalle: detalleEpic,
+              conectado: epic.state.isConnected
+            )
+          }
         } header: {
           Text("Cuentas")
         } footer: {
@@ -40,6 +51,19 @@ struct SettingsView: View {
         }
       }
       .navigationTitle("Ajustes")
+    }
+  }
+
+  private var detalleEpic: String {
+    switch epic.state {
+    case .conectado:
+      epic.displayName ?? String(localized: "Conectado", comment: "Estado de una cuenta")
+    case .necesitaCodigoNuevo:
+      String(localized: "Hay que volver a conectarla", comment: "Estado de una cuenta")
+    case .trabajando:
+      String(localized: "Conectando…", comment: "Estado de una cuenta")
+    case .desconectado, .fallo:
+      String(localized: "Sin conectar", comment: "Estado de una cuenta")
     }
   }
 
