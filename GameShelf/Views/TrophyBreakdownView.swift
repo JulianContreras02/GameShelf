@@ -14,11 +14,10 @@ struct TrophyBreakdownView: View {
   @Environment(\.dismiss) private var dismiss
 
   let gameName: String
-  let earned: TrophyCounts
-  let defined: TrophyCounts
+  let breakdown: TrophyBreakdown
 
-  /// Porcentaje conseguido, tal como lo reporta la tienda.
-  let progress: Int?
+  private var earned: TrophyCounts { breakdown.earned }
+  private var defined: TrophyCounts { breakdown.defined }
 
   var body: some View {
     NavigationStack {
@@ -36,7 +35,11 @@ struct TrophyBreakdownView: View {
         } header: {
           Text("Por tipo")
         } footer: {
-          Text("El platino se consigue al completar todos los demas trofeos del juego.")
+          // El texto vive en `TrophyKind` y no aca suelto: es lo que es un
+          // platino, no una nota de esta pantalla.
+          if let explicacion = TrophyKind.platinum.explanation {
+            Text(explicacion)
+          }
         }
       }
       .navigationTitle("Trofeos")
@@ -53,7 +56,7 @@ struct TrophyBreakdownView: View {
     Section {
       LabeledContent("Juego") { Text(gameName).multilineTextAlignment(.trailing) }
 
-      if let progress {
+      if let progress = breakdown.progress {
         LabeledContent("Coleccion") {
           Text(progress.formatted(.percent.scale(1)))
             .fontWeight(.semibold)
@@ -152,17 +155,21 @@ extension TrophyKind {
 #Preview("Con platino") {
   TrophyBreakdownView(
     gameName: "Halo: Campaign Evolved",
-    earned: TrophyCounts(bronze: 52, silver: 3, gold: 2, platinum: 1),
-    defined: TrophyCounts(bronze: 52, silver: 3, gold: 2, platinum: 1),
-    progress: 100
+    breakdown: TrophyBreakdown(
+      earned: TrophyCounts(bronze: 52, silver: 3, gold: 2, platinum: 1),
+      defined: TrophyCounts(bronze: 52, silver: 3, gold: 2, platinum: 1),
+      progress: 100
+    )
   )
 }
 
 #Preview("A medias") {
   TrophyBreakdownView(
     gameName: "Grand Theft Auto V",
-    earned: TrophyCounts(bronze: 2, silver: 0, gold: 0, platinum: 0),
-    defined: TrophyCounts(bronze: 48, silver: 7, gold: 1, platinum: 1),
-    progress: 3
+    breakdown: TrophyBreakdown(
+      earned: TrophyCounts(bronze: 2, silver: 0, gold: 0, platinum: 0),
+      defined: TrophyCounts(bronze: 48, silver: 7, gold: 1, platinum: 1),
+      progress: 3
+    )
   )
 }

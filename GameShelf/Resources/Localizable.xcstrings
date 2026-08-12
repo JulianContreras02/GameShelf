@@ -3165,17 +3165,6 @@
         }
       }
     },
-    "Se consigue al tener todos los demas": {
-      "comment": "Que es el trofeo de platino",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Earned by getting all the others"
-          }
-        }
-      }
-    },
     "Se guarda solo al salir.": {
       "localizations": {
         "en": {

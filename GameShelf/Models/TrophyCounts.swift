@@ -31,6 +31,23 @@ struct TrophyCounts: Codable, Hashable, Sendable {
   }
 }
 
+/// El desglose de trofeos de un juego: cuantos tiene, cuantos llevas y que
+/// porcentaje representa eso.
+///
+/// Los tres van juntos porque salen de la **misma** lista de trofeos. Un juego
+/// puede tener dos (la de PS4 y la de PS5), y mezclar el porcentaje de una con
+/// los conteos de la otra ensenaria dos numeros que se contradicen.
+struct TrophyBreakdown: Hashable, Sendable {
+  /// Cuantos se consiguieron.
+  var earned: TrophyCounts
+
+  /// Cuantos tiene el juego en total.
+  var defined: TrophyCounts
+
+  /// Porcentaje conseguido, tal como lo reporta la tienda. `nil` si no lo dice.
+  var progress: Int?
+}
+
 /// Los tipos de trofeo de PlayStation.
 ///
 /// El orden es el de la propia consola: de mas comun a mas dificil, con el
@@ -50,12 +67,14 @@ enum TrophyKind: String, CaseIterable, Sendable {
     }
   }
 
-  /// Explicacion corta, para el platino que es el unico que no es obvio.
+  /// Que hay que hacer para conseguirlo, cuando no es obvio.
+  ///
+  /// Solo el platino la lleva: los otros tres se entienden solos.
   var explanation: String? {
     switch self {
     case .platinum:
       String(
-        localized: "Se consigue al tener todos los demas",
+        localized: "El platino se consigue al completar todos los demas trofeos del juego.",
         comment: "Que es el trofeo de platino"
       )
     case .bronze, .silver, .gold:

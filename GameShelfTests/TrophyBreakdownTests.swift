@@ -182,6 +182,33 @@ struct TrophyPersistenceTests {
     #expect(desglose.earned.silver == 4)
   }
 
+  @Test("El porcentaje del desglose es el de la lista que se muestra")
+  func porcentajeCoherente() throws {
+    let context = try hacerContexto()
+
+    // Una entrada vieja, guardada antes de que se guardaran los conteos: tiene
+    // porcentaje pero no desglose. Y otra con desglose, pero menos avanzada.
+    let juego = Game(name: "Until Dawn")
+    juego.storeEntries = [
+      StoreEntry(store: .psn, storeGameID: "PS4", trophyProgress: 90),
+      StoreEntry(
+        store: .psn,
+        storeGameID: "PS5",
+        trophyProgress: 50,
+        earnedTrophies: TrophyCounts(bronze: 15),
+        definedTrophies: TrophyCounts(bronze: 30, silver: 5, gold: 2, platinum: 1)
+      )
+    ]
+    context.insert(juego)
+
+    let desglose = try #require(juego.trophyBreakdown)
+
+    // Sin esto la ficha ensena "90%" encima de un "15 / 38" que sale de la
+    // otra lista, y los dos numeros se contradicen.
+    #expect(desglose.progress == 50)
+    #expect(desglose.earned.total == 15)
+  }
+
   @Test("Re-sincronizar refresca el desglose")
   func seRefresca() throws {
     let context = try hacerContexto()
