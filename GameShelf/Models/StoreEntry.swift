@@ -50,6 +50,15 @@ final class StoreEntry {
   /// no viene, se pone en `nil` sin tocar el estado.
   var wishlistedAt: Date?
 
+  /// Porcentaje de trofeos o logros conseguidos, de 0 a 100.
+  ///
+  /// `nil` si la tienda no lleva la cuenta, o si el juego no tiene trofeos.
+  /// Distinto de `0`, que significa "los tiene y no has conseguido ninguno".
+  var trophyProgress: Int?
+
+  /// Cuantas veces se ha abierto el juego, si la tienda lo cuenta.
+  var launchCount: Int?
+
   /// Si la tienda dice que el juego todavia no ha salido.
   ///
   /// No basta con mirar `Game.releaseDate`: Steam informa el lanzamiento de una
@@ -74,6 +83,8 @@ final class StoreEntry {
     lastPlayedAt: Date? = nil,
     wishlistedAt: Date? = nil,
     comingSoon: Bool = false,
+    trophyProgress: Int? = nil,
+    launchCount: Int? = nil,
     lastSyncedAt: Date? = nil
   ) {
     self.id = UUID()
@@ -85,6 +96,8 @@ final class StoreEntry {
     self.lastPlayedAt = lastPlayedAt
     self.wishlistedAt = wishlistedAt
     self.comingSoon = comingSoon
+    self.trophyProgress = trophyProgress
+    self.launchCount = launchCount
     self.lastSyncedAt = lastSyncedAt
   }
 }

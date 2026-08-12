@@ -3,6 +3,7 @@
 //  GameShelf
 //
 
+import SwiftData
 import SwiftUI
 
 /// Conectar la cuenta de PlayStation pegando el codigo NPSSO.
@@ -13,6 +14,7 @@ import SwiftUI
 /// bien: es un paso raro y sin instrucciones claras no hay forma de adivinarlo.
 struct PSNConnectView: View {
   @Environment(\.openURL) private var openURL
+  @Environment(\.modelContext) private var modelContext
 
   let viewModel: PSNAccountViewModel
 
@@ -67,6 +69,30 @@ struct PSNConnectView: View {
         LabeledContent("Volver a copiar el codigo") {
           Text(volver, style: .relative)
         }
+      }
+
+      Button(action: sincronizar) {
+        if viewModel.libraryState.isSyncing {
+          HStack(spacing: 8) {
+            ProgressView().controlSize(.small)
+            Text("Trayendo tus juegos…")
+          }
+        } else {
+          Label("Traer mis juegos de PlayStation", systemImage: "arrow.down.circle")
+        }
+      }
+      .disabled(viewModel.libraryState.isSyncing)
+
+      if case .succeeded(let creados, let actualizados, let unidos) = viewModel.libraryState {
+        Text(resumen(creados: creados, actualizados: actualizados, unidos: unidos))
+          .font(.footnote)
+          .foregroundStyle(.secondary)
+      }
+
+      if case .failed(let mensaje, _) = viewModel.libraryState {
+        Label(mensaje, systemImage: "exclamationmark.triangle.fill")
+          .font(.footnote)
+          .foregroundStyle(.orange)
       }
 
       Button("Desconectar", role: .destructive) { confirmandoDesconexion = true }
@@ -153,6 +179,31 @@ struct PSNConnectView: View {
       }
       .font(.subheadline)
     }
+  }
+
+  private func sincronizar() {
+    Task { await viewModel.syncLibrary(into: modelContext) }
+  }
+
+  /// Que cambio en la ultima sincronizacion.
+  private func resumen(creados: Int, actualizados: Int, unidos: Int) -> String {
+    var partes = [
+      String(localized: "\(creados) juegos nuevos", comment: "Resultado de sincronizar con PSN"),
+      String(localized: "\(actualizados) actualizados", comment: "Resultado de sincronizar con PSN")
+    ]
+
+    // Los unidos solo se mencionan si los hubo: es un concepto que no hace
+    // falta explicar cuando no aplica.
+    if unidos > 0 {
+      partes.append(
+        String(
+          localized: "\(unidos) que ya tenias en otra tienda",
+          comment: "Juegos que ya estaban y ahora tambien tienen PSN"
+        )
+      )
+    }
+
+    return partes.joined(separator: " · ")
   }
 
   private func conectar() {

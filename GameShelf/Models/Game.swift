@@ -121,6 +121,14 @@ final class Game {
     return false
   }
 
+  /// Porcentaje de trofeos conseguidos, si alguna tienda lo lleva.
+  ///
+  /// Si esta en varias, el mas alto: es el progreso que el usuario reconoce
+  /// como suyo.
+  var trophyProgress: Int? {
+    storeEntries.compactMap(\.trophyProgress).max()
+  }
+
   /// El appid de Steam, si el juego viene de ahi.
   ///
   /// Hace falta para consultar precios: IsThereAnyDeal identifica los juegos

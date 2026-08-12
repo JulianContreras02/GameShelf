@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import SwiftData
 
 /// La conexion con la cuenta de PlayStation: conectar, renovar y desconectar.
 ///
@@ -121,6 +122,55 @@ final class PSNAccountViewModel {
     expiresAt = nil
     reconnectBy = nil
     state = .desconectado
+  }
+
+  // MARK: - Biblioteca
+
+  /// En que punto esta la sincronizacion de la biblioteca de PSN.
+  enum LibraryState: Equatable {
+    case idle
+    case syncing
+    case succeeded(created: Int, updated: Int, merged: Int)
+    case failed(message: String, suggestion: String?)
+
+    var isSyncing: Bool { self == .syncing }
+  }
+
+  private(set) var libraryState: LibraryState = .idle
+
+  /// Trae los juegos de PlayStation y los guarda.
+  ///
+  /// No propaga errores: los deja en `libraryState`. Si la sesion caduco, el
+  /// estado de la cuenta pasa a pedir un codigo nuevo, que es lo unico que lo
+  /// arregla.
+  func syncLibrary(into context: ModelContext, using client: HTTPClient = URLSessionHTTPClient()) async {
+    guard !libraryState.isSyncing else { return }
+    libraryState = .syncing
+
+    let servicio = PSNLibraryService(client: client) { [weak self] in
+      guard let self else { throw PSNAuthError.sinCredenciales }
+      return try await self.validAccessToken()
+    }
+
+    do {
+      let juegos = try await servicio.fetchPlayedGames()
+      let resultado = try PSNLibrarySyncer.sync(juegos, into: context)
+      libraryState = .succeeded(
+        created: resultado.created,
+        updated: resultado.updated,
+        merged: resultado.merged
+      )
+    } catch let error as PSNAuthError {
+      state = Self.estado(para: error)
+      libraryState = .failed(message: error.errorDescription ?? "", suggestion: error.recoverySuggestion)
+    } catch let error as NetworkError {
+      libraryState = .failed(
+        message: error.errorDescription ?? String(localized: "No se pudo sincronizar.", comment: "Error generico"),
+        suggestion: error.recoverySuggestion
+      )
+    } catch {
+      libraryState = .failed(message: error.localizedDescription, suggestion: nil)
+    }
   }
 
   // MARK: - Guardado
