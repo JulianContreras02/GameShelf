@@ -1,7 +1,9 @@
 package com.gameshelf.ui.collections
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -49,6 +52,7 @@ import com.gameshelf.R
 import com.gameshelf.domain.GameCollection
 import com.gameshelf.domain.format.PlaytimeFormatter
 import com.gameshelf.ui.common.EstadoVacio
+import com.gameshelf.ui.common.PantallaPrincipal
 import com.gameshelf.ui.common.vector
 import com.gameshelf.ui.library.GameRow
 import com.gameshelf.ui.theme.composeColor
@@ -71,9 +75,9 @@ fun CollectionsScreen(alAbrirColeccion: (UUID) -> Unit, alCrear: () -> Unit) {
   var aBorrar by remember { mutableStateOf<GameCollection?>(null) }
   val ambito = rememberCoroutineScope()
 
-  Scaffold(
-    topBar = { TopAppBar(title = { Text(stringResource(R.string.tab_collections)) }) },
-    floatingActionButton = {
+  PantallaPrincipal(
+    titulo = stringResource(R.string.tab_collections),
+    accionFlotante = {
       FloatingActionButton(onClick = alCrear) {
         Icon(Icons.Default.Add, contentDescription = stringResource(R.string.action_new_collection))
       }
@@ -91,7 +95,7 @@ fun CollectionsScreen(alAbrirColeccion: (UUID) -> Unit, alCrear: () -> Unit) {
           }
         },
       )
-      return@Scaffold
+      return@PantallaPrincipal
     }
 
     LazyColumn(Modifier.padding(relleno).fillMaxSize()) {
@@ -107,7 +111,16 @@ fun CollectionsScreen(alAbrirColeccion: (UUID) -> Unit, alCrear: () -> Unit) {
           alBajar = { vm.move(colecciones, indice, indice + 1) },
           alBorrar = { aBorrar = coleccion },
         )
-        HorizontalDivider()
+
+        // Sangrada y tenue: una linea de lado a lado corta la pantalla en
+        // bandas y compite con la propia lista. Aca solo hace falta insinuar
+        // donde acaba una fila.
+        if (coleccion != colecciones.last()) {
+          HorizontalDivider(
+            Modifier.padding(start = 56.dp),
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+          )
+        }
       }
     }
   }
@@ -152,15 +165,26 @@ private fun FilaDeColeccion(
     horizontalArrangement = Arrangement.spacedBy(12.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Icon(
-      coleccion.symbol.vector,
-      contentDescription = null,
-      tint = coleccion.color.composeColor,
-      modifier = Modifier.size(28.dp),
-    )
+    // El icono va sobre una pastilla de su propio color, como las filas de
+    // Ajustes. Suelto sobre el fondo, un icono de color se lee como un adorno;
+    // dentro de la pastilla se lee como la identidad de la coleccion, que es
+    // justo para lo que el usuario eligio ese color.
+    Box(
+      Modifier
+        .size(40.dp)
+        .background(coleccion.color.composeColor.copy(alpha = 0.15f), RoundedCornerShape(12.dp)),
+      contentAlignment = Alignment.Center,
+    ) {
+      Icon(
+        coleccion.symbol.vector,
+        contentDescription = null,
+        tint = coleccion.color.composeColor,
+        modifier = Modifier.size(22.dp),
+      )
+    }
 
     Column(Modifier.weight(1f)) {
-      Text(coleccion.name, style = MaterialTheme.typography.bodyLarge)
+      Text(coleccion.name, style = MaterialTheme.typography.titleMedium)
       Text(
         pluralStringResource(
           R.plurals.collection_game_count,

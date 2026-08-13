@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Checklist
@@ -30,11 +31,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -57,6 +58,7 @@ import com.gameshelf.domain.format.LastPlayedFormatter
 import com.gameshelf.ui.collections.BulkAddToCollectionSheet
 import com.gameshelf.ui.common.AvisoDeFallo
 import com.gameshelf.ui.common.EstadoVacio
+import com.gameshelf.ui.common.PantallaPrincipal
 import com.gameshelf.ui.common.userMessage
 import com.gameshelf.ui.common.userRecovery
 import com.gameshelf.ui.common.vector
@@ -106,61 +108,60 @@ fun LibraryScreen(
     todos.filter { it.id in seleccionados }
   }
 
-  Scaffold(
-    topBar = {
-      TopAppBar(
-        title = { Text(stringResource(R.string.tab_library)) },
-        navigationIcon = {
-          if (todos.isNotEmpty()) {
-            MenuDeOpciones(
-              filtroActivo = consulta.filter.isActive,
-              modoSeleccion = modoSeleccion,
-              haySeleccion = seleccionados.isNotEmpty(),
-              ordenActual = consulta.sort,
-              alOrdenar = vm::setSort,
-              alFiltrar = { mostrandoFiltros = true },
-              alQuitarFiltros = vm::clearFilters,
-              alSeleccionar = { modoSeleccion = true },
-              alAgregarAColeccion = { agregandoAColeccion = true },
+  PantallaPrincipal(
+    titulo = stringResource(R.string.tab_library),
+    navegacion = {
+      if (todos.isNotEmpty()) {
+        MenuDeOpciones(
+          filtroActivo = consulta.filter.isActive,
+          modoSeleccion = modoSeleccion,
+          haySeleccion = seleccionados.isNotEmpty(),
+          ordenActual = consulta.sort,
+          alOrdenar = vm::setSort,
+          alFiltrar = { mostrandoFiltros = true },
+          alQuitarFiltros = vm::clearFilters,
+          alSeleccionar = { modoSeleccion = true },
+          alAgregarAColeccion = { agregandoAColeccion = true },
+        )
+      }
+    },
+    acciones = {
+      when {
+        modoSeleccion -> TextButton(onClick = {
+          seleccionados = emptySet()
+          modoSeleccion = false
+        }) { Text(stringResource(R.string.action_done)) }
+
+        estado.isSyncing -> CircularProgressIndicator(Modifier.size(24.dp))
+
+        else -> {
+          IconButton(onClick = alAbrirDeseos) {
+            Icon(
+              Icons.Default.FavoriteBorder,
+              contentDescription = stringResource(R.string.tab_wishlist),
             )
           }
-        },
-        actions = {
-          when {
-            modoSeleccion -> TextButton(onClick = {
-              seleccionados = emptySet()
-              modoSeleccion = false
-            }) { Text(stringResource(R.string.action_done)) }
-
-            estado.isSyncing -> CircularProgressIndicator(Modifier.size(24.dp))
-
-            else -> {
-              IconButton(onClick = alAbrirDeseos) {
-                Icon(
-                  Icons.Default.FavoriteBorder,
-                  contentDescription = stringResource(R.string.tab_wishlist),
-                )
-              }
-              IconButton(onClick = alAbrirInsights) {
-                Icon(
-                  Icons.Default.BarChart,
-                  contentDescription = stringResource(R.string.insights_title),
-                )
-              }
-              IconButton(onClick = vm::sync) {
-                Icon(
-                  Icons.Default.Refresh,
-                  contentDescription = stringResource(R.string.action_sync),
-                )
-              }
-            }
+          IconButton(onClick = alAbrirInsights) {
+            Icon(
+              Icons.Default.BarChart,
+              contentDescription = stringResource(R.string.insights_title),
+            )
           }
-        },
-      )
+          IconButton(onClick = vm::sync) {
+            Icon(
+              Icons.Default.Refresh,
+              contentDescription = stringResource(R.string.action_sync),
+            )
+          }
+        }
+      }
     },
   ) { relleno ->
     Column(Modifier.padding(relleno).fillMaxSize()) {
-      OutlinedTextField(
+      // Campo relleno y con esquinas de pastilla en vez de delineado: es la
+      // forma que Material 3 le da a una busqueda, y hace que se lea como un
+      // control y no como un formulario pendiente de rellenar.
+      TextField(
         value = consulta.search,
         onValueChange = vm::setSearch,
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
@@ -177,6 +178,16 @@ fun LibraryScreen(
           }
         },
         singleLine = true,
+        shape = RoundedCornerShape(28.dp),
+        // Sin la linea inferior: con esquinas redondas, el indicador de
+        // Material la cruza por debajo y se ve como un subrayado suelto.
+        colors = TextFieldDefaults.colors(
+          focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+          unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+          focusedIndicatorColor = Color.Transparent,
+          unfocusedIndicatorColor = Color.Transparent,
+          disabledIndicatorColor = Color.Transparent,
+        ),
       )
 
       when {
@@ -301,7 +312,6 @@ private fun ListaDeJuegos(
           )
         }
       }
-      HorizontalDivider()
     }
 
     items(juegos, key = { it.id }) { juego ->

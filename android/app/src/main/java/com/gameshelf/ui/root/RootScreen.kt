@@ -1,5 +1,8 @@
 package com.gameshelf.ui.root
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
@@ -74,6 +77,32 @@ fun RootScreen() {
       navController = nav,
       startDestination = Rutas.BIBLIOTECA,
       modifier = Modifier.padding(relleno),
+      // Entrar y salir deslizando, no con el desvanecido de serie. El
+      // desplazamiento dice de donde viene la pantalla y a donde vuelve, que es
+      // justo lo que el desvanecido no cuenta: con el, entrar en la ficha de un
+      // juego y volver se ven igual.
+      //
+      // El que se va solo recorre un tercio de la pantalla: si los dos se
+      // movieran lo mismo, el de atras parece que se despega en vez de quedarse
+      // esperando.
+      enterTransition = {
+        slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start) + fadeIn()
+      },
+      exitTransition = {
+        slideOutOfContainer(
+          AnimatedContentTransitionScope.SlideDirection.Start,
+          targetOffset = { it / 3 },
+        ) + fadeOut()
+      },
+      popEnterTransition = {
+        slideIntoContainer(
+          AnimatedContentTransitionScope.SlideDirection.End,
+          initialOffset = { it / 3 },
+        ) + fadeIn()
+      },
+      popExitTransition = {
+        slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End) + fadeOut()
+      },
     ) {
       grafoDeBiblioteca(nav)
       grafoDeProgreso(nav)

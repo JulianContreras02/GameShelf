@@ -34,6 +34,7 @@ import com.gameshelf.domain.Game
 import com.gameshelf.domain.format.PlaytimeFormatter
 import com.gameshelf.ui.common.Chip
 import com.gameshelf.ui.common.vector
+import com.gameshelf.ui.theme.FormaDeCaratula
 
 /**
  * Una fila de la biblioteca.
@@ -59,11 +60,11 @@ fun GameRow(
     modifier = modifier
       .fillMaxWidth()
       .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
-      .padding(horizontal = 16.dp, vertical = 8.dp)
+      .padding(horizontal = 16.dp, vertical = 10.dp)
       .semantics(mergeDescendants = true) {
         contentDescription = "${game.name}, $horas, $estado"
       },
-    horizontalArrangement = Arrangement.spacedBy(12.dp),
+    horizontalArrangement = Arrangement.spacedBy(14.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     if (seleccionado != null) {
@@ -72,10 +73,13 @@ fun GameRow(
 
     Caratula(game)
 
-    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+      // El nombre en titleMedium y no en bodyLarge: es lo que se busca al
+      // recorrer la lista, y con el mismo peso que el tiempo jugado los dos
+      // compiten por la mirada.
       Text(
         game.name,
-        style = MaterialTheme.typography.bodyLarge,
+        style = MaterialTheme.typography.titleMedium,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
       )
@@ -114,17 +118,19 @@ fun GameRow(
  *
  * El hueco lleva la inicial y no un icono generico para que las filas sin
  * caratula sigan distinguiendose unas de otras de un vistazo.
+ *
+ * Las medidas siguen la proporcion de las cabeceras de Steam (460x215), que es
+ * de donde salen casi todas: recortarlas a otra proporcion las deformaria o les
+ * cortaria el titulo, que suele ir centrado en la imagen.
  */
 @Composable
 private fun Caratula(game: Game) {
-  val forma = RoundedCornerShape(6.dp)
-
   Box(
     modifier = Modifier
-      .width(64.dp)
-      .height(30.dp)
-      .clip(forma)
-      .background(MaterialTheme.colorScheme.surfaceVariant)
+      .width(ANCHO_CARATULA)
+      .height(ALTO_CARATULA)
+      .clip(FormaDeCaratula)
+      .background(MaterialTheme.colorScheme.surfaceContainerHighest)
       .clearAndSetSemantics {},
     contentAlignment = Alignment.Center,
   ) {
@@ -133,17 +139,20 @@ private fun Caratula(game: Game) {
         model = game.coverImageURL,
         contentDescription = null,
         contentScale = ContentScale.Crop,
-        modifier = Modifier.fillMaxWidth().height(30.dp),
+        modifier = Modifier.fillMaxWidth().height(ALTO_CARATULA),
       )
     } else {
       Text(
         game.name.take(1).uppercase(),
-        style = MaterialTheme.typography.labelLarge,
+        style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
       )
     }
   }
 }
+
+private val ANCHO_CARATULA = 92.dp
+private val ALTO_CARATULA = 43.dp
 
 /** Version compacta para las listas horizontales de las secciones. */
 @Composable

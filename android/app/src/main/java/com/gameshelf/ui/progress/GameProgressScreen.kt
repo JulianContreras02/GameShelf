@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,12 +18,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +35,7 @@ import com.gameshelf.LocalAppContainer
 import com.gameshelf.R
 import com.gameshelf.domain.PlayStatus
 import com.gameshelf.ui.common.EstadoVacio
+import com.gameshelf.ui.common.PantallaPrincipal
 import com.gameshelf.ui.common.vector
 import com.gameshelf.ui.detail.GameStatusViewModel
 import com.gameshelf.ui.library.GameRow
@@ -61,9 +61,7 @@ fun GameProgressScreen(alAbrirJuego: (UUID) -> Unit) {
   val conteos = remember(juegos) { GameStatusViewModel.counts(juegos) }
   val visibles = remember(juegos, elegido) { GameStatusViewModel.games(juegos, elegido) }
 
-  Scaffold(
-    topBar = { TopAppBar(title = { Text(stringResource(R.string.tab_progress)) }) },
-  ) { relleno ->
+  PantallaPrincipal(titulo = stringResource(R.string.tab_progress)) { relleno ->
     Column(Modifier.padding(relleno).fillMaxSize()) {
       FlowRow(
         Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
@@ -94,7 +92,7 @@ fun GameProgressScreen(alAbrirJuego: (UUID) -> Unit) {
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
       )
 
-      HorizontalDivider()
+      Spacer(Modifier.height(8.dp))
 
       if (visibles.isEmpty()) {
         EstadoVacio(

@@ -3,10 +3,8 @@ package com.gameshelf.ui.theme
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -19,6 +17,9 @@ import com.gameshelf.domain.CollectionColor
  * que es el equivalente mas cercano a lo que hacia la version de iOS al apoyarse
  * en los colores del sistema: el resultado se adapta solo a claro y oscuro y
  * respeta los ajustes de contraste del usuario.
+ *
+ * Donde no lo ofrece cae en la paleta propia de [EsquemaClaro] y
+ * [EsquemaOscuro], no en la de muestra de Material.
  */
 @Composable
 fun GameShelfTheme(
@@ -32,11 +33,16 @@ fun GameShelfTheme(
     dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
       if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
 
-    darkTheme -> darkColorScheme()
-    else -> lightColorScheme()
+    darkTheme -> EsquemaOscuro
+    else -> EsquemaClaro
   }
 
-  MaterialTheme(colorScheme = colorScheme, content = content)
+  MaterialTheme(
+    colorScheme = colorScheme,
+    typography = GameShelfTypography,
+    shapes = GameShelfShapes,
+    content = content,
+  )
 }
 
 /**
