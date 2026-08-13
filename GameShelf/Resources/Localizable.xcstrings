@@ -950,6 +950,16 @@
         }
       }
     },
+    "Antes de guardar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Before saving"
+          }
+        }
+      }
+    },
     "Apenas probados": {
       "comment": "Grupo automatico",
       "localizations": {
@@ -1033,6 +1043,16 @@
         }
       }
     },
+    "Borrar la clave": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete the key"
+          }
+        }
+      }
+    },
     "Bronce": {
       "comment": "Tipo de trofeo",
       "localizations": {
@@ -1060,6 +1080,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cancel"
+          }
+        }
+      }
+    },
+    "Clave guardada": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Key saved"
           }
         }
       }
@@ -1135,6 +1165,17 @@
         }
       }
     },
+    "Con precios y ofertas": {
+      "comment": "Estado de la clave de ITAD",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "With prices and deals"
+          }
+        }
+      }
+    },
     "Conecta tu cuenta desde Ajustes.": {
       "comment": "Como conectar PSN\nComo resolver: falta conectar Steam",
       "localizations": {
@@ -1174,6 +1215,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Connect"
+          }
+        }
+      }
+    },
+    "Configurala desde Ajustes -> Ofertas y precios.": {
+      "comment": "Como resolver: falta configurar la clave de ITAD",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set it up from Settings -> Prices and deals."
           }
         }
       }
@@ -1623,6 +1675,16 @@
         }
       }
     },
+    "Es gratis y no necesita crear cuenta. No sale de tu telefono: se guarda cifrada en el llavero.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's free and doesn't need an account. It never leaves your phone: it's stored encrypted in the keychain."
+          }
+        }
+      }
+    },
     "Escribe lo que quieras recordar de este juego.": {
       "localizations": {
         "en": {
@@ -1772,6 +1834,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "The %@ key is missing."
+          }
+        }
+      }
+    },
+    "Falta la clave de IsThereAnyDeal.": {
+      "comment": "Error: falta la clave de ITAD",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The IsThereAnyDeal key is missing."
           }
         }
       }
@@ -2092,6 +2165,16 @@
         }
       }
     },
+    "La wishlist se sigue viendo, solo que sin precios ni ofertas.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The wishlist still shows, just without prices or deals."
+          }
+        }
+      }
+    },
     "Limpiar": {
       "localizations": {
         "en": {
@@ -2298,6 +2381,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Both are free and tied to your Steam account. Neither ever leaves your phone: they're stored encrypted in the keychain."
+          }
+        }
+      }
+    },
+    "Los precios se traen solos al abrir la lista de deseos.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prices load on their own when you open the wishlist."
           }
         }
       }
@@ -2863,6 +2956,16 @@
         }
       }
     },
+    "Ofertas y precios": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prices and deals"
+          }
+        }
+      }
+    },
     "Opciones": {
       "localizations": {
         "en": {
@@ -3365,6 +3468,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "If the page says `\"authorizationCode\": null`, step 1 is missing.\n\nEpic codes expire within seconds, so paste it right away. If it expires, just reload that page and copy the new one."
+          }
+        }
+      }
+    },
+    "Sin clave configurada": {
+      "comment": "Estado de la clave de ITAD",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No key set up"
           }
         }
       }

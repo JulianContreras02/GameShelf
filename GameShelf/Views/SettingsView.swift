@@ -10,6 +10,7 @@ struct SettingsView: View {
   @State private var steam = SteamAccountViewModel()
   @State private var psn = PSNAccountViewModel()
   @State private var epic = EpicAccountViewModel()
+  @State private var itad = ITADSettingsViewModel()
 
   var body: some View {
     NavigationStack {
@@ -51,9 +52,39 @@ struct SettingsView: View {
         } footer: {
           Text("Los codigos de acceso se guardan en el llavero del sistema, cifrados.")
         }
+
+        Section {
+          NavigationLink {
+            WishlistView()
+          } label: {
+            FilaDeTienda(
+              nombre: PlayStatus.wishlist.displayName,
+              simbolo: PlayStatus.wishlist.symbolName,
+              detalle: PlayStatus.wishlist.explanation,
+              conectado: true
+            )
+          }
+
+          NavigationLink {
+            PricesSettingsView(viewModel: itad)
+          } label: {
+            FilaDeTienda(
+              nombre: "Ofertas y precios",
+              simbolo: "tag",
+              detalle: detalleITAD,
+              conectado: itad.hasAPIKey
+            )
+          }
+        }
       }
       .navigationTitle("Ajustes")
     }
+  }
+
+  private var detalleITAD: String {
+    itad.hasAPIKey
+      ? String(localized: "Con precios y ofertas", comment: "Estado de la clave de ITAD")
+      : String(localized: "Sin clave configurada", comment: "Estado de la clave de ITAD")
   }
 
   private var detalleSteam: String {

@@ -24,42 +24,28 @@ usandolo tambien para experimentar con las funciones de accesibilidad de iOS.
 cp Config/Secrets.example.xcconfig Config/Secrets.xcconfig
 ```
 
-Ese archivo esta ignorado por git, asi que tus claves nunca se suben.
+Ese archivo esta ignorado por git. Hoy no hace falta llenarlo con nada: todas
+las claves se conectan desde dentro de la app (ver la siguiente seccion).
+Sigue siendo parte del proyecto de Xcode, y es donde iria una clave que en el
+futuro haga falta antes de que el usuario haga nada.
 
-### 2. Conseguir las claves
-
-| Clave | Donde se saca |
-| --- | --- |
-| `ITAD_API_KEY` | https://isthereanydeal.com/apps/my/ (solo hace falta para el modulo de ofertas) |
-
-Llena el valor en `Config/Secrets.xcconfig`:
-
-```
-ITAD_API_KEY = tu_key_aqui
-```
-
-Steam, PlayStation y Epic **no van aca**: se conectan desde la app. Ver la
-siguiente seccion.
-
-### 3. Correr
+### 2. Correr
 
 Abrir `GameShelf.xcodeproj` en Xcode y correr en el simulador o en tu
 dispositivo.
-
-Si falta alguna clave el proyecto **compila igual**: la app avisa cuales faltan
-en vez de caerse. Ver `docs/decisiones/002-gestion-de-secretos.md`.
 
 ### Requisitos
 
 - Xcode 26 o superior
 - [SwiftLint](https://github.com/realm/SwiftLint): `brew install swiftlint`
 
-## Conectar Steam, PlayStation y Epic
+## Conectar cuentas y claves
 
-Las tres se conectan desde la app, en **Ajustes -> Cuentas**, y sus
-credenciales se guardan cifradas en el llavero del telefono. Ninguna vive en
-el archivo de secretos: eso es lo que permite instalar la app en otro telefono
-y conectar ahi una cuenta distinta, sin recompilar.
+Steam, PlayStation, Epic e IsThereAnyDeal se conectan desde la app, en
+**Ajustes**, y sus credenciales se guardan cifradas en el llavero del
+telefono. Ninguna vive en el archivo de secretos: eso es lo que permite
+instalar la app en otro telefono y conectar ahi cuentas distintas, sin
+recompilar.
 
 ### Steam
 
@@ -106,6 +92,15 @@ Ese codigo dura unos dos meses. Mientras tanto la app renueva el acceso sola.
 Los codigos de Epic caducan en segundos. Si al pegarlo dice que no sirve, basta
 con recargar esa pagina y copiar el nuevo. Si la pagina muestra
 `"authorizationCode": null`, es que falta el paso 1.
+
+### Ofertas y precios (IsThereAnyDeal)
+
+Esta si es solo una API key, gratis y sin cuenta:
+
+1. Sacala en https://isthereanydeal.com/apps/my/
+2. Pegala en **Ajustes -> Ofertas y precios**.
+
+Sin ella la lista de deseos se ve igual, solo que sin precios ni ofertas.
 
 ### Que pasa si una falla
 

@@ -56,17 +56,18 @@ struct ITADService: ITADServicing {
     self.country = country
   }
 
-  /// Crea el servicio con la clave del archivo de configuracion.
+  /// Crea el servicio con la clave que el usuario guardo desde Ajustes.
+  ///
+  /// - Throws: `ITADCredentialsError.notConnected` si todavia no la guardo.
   static func live(
     client: HTTPClient = URLSessionHTTPClient(),
-    bundle: Bundle = .main,
+    keychain: KeychainStoring = KeychainStore(),
     country: String = "CO"
   ) throws -> ITADService {
-    ITADService(
-      client: client,
-      apiKey: try AppSecrets.value(for: .itadAPIKey, in: bundle),
-      country: country
-    )
+    guard let apiKey = try apiKey(from: keychain) else {
+      throw ITADCredentialsError.notConnected
+    }
+    return ITADService(client: client, apiKey: apiKey, country: country)
   }
 
   func prices(forSteamAppIDs appIDs: [Int]) async throws -> [Int: GamePrices] {
@@ -188,5 +189,42 @@ struct ITADService: ITADServicing {
       throw NetworkError.invalidURL(ruta)
     }
     return url
+  }
+
+  // MARK: - Credenciales en el llavero
+
+  private static let claveDeLlavero = "itad.apiKey"
+
+  private static func apiKey(from keychain: KeychainStoring) throws -> String? {
+    try keychain.string(for: claveDeLlavero)
+  }
+
+  static func save(apiKey: String, to keychain: KeychainStoring) throws {
+    try keychain.set(apiKey, for: claveDeLlavero)
+  }
+
+  static func removeAPIKey(from keychain: KeychainStoring) throws {
+    try keychain.remove(for: claveDeLlavero)
+  }
+
+  /// Si ya hay una clave guardada, sin necesidad de crear el servicio entero.
+  static func hasAPIKey(in keychain: KeychainStoring) -> Bool {
+    ((try? apiKey(from: keychain)) ?? nil) != nil
+  }
+}
+
+/// Error cuando no hay clave de IsThereAnyDeal guardada en el llavero.
+enum ITADCredentialsError: LocalizedError, Equatable {
+  case notConnected
+
+  var errorDescription: String? {
+    String(localized: "Falta la clave de IsThereAnyDeal.", comment: "Error: falta la clave de ITAD")
+  }
+
+  var recoverySuggestion: String? {
+    String(
+      localized: "Configurala desde Ajustes -> Ofertas y precios.",
+      comment: "Como resolver: falta configurar la clave de ITAD"
+    )
   }
 }
