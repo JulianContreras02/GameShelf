@@ -6,15 +6,22 @@ import com.gameshelf.R
 import com.gameshelf.data.net.UserFacingError
 
 /**
- * Acceso a las claves de API que la app necesita.
+ * Las claves que vienen del archivo de configuracion, si lo hay.
  *
- * Los valores no viven en el codigo: entran por `Config/Secrets.xcconfig` (el
- * mismo archivo que usa la version de iOS, ignorado por git), el script de
- * Gradle los mete en `BuildConfig` y se leen aca en tiempo de ejecucion.
+ * Entran por `Config/Secrets.xcconfig` (el mismo archivo que usa la version de
+ * iOS, ignorado por git), el script de Gradle las mete en `BuildConfig` y se
+ * leen aca en tiempo de ejecucion. Es el equivalente exacto del rodeo de iOS
+ * (xcconfig -> Info.plist -> Bundle).
  *
- * Es el equivalente exacto del rodeo de iOS (xcconfig -> Info.plist -> Bundle),
- * y mantiene su propiedad importante: **si falta una clave el proyecto compila
- * igual** y la app avisa cual falta, en vez de caerse.
+ * **Ya no es la fuente principal.** Desde que cada cuenta pide lo suyo al
+ * conectarse, esto es solo el respaldo: lo usa
+ * [com.gameshelf.data.secrets.SteamCredentialsStore] cuando no hay nada
+ * guardado, para que quien ya tuviera el archivo siga funcionando sin tener
+ * que volver a conectar nada. Lo que el usuario conecta desde la app siempre
+ * gana.
+ *
+ * Se mantiene la propiedad de siempre: **si falta una clave el proyecto
+ * compila igual**. Lo que cambio es que ya no hace falta que ninguna este.
  *
  * Ver `docs/decisiones/002-gestion-de-secretos.md`.
  */
@@ -73,13 +80,4 @@ object AppSecrets {
     if (bruto.isNullOrEmpty()) throw MissingSecretError(key)
     return bruto
   }
-
-  /**
-   * Claves que faltan o estan vacias.
-   *
-   * Sirve para avisar al arrancar, antes de que el usuario se tope con un
-   * error a mitad de una pantalla.
-   */
-  fun missingKeys(source: Source = buildConfigSource): List<Key> =
-    Key.entries.filter { key -> runCatching { value(key, source) }.isFailure }
 }

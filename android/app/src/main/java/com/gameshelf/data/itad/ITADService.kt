@@ -4,7 +4,7 @@ import com.gameshelf.data.net.GameShelfJson
 import com.gameshelf.data.net.HttpClient
 import com.gameshelf.data.net.NetworkError
 import com.gameshelf.data.net.OkHttpNetworkClient
-import com.gameshelf.data.secrets.AppSecrets
+import com.gameshelf.data.secrets.ITADKeyStore
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
@@ -111,10 +111,23 @@ interface ITADServicing {
   suspend fun prices(forSteamAppIDs: List<Int>): Map<Int, GamePrices>
 }
 
-/** Implementacion real contra la API v2 de IsThereAnyDeal. */
+/**
+ * Implementacion real contra la API v2 de IsThereAnyDeal.
+ *
+ * La clave llega como una funcion, y puede devolver `null`. Son dos cosas a la
+ * vez, las dos a proposito:
+ *
+ * - **Funcion**, porque la clave se pega en Ajustes con la app ya corriendo. Si
+ *   se guardara el valor al construir el servicio, habria que reiniciar para
+ *   que los precios aparecieran.
+ * - **Nullable**, porque los precios son opcionales: sin clave la lista de
+ *   deseos se muestra igual, solo que sin precios. Devolver un mapa vacio es
+ *   exactamente eso, y evita tener que distinguir "sin clave" de "fallo" en
+ *   cada pantalla que los pida.
+ */
 class ITADService(
   private val client: HttpClient,
-  private val apiKey: String,
+  private val apiKey: () -> String?,
   /**
    * Pais con el que se piden los precios, en ISO 3166-1 alpha-2.
    *
@@ -130,6 +143,10 @@ class ITADService(
 
   override suspend fun prices(forSteamAppIDs: List<Int>): Map<Int, GamePrices> {
     if (forSteamAppIDs.isEmpty()) return emptyMap()
+
+    // Sin clave no se consulta nada. Se comprueba aca, antes de armar ninguna
+    // peticion, para no gastar una llamada que la API rechazaria.
+    if (apiKey().isNullOrBlank()) return emptyMap()
 
     val idsDeITAD = lookupITADIDs(forSteamAppIDs)
     if (idsDeITAD.isEmpty()) return emptyMap()
@@ -200,12 +217,12 @@ class ITADService(
    * peticion, igual que en los servicios de Steam.
    */
   fun lookupURL(): String = buildURL("/lookup/id/shop/$STEAM_SHOP_ID/v1") {
-    addQueryParameter("key", apiKey)
+    addQueryParameter("key", apiKey().orEmpty())
   }
 
   /** Arma la URL de la consulta de precios. */
   fun pricesURL(): String = buildURL("/games/prices/v3") {
-    addQueryParameter("key", apiKey)
+    addQueryParameter("key", apiKey().orEmpty())
     addQueryParameter("country", country)
   }
 
@@ -228,13 +245,15 @@ class ITADService(
 
     const val BASE_URL = "https://api.isthereanydeal.com"
 
-    /** Crea el servicio con la clave del archivo de configuracion. */
+    /** Donde se registra una app y se obtiene la clave. */
+    const val API_KEY_URL = "https://isthereanydeal.com/apps/new/"
+
+    /** Crea el servicio con la clave que el usuario haya guardado en Ajustes. */
     fun live(
       client: HttpClient = OkHttpNetworkClient(),
-      source: AppSecrets.Source = AppSecrets.buildConfigSource,
+      store: ITADKeyStore,
       country: String = "CO",
-    ): ITADService =
-      ITADService(client, AppSecrets.value(AppSecrets.Key.ITAD_API_KEY, source), country)
+    ): ITADService = ITADService(client, { store.key() }, country)
 
     /**
      * Prefijo que usa Steam para sus ids dentro de ITAD.

@@ -9,20 +9,10 @@ como para comparar las dos versiones cuando algo se comporta distinto.
 
 ## Como correrlo
 
-### 1. Secretos
+### 1. Compilar y ya
 
-Se leen del **mismo archivo** que usa la version de iOS:
-
-```bash
-cp Config/Secrets.example.xcconfig Config/Secrets.xcconfig
-```
-
-Y se llenan los valores como explica el README principal. Gradle lo parsea y
-mete las claves en `BuildConfig`. Si no existe ese archivo, tambien se leen de
-`android/local.properties`.
-
-Si falta alguna clave el proyecto **compila igual**: la app avisa cuales faltan
-en Ajustes, en vez de caerse. Es la misma promesa que en iOS.
+No hace falta configurar nada antes de compilar. Las cuentas se conectan
+**desde dentro de la app**, en Ajustes, y cada una pide ahi lo que necesita.
 
 ### 2. Compilar
 
@@ -44,6 +34,53 @@ Si el SDK no esta en la ruta por defecto, se indica en `android/local.properties
 ```
 sdk.dir=/ruta/a/tu/Android/Sdk
 ```
+
+## Conectar las cuentas
+
+Todo se hace en **Ajustes**, con la app corriendo. Cada cuenta se guarda cifrada
+con `EncryptedSharedPreferences` y nada sale del dispositivo.
+
+| Cuenta | Que pide | De donde sale |
+| --- | --- | --- |
+| Steam | La clave de la Web API y la direccion de tu perfil | `steamcommunity.com/dev/apikey` y tu propio perfil |
+| PlayStation | El codigo NPSSO | Del navegador, con la sesion iniciada |
+| Epic | El codigo de autorizacion | Del navegador, con la sesion iniciada |
+| Precios (opcional) | La clave de IsThereAnyDeal | `isthereanydeal.com/apps/new/` |
+
+Las cuatro pantallas tienen la misma forma y traen los enlaces en orden, porque
+en las tres primeras el segundo paso falla de manera confusa si no se hizo el
+primero.
+
+### Por que hay que pegar claves y no hay un boton de "iniciar sesion"
+
+Ninguna de las tres tiendas ofrece OAuth a aplicaciones de terceros para lo que
+esta app necesita:
+
+- **Steam** no tiene OAuth para su Web API. La clave se genera a mano en su web
+  y solo se puede copiar de ahi. Lo que si se resuelve solo es el SteamID: se
+  pega la URL del perfil y la app la traduce al numero de 17 digitos, resolviendo
+  el nombre personalizado contra la API cuando hace falta.
+- **PlayStation** y **Epic** solo exponen un codigo que se copia del navegador
+  con la sesion ya iniciada.
+
+Lo que si cambio es **cuando** se piden: antes eran configuracion de compilacion
+y ahora son parte de usar la app.
+
+### El archivo de secretos sigue sirviendo
+
+Si ya tenias `Config/Secrets.xcconfig` (por ejemplo porque compartes el repo con
+la version de iOS), sigue funcionando sin tocar nada: cuando no hay ninguna
+cuenta conectada, las claves se leen de ahi como antes. Lo que conectes desde la
+app siempre gana sobre el archivo.
+
+Para crearlo, si lo prefieres a conectar desde la app:
+
+```bash
+cp Config/Secrets.example.xcconfig Config/Secrets.xcconfig
+```
+
+Tambien se leen de `android/local.properties`. Si no existe ninguno de los dos,
+el proyecto **compila igual**: simplemente arranca sin cuentas conectadas.
 
 ### El emulador, sin ventana, revienta
 

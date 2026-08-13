@@ -31,33 +31,41 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gameshelf.LocalAppContainer
 import com.gameshelf.R
-import com.gameshelf.data.secrets.AppSecrets
 import com.gameshelf.ui.accounts.EpicAccountViewModel
+import com.gameshelf.ui.accounts.ITADKeyViewModel
 import com.gameshelf.ui.accounts.PSNAccountViewModel
+import com.gameshelf.ui.accounts.SteamAccountViewModel
 
 /**
- * Ajustes: las cuentas conectadas y el estado de la configuracion.
+ * Ajustes: las cuentas conectadas y lo que habilita cada una.
  *
- * Lo primero que ensena, si aplica, es que claves faltan. Es la contraparte de
- * la promesa del README: **si falta una clave el proyecto compila igual** y la
- * app lo dice, en vez de fallar a mitad de una pantalla sin explicar por que.
+ * Antes esta pantalla abria con un aviso de que claves faltaban en el archivo
+ * de configuracion. Ya no existe: cada cuenta pide lo suyo al conectarse, asi
+ * que una app recien instalada no tiene nada "mal configurado", solo cuentas
+ * sin conectar. Lo que era una tarea de compilacion es ahora parte de usar la
+ * app.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+  alConectarSteam: () -> Unit,
   alConectarPSN: () -> Unit,
   alConectarEpic: () -> Unit,
+  alConfigurarPrecios: () -> Unit,
   alAbrirDeseos: () -> Unit,
 ) {
   val container = LocalAppContainer.current
+  val steam: SteamAccountViewModel = viewModel(factory = container.viewModelFactory)
   val psn: PSNAccountViewModel = viewModel(factory = container.viewModelFactory)
   val epic: EpicAccountViewModel = viewModel(factory = container.viewModelFactory)
+  val precios: ITADKeyViewModel = viewModel(factory = container.viewModelFactory)
 
+  val estadoSteam by steam.state.collectAsStateWithLifecycle()
+  val nombreSteam by steam.personaName.collectAsStateWithLifecycle()
   val estadoPSN by psn.state.collectAsStateWithLifecycle()
   val estadoEpic by epic.state.collectAsStateWithLifecycle()
   val nombreEpic by epic.displayName.collectAsStateWithLifecycle()
-
-  val faltantes = remember { AppSecrets.missingKeys() }
+  val hayClaveDePrecios by precios.hasKey.collectAsStateWithLifecycle()
 
   Scaffold(
     topBar = { TopAppBar(title = { Text(stringResource(R.string.tab_settings)) }) },
@@ -70,29 +78,23 @@ fun SettingsScreen(
         .padding(16.dp),
       verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-      if (faltantes.isNotEmpty()) {
-        Card {
-          Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(
-              stringResource(R.string.settings_missing_keys),
-              style = MaterialTheme.typography.titleMedium,
-            )
-            faltantes.forEach { clave ->
-              Text("· ${clave.configName}", style = MaterialTheme.typography.bodyMedium)
-            }
-            Text(
-              stringResource(R.string.settings_missing_keys_detail),
-              style = MaterialTheme.typography.bodySmall,
-              color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-          }
-        }
-      }
-
       Text(stringResource(R.string.settings_accounts), style = MaterialTheme.typography.titleMedium)
 
       Card {
         Column {
+          FilaDeCuenta(
+            titulo = stringResource(R.string.settings_steam),
+            detalle = when {
+              estadoSteam.isConnected && nombreSteam != null -> nombreSteam!!
+              estadoSteam.isConnected -> stringResource(R.string.settings_connected)
+              else -> stringResource(R.string.settings_not_connected)
+            },
+            conectado = estadoSteam.isConnected,
+            onClick = alConectarSteam,
+          )
+
+          HorizontalDivider()
+
           FilaDeCuenta(
             titulo = stringResource(R.string.settings_playstation),
             detalle = if (estadoPSN.isConnected) {
@@ -122,12 +124,27 @@ fun SettingsScreen(
       Text(stringResource(R.string.settings_sections), style = MaterialTheme.typography.titleMedium)
 
       Card {
-        FilaDeCuenta(
-          titulo = stringResource(R.string.tab_wishlist),
-          detalle = stringResource(R.string.settings_wishlist_detail),
-          conectado = false,
-          onClick = alAbrirDeseos,
-        )
+        Column {
+          FilaDeCuenta(
+            titulo = stringResource(R.string.tab_wishlist),
+            detalle = stringResource(R.string.settings_wishlist_detail),
+            conectado = false,
+            onClick = alAbrirDeseos,
+          )
+
+          HorizontalDivider()
+
+          FilaDeCuenta(
+            titulo = stringResource(R.string.settings_prices),
+            detalle = if (hayClaveDePrecios) {
+              stringResource(R.string.itad_prices_enabled)
+            } else {
+              stringResource(R.string.settings_prices_detail)
+            },
+            conectado = hayClaveDePrecios,
+            onClick = alConfigurarPrecios,
+          )
+        }
       }
 
       Text(

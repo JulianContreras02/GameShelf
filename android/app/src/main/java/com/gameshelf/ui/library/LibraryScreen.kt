@@ -50,6 +50,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gameshelf.LocalAppContainer
 import com.gameshelf.R
+import com.gameshelf.data.steam.SteamAuthError
 import com.gameshelf.domain.Game
 import com.gameshelf.domain.PlayStatus
 import com.gameshelf.domain.format.LastPlayedFormatter
@@ -452,6 +453,19 @@ private fun LibraryEmptyState(
       titulo = stringResource(R.string.library_syncing),
       descripcion = stringResource(R.string.library_syncing_detail),
     )
+
+    // La biblioteca se llena desde las tres tiendas, asi que quedarse sin
+    // credenciales de Steam no significa aca "falta Steam" sino "no hay de
+    // donde traer juegos". El error de Steam es correcto en su propia pantalla
+    // y en la lista de deseos, que si son solo suyas; aca senalaria una sola de
+    // las tres. Tampoco se ofrece reintentar: repetir la misma peticion sin
+    // credenciales daria el mismo error.
+    estado is LibraryViewModel.State.Failed && estado.error is SteamAuthError.SinCredenciales ->
+      EstadoVacio(
+        icono = Icons.Default.SportsEsports,
+        titulo = stringResource(R.string.library_no_accounts),
+        descripcion = stringResource(R.string.library_no_accounts_detail),
+      )
 
     estado is LibraryViewModel.State.Failed -> EstadoVacio(
       icono = Icons.Default.SportsEsports,

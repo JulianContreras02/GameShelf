@@ -180,6 +180,8 @@
     <string name="library_updated">Actualizado %1$s</string>
     <string name="library_syncing">Trayendo tu biblioteca</string>
     <string name="library_syncing_detail">Estamos preguntandole a Steam que juegos tienes.</string>
+    <string name="library_no_accounts">No hay ninguna cuenta conectada</string>
+    <string name="library_no_accounts_detail">Conecta Steam, PlayStation o Epic desde Ajustes para traer tus juegos.</string>
     <string name="library_empty">Tu biblioteca esta vacia</string>
     <string name="library_empty_detail">Sincroniza con Steam para traer los juegos que ya tienes.</string>
     <string name="library_empty_after_sync">Steam no devolvio ningun juego</string>
@@ -285,12 +287,13 @@
     <string name="wishlist_price_discount">%1$d por ciento de descuento</string>
 
     <!-- Ajustes -->
-    <string name="settings_missing_keys">Faltan claves de configuracion</string>
-    <string name="settings_missing_keys_detail">Copia Config/Secrets.example.xcconfig a Config/Secrets.xcconfig y llena los valores. Las instrucciones estan en el README.</string>
     <string name="settings_accounts">Cuentas</string>
     <string name="settings_sections">Secciones</string>
+    <string name="settings_steam">Steam</string>
     <string name="settings_playstation">PlayStation Network</string>
     <string name="settings_epic">Epic Games</string>
+    <string name="settings_prices">Precios y ofertas</string>
+    <string name="settings_prices_detail">Sin configurar. La lista de deseos funciona igual, pero sin precios.</string>
     <string name="settings_connected">Conectado</string>
     <string name="settings_not_connected">Sin conectar</string>
     <string name="settings_wishlist_detail">Los juegos que quieres, con sus ofertas.</string>
@@ -310,4 +313,28 @@
     <string name="epic_step_3">Pega el codigo aca abajo enseguida</string>
     <string name="epic_warning">Ojo: Epic avisa en su propia pagina de que ese codigo da acceso completo a la cuenta. Aca se guarda cifrado y no se manda a ningun servidor, pero no conviene pegarlo en ningun otro sitio. Los codigos caducan en segundos.</string>
     <string name="epic_code_label">Codigo de autorizacion de Epic</string>
+
+    <!-- Conectar Steam -->
+    <string name="steam_step_1">Inicia sesion en Steam y genera tu clave de la Web API</string>
+    <string name="steam_step_2">Abre tu perfil y copia la direccion que quede en el navegador</string>
+    <string name="steam_step_3">Pega las dos cosas aca abajo</string>
+    <string name="steam_key_notice">Steam no permite que una app inicie sesion por ti para su Web API: la clave se genera en su web y solo se puede copiar de ahi. Aca se guarda cifrada y no se manda a ningun servidor. Puedes revocarla cuando quieras desde la misma pagina donde la generaste.</string>
+    <string name="steam_key_label">Clave de la Web API de Steam</string>
+    <string name="steam_profile_label">Direccion de tu perfil o SteamID</string>
+    <string name="account_sync_result_steam">%1$d nuevos, %2$d actualizados</string>
+    <string name="steam_error_not_connected">No hay ninguna cuenta de Steam conectada.</string>
+    <string name="steam_error_profile_unreadable">Eso no se parece a un perfil de Steam.</string>
+    <string name="steam_error_profile_not_found">Steam no encontro ese perfil.</string>
+    <string name="steam_error_invalid_key">Steam rechazo la clave.</string>
+    <string name="steam_error_unexpected">Steam respondio algo inesperado: %1$s</string>
+    <string name="steam_recovery_check_profile">Abre tu perfil en Steam y copia la direccion completa, o pega tu SteamID de 17 digitos.</string>
+    <string name="steam_recovery_check_key">Vuelve a copiar la clave desde la pagina de la Web API de Steam. Si la revocaste, genera una nueva.</string>
+
+    <!-- Precios (IsThereAnyDeal) -->
+    <string name="itad_how_to">Como activarlos</string>
+    <string name="itad_step_1">Crea una clave en IsThereAnyDeal</string>
+    <string name="itad_step_2">Pega la clave aca abajo</string>
+    <string name="itad_optional_notice">Esto es opcional. Sin clave la lista de deseos funciona igual, solo que sin precios ni minimos historicos.</string>
+    <string name="itad_key_label">Clave de IsThereAnyDeal</string>
+    <string name="itad_prices_enabled">Precios activados</string>
 </resources>

@@ -11,23 +11,26 @@ import com.gameshelf.data.local.GameShelfDatabase
 import com.gameshelf.data.net.OkHttpNetworkClient
 import com.gameshelf.data.repository.GameRepository
 import com.gameshelf.data.repository.GameStore
+import com.gameshelf.data.secrets.ITADKeyStore
 import com.gameshelf.data.secrets.SecureStore
 import com.gameshelf.data.secrets.SecureStoring
+import com.gameshelf.data.secrets.SteamCredentialsStore
 import com.gameshelf.data.steam.FallbackNames
+import com.gameshelf.data.steam.SteamAuthService
 import com.gameshelf.data.steam.SteamService
 import com.gameshelf.data.steam.SteamServicing
 import com.gameshelf.data.steam.SteamWishlistService
 import com.gameshelf.data.steam.SteamWishlistServicing
 import com.gameshelf.ui.accounts.EpicAccountViewModel
+import com.gameshelf.ui.accounts.ITADKeyViewModel
 import com.gameshelf.ui.accounts.PSNAccountViewModel
+import com.gameshelf.ui.accounts.SteamAccountViewModel
 import com.gameshelf.ui.collections.CollectionsViewModel
 import com.gameshelf.ui.common.AppPreferences
 import com.gameshelf.ui.detail.GameNotesViewModel
 import com.gameshelf.ui.detail.GameStatusViewModel
 import com.gameshelf.ui.library.LibraryViewModel
-import com.gameshelf.ui.library.UnavailableSteamService
 import com.gameshelf.ui.tags.TagsViewModel
-import com.gameshelf.ui.wishlist.UnavailableWishlistService
 import com.gameshelf.ui.wishlist.WishlistViewModel
 
 /**
@@ -61,28 +64,38 @@ class AppContainer(context: Context) {
     app.getString(R.string.steam_fallback_name, appID.toString())
   }
 
+  /** Las credenciales que el usuario dio al conectar cada cuenta. */
+  private val steamCredentials by lazy { SteamCredentialsStore(secure) }
+
+  private val itadKey by lazy { ITADKeyStore(secure) }
+
   /**
-   * Servicio de Steam, o uno que solo sabe fallar con el motivo original.
+   * Los servicios se construyen siempre, incluso sin cuenta conectada.
    *
-   * Ese segundo caso es lo que permite que la pantalla explique que falta la
-   * clave en vez de quedarse en blanco.
+   * Antes iban envueltos en `runCatching` porque leer una clave que faltaba
+   * lanzaba al construirlos, y habia que sustituirlos por un doble que solo
+   * sabia fallar. Ya no hace falta: las credenciales se leen en cada llamada,
+   * asi que un servicio sin cuenta conectada es un objeto valido que lanza
+   * [SteamAuthError.SinCredenciales] cuando se usa.
+   *
+   * El cambio no es solo de forma. Antes, conectar la cuenta no servia de nada
+   * hasta reiniciar la app, porque el servicio ya se habia resuelto al doble
+   * inservible.
    */
   private val steamService: SteamServicing by lazy {
-    runCatching { SteamService.live(httpClient) as SteamServicing }
-      .getOrElse { UnavailableSteamService(it) }
+    SteamService.live(httpClient, steamCredentials)
   }
 
   private val wishlistService: SteamWishlistServicing by lazy {
-    runCatching { SteamWishlistService.live(httpClient) as SteamWishlistServicing }
-      .getOrElse { UnavailableWishlistService(it) }
+    SteamWishlistService.live(httpClient, steamCredentials)
   }
 
   /**
-   * Los precios son opcionales a proposito: si falta la clave de
-   * IsThereAnyDeal, la lista de deseos sigue funcionando sin ellos.
+   * Los precios son opcionales a proposito: sin la clave de IsThereAnyDeal, la
+   * lista de deseos sigue funcionando sin ellos.
    */
-  private val itadService: ITADServicing? by lazy {
-    runCatching { ITADService.live(httpClient) }.getOrNull()
+  private val itadService: ITADServicing by lazy {
+    ITADService.live(httpClient, itadKey)
   }
 
   /** La fabrica que Compose usa para construir cada ViewModel. */
@@ -95,6 +108,16 @@ class AppContainer(context: Context) {
     initializer { GameStatusViewModel(store) }
     initializer { PSNAccountViewModel(secure = secure, store = store, client = httpClient) }
     initializer { EpicAccountViewModel(secure = secure, store = store, client = httpClient) }
+    initializer {
+      SteamAccountViewModel(
+        auth = SteamAuthService(httpClient),
+        credentials = steamCredentials,
+        library = steamService,
+        store = store,
+        names = fallbackNames,
+      )
+    }
+    initializer { ITADKeyViewModel(itadKey) }
   }
 }
 

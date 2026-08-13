@@ -42,7 +42,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gameshelf.LocalAppContainer
 import com.gameshelf.R
 import com.gameshelf.data.epic.EpicAuthService
+import com.gameshelf.data.itad.ITADService
 import com.gameshelf.data.psn.PSNAuthService
+import com.gameshelf.data.steam.SteamAuthService
 import com.gameshelf.ui.common.AvisoDeFallo
 import com.gameshelf.ui.common.userMessage
 import com.gameshelf.ui.common.userRecovery
@@ -78,9 +80,9 @@ fun PSNConnectScreen(alVolver: () -> Unit) {
       Paso(stringResource(R.string.psn_step_3), null),
     ),
     aviso = stringResource(R.string.psn_token_lifetime),
-    etiquetaDelCampo = stringResource(R.string.psn_code_label),
-    codigo = codigo,
-    alCambiarCodigo = { codigo = it },
+    campos = listOf(
+      Campo(stringResource(R.string.psn_code_label), codigo) { codigo = it },
+    ),
     trabajando = estado.isWorking,
     conectado = estado.isConnected,
     detalleConectado = reconectarEn?.let {
@@ -131,9 +133,9 @@ fun EpicConnectScreen(alVolver: () -> Unit) {
       Paso(stringResource(R.string.epic_step_3), null),
     ),
     aviso = stringResource(R.string.epic_warning),
-    etiquetaDelCampo = stringResource(R.string.epic_code_label),
-    codigo = codigo,
-    alCambiarCodigo = { codigo = it },
+    campos = listOf(
+      Campo(stringResource(R.string.epic_code_label), codigo) { codigo = it },
+    ),
     trabajando = estado.isWorking,
     conectado = estado.isConnected,
     detalleConectado = nombre,
@@ -154,8 +156,110 @@ fun EpicConnectScreen(alVolver: () -> Unit) {
   )
 }
 
+/**
+ * Conectar la cuenta de Steam.
+ *
+ * Es la unica de las tres que pide dos cosas, y conviene saber por que. Steam
+ * **no tiene OAuth para su Web API**: la clave se genera a mano en su web y no
+ * hay ningun flujo por el que una app de terceros la consiga sola. El SteamID,
+ * en cambio, si se deduce: basta con la URL del perfil, que es lo que el
+ * usuario tiene a la vista, y la app la traduce al numero que la API pide.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SteamConnectScreen(alVolver: () -> Unit) {
+  val container = LocalAppContainer.current
+  val vm: SteamAccountViewModel = viewModel(factory = container.viewModelFactory)
+
+  val estado by vm.state.collectAsStateWithLifecycle()
+  val estadoBiblioteca by vm.libraryState.collectAsStateWithLifecycle()
+  val nombre by vm.personaName.collectAsStateWithLifecycle()
+
+  var clave by remember { mutableStateOf("") }
+  var perfil by remember { mutableStateOf("") }
+
+  PantallaDeConexion(
+    titulo = stringResource(R.string.settings_steam),
+    alVolver = alVolver,
+    pasos = listOf(
+      Paso(stringResource(R.string.steam_step_1), SteamAuthService.API_KEY_URL),
+      Paso(stringResource(R.string.steam_step_2), SteamAuthService.PROFILE_URL),
+      Paso(stringResource(R.string.steam_step_3), null),
+    ),
+    aviso = stringResource(R.string.steam_key_notice),
+    campos = listOf(
+      Campo(stringResource(R.string.steam_key_label), clave) { clave = it },
+      Campo(stringResource(R.string.steam_profile_label), perfil) { perfil = it },
+    ),
+    trabajando = estado.isWorking,
+    conectado = estado.isConnected,
+    detalleConectado = nombre,
+    mensajeDeError = (estado as? SteamAccountViewModel.State.Fallo)?.error,
+    sincronizando = estadoBiblioteca.isSyncing,
+    resultadoDeSync = (estadoBiblioteca as? SteamAccountViewModel.LibraryState.Succeeded)?.let {
+      stringResource(R.string.account_sync_result_steam, it.created, it.updated)
+    },
+    alConectar = { vm.connect(clave, perfil) },
+    alDesconectar = vm::disconnect,
+    alSincronizar = vm::syncLibrary,
+  )
+}
+
+/**
+ * Guardar la clave de IsThereAnyDeal, que habilita los precios.
+ *
+ * Reusa la misma pantalla aunque no sea una cuenta: la forma es identica (abrir
+ * un enlace, copiar algo, pegarlo) y no hay biblioteca que sincronizar, asi que
+ * el boton de sincronizar se oculta.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ITADKeyScreen(alVolver: () -> Unit) {
+  val container = LocalAppContainer.current
+  val vm: ITADKeyViewModel = viewModel(factory = container.viewModelFactory)
+
+  val guardada by vm.hasKey.collectAsStateWithLifecycle()
+  var clave by remember { mutableStateOf("") }
+
+  PantallaDeConexion(
+    titulo = stringResource(R.string.settings_prices),
+    alVolver = alVolver,
+    pasos = listOf(
+      Paso(stringResource(R.string.itad_step_1), ITADService.API_KEY_URL),
+      Paso(stringResource(R.string.itad_step_2), null),
+    ),
+    tituloDeLosPasos = stringResource(R.string.itad_how_to),
+    aviso = stringResource(R.string.itad_optional_notice),
+    campos = listOf(
+      Campo(stringResource(R.string.itad_key_label), clave) { clave = it },
+    ),
+    trabajando = false,
+    conectado = guardada,
+    detalleConectado = stringResource(R.string.itad_prices_enabled),
+    mensajeDeError = null,
+    alConectar = {
+      vm.save(clave)
+      clave = ""
+    },
+    alDesconectar = vm::clear,
+  )
+}
+
 /** Un paso de las instrucciones, con su enlace si lo tiene. */
 private data class Paso(val texto: String, val url: String?)
+
+/**
+ * Un campo que el usuario tiene que llenar.
+ *
+ * Es una lista y no un solo campo porque Steam pide dos cosas (la clave y el
+ * perfil) mientras que PSN y Epic piden una. Modelarlo como lista deja una sola
+ * pantalla para las cuatro conexiones en vez de una variante por cada forma.
+ */
+private data class Campo(
+  val etiqueta: String,
+  val valor: String,
+  val alCambiar: (String) -> Unit,
+)
 
 /**
  * La forma que comparten las dos pantallas de conexion.
@@ -170,19 +274,20 @@ private fun PantallaDeConexion(
   titulo: String,
   alVolver: () -> Unit,
   pasos: List<Paso>,
+  /** Encabezado de los pasos. Se cambia donde no se conecta una cuenta. */
+  tituloDeLosPasos: String = stringResource(R.string.account_how_to),
   aviso: String,
-  etiquetaDelCampo: String,
-  codigo: String,
-  alCambiarCodigo: (String) -> Unit,
+  campos: List<Campo>,
   trabajando: Boolean,
   conectado: Boolean,
   detalleConectado: String?,
   mensajeDeError: Throwable?,
-  sincronizando: Boolean,
-  resultadoDeSync: String?,
+  sincronizando: Boolean = false,
+  resultadoDeSync: String? = null,
   alConectar: () -> Unit,
   alDesconectar: () -> Unit,
-  alSincronizar: () -> Unit,
+  /** `null` en las conexiones que no traen biblioteca, como la de precios. */
+  alSincronizar: (() -> Unit)? = null,
 ) {
   val contexto = LocalContext.current
 
@@ -233,11 +338,13 @@ private fun PantallaDeConexion(
             resultadoDeSync?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-              Button(onClick = alSincronizar, enabled = !sincronizando) {
-                if (sincronizando) {
-                  CircularProgressIndicator(Modifier.size(18.dp))
-                } else {
-                  Text(stringResource(R.string.action_sync_library))
+              if (alSincronizar != null) {
+                Button(onClick = alSincronizar, enabled = !sincronizando) {
+                  if (sincronizando) {
+                    CircularProgressIndicator(Modifier.size(18.dp))
+                  } else {
+                    Text(stringResource(R.string.action_sync_library))
+                  }
                 }
               }
               TextButton(onClick = alDesconectar) {
@@ -248,7 +355,7 @@ private fun PantallaDeConexion(
         }
       }
 
-      Text(stringResource(R.string.account_how_to), style = MaterialTheme.typography.titleMedium)
+      Text(tituloDeLosPasos, style = MaterialTheme.typography.titleMedium)
 
       pasos.forEachIndexed { indice, paso ->
         Row(
@@ -280,17 +387,19 @@ private fun PantallaDeConexion(
         )
       }
 
-      OutlinedTextField(
-        value = codigo,
-        onValueChange = alCambiarCodigo,
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text(etiquetaDelCampo) },
-        singleLine = true,
-      )
+      campos.forEach { campo ->
+        OutlinedTextField(
+          value = campo.valor,
+          onValueChange = campo.alCambiar,
+          modifier = Modifier.fillMaxWidth(),
+          label = { Text(campo.etiqueta) },
+          singleLine = true,
+        )
+      }
 
       Button(
         onClick = alConectar,
-        enabled = codigo.isNotBlank() && !trabajando,
+        enabled = campos.all { it.valor.isNotBlank() } && !trabajando,
         modifier = Modifier.fillMaxWidth(),
       ) {
         if (trabajando) {

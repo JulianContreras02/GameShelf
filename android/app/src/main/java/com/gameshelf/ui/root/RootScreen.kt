@@ -24,7 +24,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.gameshelf.R
 import com.gameshelf.ui.accounts.EpicConnectScreen
+import com.gameshelf.ui.accounts.ITADKeyScreen
 import com.gameshelf.ui.accounts.PSNConnectScreen
+import com.gameshelf.ui.accounts.SteamConnectScreen
 import com.gameshelf.ui.collections.CollectionDetailScreen
 import com.gameshelf.ui.collections.CollectionEditorScreen
 import com.gameshelf.ui.collections.CollectionsScreen
@@ -120,8 +122,10 @@ object Rutas {
   const val DESEOS = "deseos"
   const val COLECCION = "coleccion"
   const val EDITOR_COLECCION = "editor-coleccion"
+  const val CONECTAR_STEAM = "conectar-steam"
   const val CONECTAR_PSN = "conectar-psn"
   const val CONECTAR_EPIC = "conectar-epic"
+  const val PRECIOS = "precios"
 
   fun detalle(id: UUID) = "$DETALLE/$id"
   fun coleccion(id: UUID) = "$COLECCION/$id"
@@ -176,14 +180,18 @@ private fun NavGraphBuilder.grafoDeColecciones(nav: NavHostController) {
 private fun NavGraphBuilder.grafoDeAjustes(nav: NavHostController) {
   composable(Rutas.AJUSTES) {
     SettingsScreen(
+      alConectarSteam = { nav.navigate(Rutas.CONECTAR_STEAM) },
       alConectarPSN = { nav.navigate(Rutas.CONECTAR_PSN) },
       alConectarEpic = { nav.navigate(Rutas.CONECTAR_EPIC) },
+      alConfigurarPrecios = { nav.navigate(Rutas.PRECIOS) },
       alAbrirDeseos = { nav.navigate(Rutas.DESEOS) },
     )
   }
 
+  composable(Rutas.CONECTAR_STEAM) { SteamConnectScreen(alVolver = { nav.popBackStack() }) }
   composable(Rutas.CONECTAR_PSN) { PSNConnectScreen(alVolver = { nav.popBackStack() }) }
   composable(Rutas.CONECTAR_EPIC) { EpicConnectScreen(alVolver = { nav.popBackStack() }) }
+  composable(Rutas.PRECIOS) { ITADKeyScreen(alVolver = { nav.popBackStack() }) }
 }
 
 /**

@@ -182,6 +182,8 @@
     <string name="library_updated">Updated %1$s</string>
     <string name="library_syncing">Fetching your library</string>
     <string name="library_syncing_detail">We\'re asking Steam which games you own.</string>
+    <string name="library_no_accounts">No accounts are connected</string>
+    <string name="library_no_accounts_detail">Connect Steam, PlayStation or Epic from Settings to bring in your games.</string>
     <string name="library_empty">Your library is empty</string>
     <string name="library_empty_detail">Sync with Steam to bring in the games you already own.</string>
     <string name="library_empty_after_sync">Steam returned no games</string>
@@ -287,12 +289,13 @@
     <string name="wishlist_price_discount">%1$d percent off</string>
 
     <!-- Settings -->
-    <string name="settings_missing_keys">Configuration keys are missing</string>
-    <string name="settings_missing_keys_detail">Copy Config/Secrets.example.xcconfig to Config/Secrets.xcconfig and fill in the values. The instructions are in the README.</string>
     <string name="settings_accounts">Accounts</string>
     <string name="settings_sections">Sections</string>
+    <string name="settings_steam">Steam</string>
     <string name="settings_playstation">PlayStation Network</string>
     <string name="settings_epic">Epic Games</string>
+    <string name="settings_prices">Prices and deals</string>
+    <string name="settings_prices_detail">Not set up. The wishlist still works, just without prices.</string>
     <string name="settings_connected">Connected</string>
     <string name="settings_not_connected">Not connected</string>
     <string name="settings_wishlist_detail">The games you want, with their deals.</string>
@@ -312,4 +315,28 @@
     <string name="epic_step_3">Paste the code below right away</string>
     <string name="epic_warning">Heads up: Epic warns on its own page that this code grants full access to your account. GameShelf stores it encrypted and never sends it to any server, but don\'t paste it anywhere else. Codes expire within seconds.</string>
     <string name="epic_code_label">Epic authorization code</string>
+
+    <!-- Connecting Steam -->
+    <string name="steam_step_1">Sign in to Steam and generate your Web API key</string>
+    <string name="steam_step_2">Open your profile and copy the address the browser lands on</string>
+    <string name="steam_step_3">Paste both below</string>
+    <string name="steam_key_notice">Steam does not let an app sign in on your behalf for its Web API: the key is generated on their site and can only be copied from there. It is stored encrypted here and never sent to any server. You can revoke it at any time from the same page where you generated it.</string>
+    <string name="steam_key_label">Steam Web API key</string>
+    <string name="steam_profile_label">Your profile address or SteamID</string>
+    <string name="account_sync_result_steam">%1$d new, %2$d updated</string>
+    <string name="steam_error_not_connected">No Steam account is connected.</string>
+    <string name="steam_error_profile_unreadable">That does not look like a Steam profile.</string>
+    <string name="steam_error_profile_not_found">Steam could not find that profile.</string>
+    <string name="steam_error_invalid_key">Steam rejected the key.</string>
+    <string name="steam_error_unexpected">Steam returned something unexpected: %1$s</string>
+    <string name="steam_recovery_check_profile">Open your profile on Steam and copy the full address, or paste your 17-digit SteamID.</string>
+    <string name="steam_recovery_check_key">Copy the key again from the Steam Web API page. If you revoked it, generate a new one.</string>
+
+    <!-- Prices (IsThereAnyDeal) -->
+    <string name="itad_how_to">How to enable them</string>
+    <string name="itad_step_1">Create a key on IsThereAnyDeal</string>
+    <string name="itad_step_2">Paste the key below</string>
+    <string name="itad_optional_notice">This is optional. Without a key the wishlist works the same, just without prices or historical lows.</string>
+    <string name="itad_key_label">IsThereAnyDeal key</string>
+    <string name="itad_prices_enabled">Prices enabled</string>
 </resources>

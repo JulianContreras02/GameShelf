@@ -189,13 +189,3 @@ class LibraryViewModel(
     prefs.librarySyncedAt = fecha
   }
 }
-
-/**
- * Servicio que solo sabe fallar, con el motivo original.
- *
- * Se usa cuando no se pudieron leer las credenciales: asi la app arranca y
- * explica el problema en vez de caerse.
- */
-class UnavailableSteamService(private val error: Throwable) : SteamServicing {
-  override suspend fun fetchOwnedGames(): List<SteamGameDTO> = throw error
-}

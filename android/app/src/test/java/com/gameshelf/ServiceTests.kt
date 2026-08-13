@@ -307,14 +307,15 @@ class ITADTest {
 class AppSecretsTest {
 
   @Test
-  fun `una clave vacia cuenta como faltante`() {
-    val fuente = AppSecrets.Source { clave ->
-      if (clave == AppSecrets.Key.STEAM_ID) "76561198000000000" else "  "
-    }
+  fun `una clave vacia cuenta como ausente`() {
+    // El archivo de configuracion suele quedar con la clave escrita y el valor
+    // en blanco. Eso tiene que valer lo mismo que no tenerla, o la app creeria
+    // que hay credenciales y fallaria al usarlas.
+    val fuente = AppSecrets.Source { "   " }
 
-    val faltan = AppSecrets.missingKeys(fuente)
-    assertEquals(2, faltan.size)
-    assertFalse(AppSecrets.Key.STEAM_ID in faltan)
+    assertThrows(AppSecrets.MissingSecretError::class.java) {
+      AppSecrets.value(AppSecrets.Key.STEAM_ID, fuente)
+    }
   }
 
   @Test

@@ -253,13 +253,3 @@ class WishlistViewModel(
     fun canDelete(juego: Game): Boolean = juego.storeEntries.isEmpty()
   }
 }
-
-/**
- * Servicio que solo sabe fallar, con el motivo original.
- *
- * Se usa cuando no se pudo leer el SteamID: asi la pantalla abre y explica el
- * problema en vez de caerse.
- */
-class UnavailableWishlistService(private val error: Throwable) : SteamWishlistServicing {
-  override suspend fun fetchWishlist(): List<SteamWishlistGame> = throw error
-}

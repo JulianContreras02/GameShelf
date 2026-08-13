@@ -4,7 +4,7 @@ import com.gameshelf.data.net.GameShelfJson
 import com.gameshelf.data.net.HttpClient
 import com.gameshelf.data.net.NetworkError
 import com.gameshelf.data.net.OkHttpNetworkClient
-import com.gameshelf.data.secrets.AppSecrets
+import com.gameshelf.data.secrets.SteamCredentialsStore
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import okhttp3.HttpUrl
@@ -28,26 +28,24 @@ interface SteamServicing {
   suspend fun fetchOwnedGames(): List<SteamGameDTO>
 }
 
-/** Implementacion real contra la Steam Web API. */
+/**
+ * Implementacion real contra la Steam Web API.
+ *
+ * Las credenciales llegan como una funcion y no como un valor a proposito. El
+ * servicio se construye una vez al arrancar la app, pero la cuenta se conecta
+ * y se desconecta mientras la app corre: si se guardara el valor, seguiria
+ * usando el de cuando se creo y habria que reconstruir medio grafo de
+ * dependencias en cada cambio.
+ *
+ * La funcion **lanza** [SteamAuthError.SinCredenciales] cuando no hay cuenta
+ * conectada, en vez de devolver `null`. Asi el error llega a la pantalla por el
+ * mismo camino que cualquier otro fallo de sincronizacion y se muestra con su
+ * texto, sin un caso especial en cada ViewModel.
+ */
 class SteamService(
   private val client: HttpClient,
-  private val credentials: Credentials,
+  private val credentials: () -> SteamCredentials,
 ) : SteamServicing {
-
-  /** Credenciales necesarias para consultar la API. */
-  data class Credentials(val apiKey: String, val steamID: String) {
-    companion object {
-      /**
-       * Las lee de [AppSecrets], o sea del archivo de configuracion.
-       *
-       * @throws AppSecrets.MissingSecretError si falta alguna.
-       */
-      fun fromAppSecrets(source: AppSecrets.Source = AppSecrets.buildConfigSource) = Credentials(
-        apiKey = AppSecrets.value(AppSecrets.Key.STEAM_API_KEY, source),
-        steamID = AppSecrets.value(AppSecrets.Key.STEAM_ID, source),
-      )
-    }
-  }
 
   override suspend fun fetchOwnedGames(): List<SteamGameDTO> =
     client.get(ownedGamesURL(), SteamOwnedGamesResponse.serializer()).response.games
@@ -66,22 +64,27 @@ class SteamService(
    *   Steam los omite: en una biblioteca real la diferencia fue de 88 a 118
    *   juegos y de 1220 a 2735 horas, porque el juego mas jugado era F2P.
    */
-  fun ownedGamesURL(): String = buildURL("/IPlayerService/GetOwnedGames/v1/") {
-    addQueryParameter("key", credentials.apiKey)
-    addQueryParameter("steamid", credentials.steamID)
-    addQueryParameter("include_appinfo", "1")
-    addQueryParameter("include_played_free_games", "1")
-    addQueryParameter("format", "json")
+  fun ownedGamesURL(): String {
+    val credenciales = credentials()
+    return buildURL("/IPlayerService/GetOwnedGames/v1/") {
+      addQueryParameter("key", credenciales.apiKey)
+      addQueryParameter("steamid", credenciales.steamID)
+      addQueryParameter("include_appinfo", "1")
+      addQueryParameter("include_played_free_games", "1")
+      addQueryParameter("format", "json")
+    }
   }
 
   companion object {
     const val BASE_URL = "https://api.steampowered.com"
 
-    /** Crea el servicio con las credenciales del archivo de configuracion. */
+    /** Crea el servicio con las credenciales de la cuenta conectada. */
     fun live(
       client: HttpClient = OkHttpNetworkClient(),
-      source: AppSecrets.Source = AppSecrets.buildConfigSource,
-    ): SteamService = SteamService(client, Credentials.fromAppSecrets(source))
+      store: SteamCredentialsStore,
+    ): SteamService = SteamService(client) {
+      store.credentials() ?: throw SteamAuthError.SinCredenciales
+    }
 
     /**
      * Arma una URL sobre la base de Steam.
@@ -136,7 +139,7 @@ interface SteamWishlistServicing {
 /** Implementacion real contra la API de Steam. */
 class SteamWishlistService(
   private val client: HttpClient,
-  private val steamID: String,
+  private val steamID: () -> String,
 ) : SteamWishlistServicing {
 
   override suspend fun fetchWishlist(): List<SteamWishlistGame> {
@@ -188,7 +191,7 @@ class SteamWishlistService(
   /** Arma la URL de `GetWishlist`. */
   fun wishlistURL(): String =
     SteamService.buildURL("/IWishlistService/GetWishlist/v1/") {
-      addQueryParameter("steamid", steamID)
+      addQueryParameter("steamid", steamID())
     }
 
   /**
@@ -220,7 +223,7 @@ class SteamWishlistService(
     const val TAMANO_DE_TANDA = 50
 
     /**
-     * Crea el servicio con el SteamID del archivo de configuracion.
+     * Crea el servicio con el SteamID de la cuenta conectada.
      *
      * A diferencia del resto de la API, estos dos endpoints **no piden API
      * key**: se comprobo contra la cuenta real que responden igual con y sin
@@ -228,9 +231,10 @@ class SteamWishlistService(
      */
     fun live(
       client: HttpClient = OkHttpNetworkClient(),
-      source: AppSecrets.Source = AppSecrets.buildConfigSource,
-    ): SteamWishlistService =
-      SteamWishlistService(client, AppSecrets.value(AppSecrets.Key.STEAM_ID, source))
+      store: SteamCredentialsStore,
+    ): SteamWishlistService = SteamWishlistService(client) {
+      store.steamID() ?: throw SteamAuthError.SinCredenciales
+    }
   }
 }
 
