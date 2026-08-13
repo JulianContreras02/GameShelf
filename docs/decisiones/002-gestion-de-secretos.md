@@ -1,7 +1,11 @@
 # 002 - Gestion de secretos
 
 - **Fecha:** 2026-08-10
-- **Estado:** Aceptada
+- **Estado:** Superada por [#85](https://github.com/JulianContreras02/GameShelf/issues/85) y
+  [#89](https://github.com/JulianContreras02/GameShelf/issues/89) para las claves de usuario
+  (Steam, PSN, Epic, IsThereAnyDeal), que ahora se conectan desde Ajustes y quedan en el
+  Keychain. Se conserva como historial: el mecanismo de `Secrets.xcconfig` sigue existiendo
+  para el dia que haga falta una clave de build de verdad.
 - **Issue:** [#3](https://github.com/JulianContreras02/GameShelf/issues/3)
 
 ## Contexto

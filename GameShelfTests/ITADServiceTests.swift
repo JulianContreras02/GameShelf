@@ -298,3 +298,43 @@ struct ITADRequestTests {
     #expect(tandas.map(\.count) == [200, 200, 50])
   }
 }
+
+@Suite("ITAD: credenciales en el llavero")
+struct ITADCredentialsTests {
+
+  @Test("Sin clave guardada, avisa en vez de fallar en la red")
+  func sinClave() throws {
+    #expect(throws: ITADCredentialsError.notConnected) {
+      _ = try ITADService.live(client: StubHTTPClient(json: "{}"), keychain: InMemoryKeychainStore())
+    }
+  }
+
+  @Test("Con clave guardada, live() la usa")
+  func conClave() throws {
+    let llavero = InMemoryKeychainStore()
+    try ITADService.save(apiKey: "CLAVE_GUARDADA", to: llavero)
+
+    let itad = try ITADService.live(client: StubHTTPClient(json: "{}"), keychain: llavero)
+
+    #expect(try itad.pricesURL().absoluteString.contains("key=CLAVE_GUARDADA"))
+  }
+
+  @Test("hasAPIKey refleja si hay algo guardado")
+  func hasAPIKey() throws {
+    let llavero = InMemoryKeychainStore()
+    #expect(ITADService.hasAPIKey(in: llavero) == false)
+
+    try ITADService.save(apiKey: "CLAVE", to: llavero)
+    #expect(ITADService.hasAPIKey(in: llavero) == true)
+  }
+
+  @Test("Borrar la clave la quita del llavero")
+  func borrar() throws {
+    let llavero = InMemoryKeychainStore()
+    try ITADService.save(apiKey: "CLAVE", to: llavero)
+
+    try ITADService.removeAPIKey(from: llavero)
+
+    #expect(ITADService.hasAPIKey(in: llavero) == false)
+  }
+}

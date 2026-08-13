@@ -2,9 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<!-- Los valores entran desde Config/Secrets.xcconfig via variables de build.
+	<!-- Ya no hay claves de build aca: Steam, PSN, Epic e IsThereAnyDeal se
+	     conectan desde Ajustes, dentro de la app, y se guardan en el Keychain.
 	     Xcode fusiona este archivo con las claves que genera automaticamente. -->
-	<key>ITADAPIKey</key>
-	<string>$(ITAD_API_KEY)</string>
 </dict>
 </plist>
