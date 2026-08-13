@@ -57,19 +57,21 @@ struct SteamWishlistService: SteamWishlistServicing {
     self.steamID = steamID
   }
 
-  /// Crea el servicio con el SteamID del archivo de configuracion.
+  /// Crea el servicio con el SteamID que el usuario conecto desde Ajustes.
   ///
   /// A diferencia del resto de la API, estos dos endpoints **no piden API
   /// key**: se comprobo contra la cuenta real que responden igual con y sin
-  /// ella. Se pide solo el SteamID para no exponer la clave sin necesidad.
+  /// ella. Se usa solo el SteamID de las credenciales guardadas.
+  ///
+  /// - Throws: `SteamCredentialsError.notConnected` si todavia no las conecto.
   static func live(
     client: HTTPClient = URLSessionHTTPClient(),
-    bundle: Bundle = .main
+    keychain: KeychainStoring = KeychainStore()
   ) throws -> SteamWishlistService {
-    SteamWishlistService(
-      client: client,
-      steamID: try AppSecrets.value(for: .steamID, in: bundle)
-    )
+    guard let credentials = try SteamService.Credentials.fromKeychain(keychain) else {
+      throw SteamCredentialsError.notConnected
+    }
+    return SteamWishlistService(client: client, steamID: credentials.steamID)
   }
 
   func fetchWishlist() async throws -> [SteamWishlistGame] {

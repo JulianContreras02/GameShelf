@@ -5,8 +5,8 @@ sin importar de que tienda vienen.
 
 ## Que hace
 
-- Conecta con tu cuenta de Steam (y mas adelante PSN, Epic) para traer los juegos
-  que ya tienes.
+- Conecta tus cuentas de Steam, PlayStation Network y Epic Games para traer los
+  juegos que ya tienes.
 - Te deja organizar esa biblioteca con tus propias carpetas y listas
   (pendientes, favoritos, lo que sea), algo que ninguna tienda te deja hacer
   entre plataformas.
@@ -30,17 +30,16 @@ Ese archivo esta ignorado por git, asi que tus claves nunca se suben.
 
 | Clave | Donde se saca |
 | --- | --- |
-| `STEAM_API_KEY` | https://steamcommunity.com/dev/apikey (pide un dominio; sirve `localhost`) |
-| `STEAM_ID` | Tu SteamID64, el numero de 17 digitos. Se obtiene en https://steamid.io pegando la URL de tu perfil |
 | `ITAD_API_KEY` | https://isthereanydeal.com/apps/my/ (solo hace falta para el modulo de ofertas) |
 
-Llena los valores en `Config/Secrets.xcconfig`:
+Llena el valor en `Config/Secrets.xcconfig`:
 
 ```
-STEAM_API_KEY = tu_key_aqui
-STEAM_ID = 76561198000000000
 ITAD_API_KEY = tu_key_aqui
 ```
+
+Steam, PlayStation y Epic **no van aca**: se conectan desde la app. Ver la
+siguiente seccion.
 
 ### 3. Correr
 
@@ -55,13 +54,26 @@ en vez de caerse. Ver `docs/decisiones/002-gestion-de-secretos.md`.
 - Xcode 26 o superior
 - [SwiftLint](https://github.com/realm/SwiftLint): `brew install swiftlint`
 
-## Conectar PlayStation y Epic
+## Conectar Steam, PlayStation y Epic
 
-Estas dos **no van en el archivo de secretos**: se conectan desde la app, en
-**Ajustes -> Cuentas**, y sus codigos se guardan cifrados en el llavero del
-telefono.
+Las tres se conectan desde la app, en **Ajustes -> Cuentas**, y sus
+credenciales se guardan cifradas en el llavero del telefono. Ninguna vive en
+el archivo de secretos: eso es lo que permite instalar la app en otro telefono
+y conectar ahi una cuenta distinta, sin recompilar.
 
-La razon de que sea un rodeo es la misma en las dos: ni Sony ni Epic ofrecen
+### Steam
+
+A diferencia de PSN y Epic, Steam si ofrece un camino oficial: no hace falta
+iniciar sesion desde la app.
+
+1. Consigue tu SteamID64 en https://steamid.io pegando la URL de tu perfil.
+2. Saca una API key gratis en https://steamcommunity.com/dev/apikey (pide un
+   dominio; sirve `localhost`).
+3. Pega los dos datos en **Ajustes -> Steam**.
+
+### PlayStation y Epic
+
+La razon de que sean un rodeo es la misma en las dos: ni Sony ni Epic ofrecen
 un "iniciar sesion" para aplicaciones de terceros. Lo unico que hay es copiar
 un codigo desde el navegador, con la sesion ya iniciada.
 
@@ -98,8 +110,8 @@ con recargar esa pagina y copiar el nuevo. Si la pagina muestra
 ### Que pasa si una falla
 
 Cada tienda va por su lado. Si el flujo de Epic deja de funcionar, o si Sony
-cambia el suyo, **el resto de la app sigue igual**: la biblioteca de Steam, las
-colecciones y las notas no dependen de ellos.
+cambia el suyo, **el resto de la app sigue igual**: la biblioteca ya guardada,
+las colecciones y las notas no dependen de ellos.
 
 ## Estado del proyecto
 

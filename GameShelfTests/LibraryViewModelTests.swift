@@ -97,10 +97,10 @@ struct LibraryViewModelTests {
     #expect(sugerencia?.contains("API key") == true)
   }
 
-  @Test("Si faltan las claves, lo dice en vez de fallar en la red")
+  @Test("Si no hay cuenta conectada, lo dice en vez de fallar en la red")
   func faltanCredenciales() async throws {
     let context = try hacerContexto()
-    let viewModel = hacerViewModel(.failure(AppSecrets.MissingSecretError(key: .steamAPIKey)))
+    let viewModel = hacerViewModel(.failure(SteamCredentialsError.notConnected))
 
     await viewModel.sync(into: context)
 
@@ -108,8 +108,8 @@ struct LibraryViewModelTests {
       Issue.record("Se esperaba estado failed")
       return
     }
-    #expect(mensaje.contains("STEAM_API_KEY"))
-    #expect(sugerencia?.contains("Secrets.xcconfig") == true)
+    #expect(mensaje.contains("conectado"))
+    #expect(sugerencia?.contains("Ajustes") == true)
   }
 
   @Test("Un fallo no borra los juegos que ya estaban guardados")

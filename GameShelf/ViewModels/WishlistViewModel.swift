@@ -174,10 +174,9 @@ final class WishlistViewModel {
         message: error.errorDescription ?? String(localized: "No se pudo sincronizar.", comment: "Error generico"),
         suggestion: error.recoverySuggestion
       )
-    } catch let error as AppSecrets.MissingSecretError {
+    } catch let error as SteamCredentialsError {
       state = .failed(
-        message: error.errorDescription
-          ?? String(localized: "Falta configurar las claves.", comment: "Error generico de configuracion"),
+        message: error.errorDescription ?? "",
         suggestion: error.recoverySuggestion
       )
     } catch {

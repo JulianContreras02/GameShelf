@@ -16,16 +16,12 @@ enum AppSecrets {
 
   /// Claves disponibles, con el nombre exacto que tienen en el Info.plist.
   enum Key: String, CaseIterable {
-    case steamAPIKey = "SteamAPIKey"
-    case steamID = "SteamID"
     case itadAPIKey = "ITADAPIKey"
 
     /// Nombre de la variable en el archivo `.xcconfig`, para poder decirle al
     /// usuario exactamente que linea le falta.
     var xcconfigName: String {
       switch self {
-      case .steamAPIKey: "STEAM_API_KEY"
-      case .steamID: "STEAM_ID"
       case .itadAPIKey: "ITAD_API_KEY"
       }
     }
