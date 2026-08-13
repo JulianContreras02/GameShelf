@@ -161,20 +161,36 @@ struct SteamServiceFetchTests {
   }
 }
 
-@Suite("SteamService - credenciales")
+@Suite("SteamService - credenciales en el llavero")
 struct SteamServiceCredentialsTests {
 
-  @Test("Sin claves configuradas, avisa cual falta en vez de fallar en la red")
+  @Test("Sin nada conectado, avisa en vez de fallar en la red")
   func sinCredenciales() throws {
-    // Bundle.main en las pruebas no tiene las claves de Steam.
-    #expect(throws: AppSecrets.MissingSecretError.self) {
-      try SteamService.Credentials.fromAppSecrets(bundle: Bundle(for: TestBundleToken.self))
+    #expect(throws: SteamCredentialsError.notConnected) {
+      _ = try SteamService.live(client: StubHTTPClient(json: "{}"), keychain: InMemoryKeychainStore())
     }
   }
-}
 
-/// Solo sirve para ubicar el bundle de pruebas.
-private final class TestBundleToken {}
+  @Test("Con credenciales guardadas, live() las usa")
+  func conCredenciales() throws {
+    let llavero = InMemoryKeychainStore()
+    try credencialesFalsas.save(to: llavero)
+
+    let servicio = try SteamService.live(client: StubHTTPClient(json: "{}"), keychain: llavero)
+
+    #expect(try servicio.ownedGamesURL().absoluteString.contains("CLAVE_DE_PRUEBA"))
+  }
+
+  @Test("Desconectar borra las dos claves del llavero")
+  func desconectar() throws {
+    let llavero = InMemoryKeychainStore()
+    try credencialesFalsas.save(to: llavero)
+
+    try SteamService.Credentials.removeFromKeychain(llavero)
+
+    #expect(try SteamService.Credentials.fromKeychain(llavero) == nil)
+  }
+}
 
 @Suite("Ocultar secretos en las URLs")
 struct URLRedactionTests {

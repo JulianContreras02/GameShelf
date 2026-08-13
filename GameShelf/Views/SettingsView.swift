@@ -7,6 +7,7 @@ import SwiftUI
 
 /// Ajustes de la app. Por ahora, las cuentas conectadas.
 struct SettingsView: View {
+  @State private var steam = SteamAccountViewModel()
   @State private var psn = PSNAccountViewModel()
   @State private var epic = EpicAccountViewModel()
 
@@ -14,15 +15,16 @@ struct SettingsView: View {
     NavigationStack {
       List {
         Section {
-          FilaDeTienda(
-            nombre: "Steam",
-            simbolo: "gamecontroller",
-            detalle: String(
-              localized: "Se configura con las claves del proyecto",
-              comment: "Como se conecta Steam"
-            ),
-            conectado: true
-          )
+          NavigationLink {
+            SteamConnectView(viewModel: steam)
+          } label: {
+            FilaDeTienda(
+              nombre: "Steam",
+              simbolo: "gamecontroller",
+              detalle: detalleSteam,
+              conectado: steam.state.isConnected
+            )
+          }
 
           NavigationLink {
             PSNConnectView(viewModel: psn)
@@ -51,6 +53,17 @@ struct SettingsView: View {
         }
       }
       .navigationTitle("Ajustes")
+    }
+  }
+
+  private var detalleSteam: String {
+    switch steam.state {
+    case .conectado:
+      String(localized: "Conectado", comment: "Estado de una cuenta")
+    case .trabajando:
+      String(localized: "Conectando…", comment: "Estado de una cuenta")
+    case .desconectado, .fallo:
+      String(localized: "Sin conectar", comment: "Estado de una cuenta")
     }
   }
 

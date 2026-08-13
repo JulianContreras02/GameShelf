@@ -4,10 +4,6 @@
 <dict>
 	<!-- Los valores entran desde Config/Secrets.xcconfig via variables de build.
 	     Xcode fusiona este archivo con las claves que genera automaticamente. -->
-	<key>SteamAPIKey</key>
-	<string>$(STEAM_API_KEY)</string>
-	<key>SteamID</key>
-	<string>$(STEAM_ID)</string>
 	<key>ITADAPIKey</key>
 	<string>$(ITAD_API_KEY)</string>
 </dict>

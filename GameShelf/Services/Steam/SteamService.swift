@@ -23,19 +23,9 @@ protocol SteamServicing: Sendable {
 struct SteamService: SteamServicing {
 
   /// Credenciales necesarias para consultar la API.
-  struct Credentials: Sendable {
+  struct Credentials: Sendable, Equatable {
     let apiKey: String
     let steamID: String
-
-    /// Las lee de `AppSecrets`, o sea del archivo de configuracion.
-    ///
-    /// - Throws: `AppSecrets.MissingSecretError` si falta alguna.
-    static func fromAppSecrets(bundle: Bundle = .main) throws -> Credentials {
-      Credentials(
-        apiKey: try AppSecrets.value(for: .steamAPIKey, in: bundle),
-        steamID: try AppSecrets.value(for: .steamID, in: bundle)
-      )
-    }
   }
 
   private let client: HTTPClient
@@ -48,12 +38,17 @@ struct SteamService: SteamServicing {
     self.credentials = credentials
   }
 
-  /// Crea el servicio con las credenciales del archivo de configuracion.
+  /// Crea el servicio con las credenciales que el usuario conecto desde Ajustes.
+  ///
+  /// - Throws: `SteamCredentialsError.notConnected` si todavia no las conecto.
   static func live(
     client: HTTPClient = URLSessionHTTPClient(),
-    bundle: Bundle = .main
+    keychain: KeychainStoring = KeychainStore()
   ) throws -> SteamService {
-    SteamService(client: client, credentials: try .fromAppSecrets(bundle: bundle))
+    guard let credentials = try Credentials.fromKeychain(keychain) else {
+      throw SteamCredentialsError.notConnected
+    }
+    return SteamService(client: client, credentials: credentials)
   }
 
   func fetchOwnedGames() async throws -> [SteamGameDTO] {
@@ -97,6 +92,44 @@ struct SteamService: SteamServicing {
     }
 
     return url
+  }
+}
+
+/// Error cuando no hay credenciales de Steam guardadas en el llavero.
+enum SteamCredentialsError: LocalizedError, Equatable {
+  case notConnected
+
+  var errorDescription: String? {
+    String(localized: "Steam no esta conectado.", comment: "Error: faltan credenciales de Steam")
+  }
+
+  var recoverySuggestion: String? {
+    String(localized: "Conecta tu cuenta desde Ajustes.", comment: "Como resolver: falta conectar Steam")
+  }
+}
+
+extension SteamService.Credentials {
+  private enum ClaveDeLlavero {
+    static let apiKey = "steam.apiKey"
+    static let steamID = "steam.steamID"
+  }
+
+  /// Lee las credenciales guardadas por el usuario. `nil` si no ha conectado.
+  static func fromKeychain(_ keychain: KeychainStoring) throws -> SteamService.Credentials? {
+    guard let apiKey = try keychain.string(for: ClaveDeLlavero.apiKey),
+          let steamID = try keychain.string(for: ClaveDeLlavero.steamID)
+    else { return nil }
+    return SteamService.Credentials(apiKey: apiKey, steamID: steamID)
+  }
+
+  func save(to keychain: KeychainStoring) throws {
+    try keychain.set(apiKey, for: ClaveDeLlavero.apiKey)
+    try keychain.set(steamID, for: ClaveDeLlavero.steamID)
+  }
+
+  static func removeFromKeychain(_ keychain: KeychainStoring) throws {
+    try keychain.remove(for: ClaveDeLlavero.apiKey)
+    try keychain.remove(for: ClaveDeLlavero.steamID)
   }
 }
 

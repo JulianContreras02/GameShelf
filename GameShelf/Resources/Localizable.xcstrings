@@ -726,6 +726,16 @@
         }
       }
     },
+    "API key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API key"
+          }
+        }
+      }
+    },
     "Abandonado": {
       "comment": "Estado de un juego",
       "localizations": {
@@ -930,6 +940,16 @@
         }
       }
     },
+    "Antes de conectar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Before connecting"
+          }
+        }
+      }
+    },
     "Apenas probados": {
       "comment": "Grupo automatico",
       "localizations": {
@@ -1116,7 +1136,7 @@
       }
     },
     "Conecta tu cuenta desde Ajustes.": {
-      "comment": "Como conectar PSN",
+      "comment": "Como conectar PSN\nComo resolver: falta conectar Steam",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1330,6 +1350,16 @@
         }
       }
     },
+    "Desconectar Steam": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnect Steam"
+          }
+        }
+      }
+    },
     "Deseado hace poco": {
       "comment": "Orden de la lista de deseos",
       "localizations": {
@@ -1498,6 +1528,7 @@
       }
     },
     "El platino se consigue al completar todos los demas trofeos del juego.": {
+      "comment": "Que es el trofeo de platino",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1934,6 +1965,16 @@
         }
       }
     },
+    "La biblioteca y la lista de deseos se sincronizan desde sus propias pantallas.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The library and wishlist sync from their own screens."
+          }
+        }
+      }
+    },
     "La direccion no es valida: %@": {
       "comment": "Error de red",
       "localizations": {
@@ -2247,6 +2288,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Both steps have to happen in the **same browser**: what they share is the session. If the code page says \"Invalid login\", step 1 is missing.\n\nSony offers no \"connect\" button for third-party apps, so this detour is the only way. The code is stored encrypted in your phone's keychain and never leaves it."
+          }
+        }
+      }
+    },
+    "Los dos son gratis y quedan asociados a tu cuenta de Steam. Ninguno sale de tu telefono: se guardan cifrados en el llavero.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both are free and tied to your Steam account. Neither ever leaves your phone: they're stored encrypted in the keychain."
           }
         }
       }
@@ -3083,6 +3134,26 @@
         }
       }
     },
+    "Sacar tu API key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get your API key"
+          }
+        }
+      }
+    },
+    "Sacar tu SteamID64": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get your SteamID64"
+          }
+        }
+      }
+    },
     "Se agregan %lld": {
       "comment": "Cuantos juegos se van a agregar",
       "localizations": {
@@ -3130,6 +3201,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "The code is removed from the keychain. Your saved games are left alone."
+          }
+        }
+      }
+    },
+    "Se borran las credenciales del llavero. Tus juegos guardados no se tocan.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This removes the credentials from the keychain. Your saved games aren't touched."
           }
         }
       }
@@ -3411,6 +3492,16 @@
         }
       }
     },
+    "Steam": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam"
+          }
+        }
+      }
+    },
     "Steam no devolvio juegos": {
       "localizations": {
         "en": {
@@ -3442,6 +3533,17 @@
         }
       }
     },
+    "Steam no esta conectado.": {
+      "comment": "Error: faltan credenciales de Steam",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steam isn't connected."
+          }
+        }
+      }
+    },
     "Steam no manda la fecha de lanzamiento, asi que este orden todavia no cambia nada.": {
       "comment": "Aviso de que un orden no puede funcionar todavia",
       "localizations": {
@@ -3449,6 +3551,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Steam does not send release dates, so this order does not change anything yet."
+          }
+        }
+      }
+    },
+    "SteamID64": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SteamID64"
           }
         }
       }
