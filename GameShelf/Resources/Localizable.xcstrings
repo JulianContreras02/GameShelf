@@ -706,6 +706,16 @@
         }
       }
     },
+    "1. Iniciar sesion con Microsoft": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1. Sign in with Microsoft"
+          }
+        }
+      }
+    },
     "1. Iniciar sesion en Epic": {
       "localizations": {
         "en": {
@@ -773,6 +783,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Open the code page. You will see a long piece of text after \"authorizationCode\"."
+          }
+        }
+      }
+    },
+    "Abrir portal.azure.com": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open portal.azure.com"
           }
         }
       }
@@ -971,6 +991,16 @@
         }
       }
     },
+    "App guardada": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App saved"
+          }
+        }
+      }
+    },
     "Asi se vera": {
       "localizations": {
         "en": {
@@ -1094,6 +1124,26 @@
         }
       }
     },
+    "Client ID": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Client ID"
+          }
+        }
+      }
+    },
+    "Client secret": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Client secret"
+          }
+        }
+      }
+    },
     "Coleccion": {
       "localizations": {
         "en": {
@@ -1154,6 +1204,16 @@
         }
       }
     },
+    "Con la app de Azure ya guardada arriba, abre la pagina de inicio de sesion.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "With the Azure app already saved above, open the sign-in page."
+          }
+        }
+      }
+    },
     "Con partidas en las ultimas dos semanas": {
       "comment": "Que agrupa la seccion",
       "localizations": {
@@ -1177,7 +1237,7 @@
       }
     },
     "Conecta tu cuenta desde Ajustes.": {
-      "comment": "Como conectar PSN\nComo resolver: falta conectar Steam",
+      "comment": "Como conectar PSN\nComo conectar Xbox\nComo resolver: falta conectar Steam",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1247,6 +1307,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Copy Config/Secrets.example.xcconfig to Config/Secrets.xcconfig and fill in %@. The instructions are in the README."
+          }
+        }
+      }
+    },
+    "Copia lo que hay tras \"code=\" en la barra de direcciones y pegalo abajo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy what comes after \"code=\" in the address bar and paste it below."
           }
         }
       }
@@ -1412,6 +1482,16 @@
         }
       }
     },
+    "Desconectar Xbox": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnect Xbox"
+          }
+        }
+      }
+    },
     "Deseado hace poco": {
       "comment": "Orden de la lista de deseos",
       "localizations": {
@@ -1484,6 +1564,17 @@
         }
       }
     },
+    "El client ID o el client secret de tu app de Azure no sirven.": {
+      "comment": "Error de autenticacion con Xbox",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Azure app's client ID or client secret isn't valid."
+          }
+        }
+      }
+    },
     "El codigo de Epic no sirve o ya se uso.": {
       "comment": "Error de autenticacion con Epic",
       "localizations": {
@@ -1502,6 +1593,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "That PlayStation code is wrong or has expired."
+          }
+        }
+      }
+    },
+    "El codigo de Xbox no sirve o ya caduco.": {
+      "comment": "Error de autenticacion con Xbox",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Xbox code isn't valid or already expired."
           }
         }
       }
@@ -1827,6 +1929,17 @@
         }
       }
     },
+    "Falta configurar tu app de Azure.": {
+      "comment": "Error de autenticacion con Xbox: falta la app de Azure",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Azure app isn't set up yet."
+          }
+        }
+      }
+    },
     "Falta la clave %@.": {
       "comment": "Falta un secreto de configuracion",
       "localizations": {
@@ -1869,6 +1982,16 @@
         }
       }
     },
+    "Gamertag": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gamertag"
+          }
+        }
+      }
+    },
     "Gris": {
       "comment": "Color de una coleccion",
       "localizations": {
@@ -1886,6 +2009,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Save"
+          }
+        }
+      }
+    },
+    "Guardar app": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save app"
           }
         }
       }
@@ -1980,6 +2113,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sign in to Epic Games in your browser."
+          }
+        }
+      }
+    },
+    "Inicia sesion y autoriza la app. Que falle al llegar a localhost es lo esperado.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in and authorize the app. It's expected to fail once it reaches localhost."
           }
         }
       }
@@ -2151,6 +2294,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Your PlayStation session has expired."
+          }
+        }
+      }
+    },
+    "La sesion de Xbox caduco.": {
+      "comment": "Error de autenticacion con Xbox",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Xbox session expired."
           }
         }
       }
@@ -2655,6 +2809,16 @@
         }
       }
     },
+    "Microsoft no deja usar una app compartida como con PlayStation o Epic: hay que registrar una propia, una sola vez. En \"App registrations\", cuentas personales, con http://localhost/auth/callback como Redirect URI de tipo Web, y un client secret nuevo en \"Certificates & secrets\". El paso a paso completo esta en el README.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microsoft doesn't allow a shared app like PlayStation or Epic: you need to register your own, just once. Under \"App registrations\", personal accounts, with http://localhost/auth/callback as a Web Redirect URI, and a new client secret under \"Certificates & secrets\". The full walkthrough is in the README."
+          }
+        }
+      }
+    },
     "Minimo historico": {
       "comment": "El precio mas bajo de siempre",
       "localizations": {
@@ -2735,6 +2899,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "There is no internet connection."
+          }
+        }
+      }
+    },
+    "No hay que hacer nada mientras tanto: el acceso se renueva solo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No need to do anything in the meantime: access renews on its own."
           }
         }
       }
@@ -3133,6 +3307,16 @@
         }
       }
     },
+    "Que la pagina no cargue al final es normal: nada escucha en localhost. El codigo ya esta en la direccion, no en la pagina.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's normal for the page to fail to load at the end: nothing is listening on localhost. The code is already in the address, not on the page."
+          }
+        }
+      }
+    },
     "Queda solo en GameShelf: tu lista de deseos de Steam no cambia, porque su API no deja escribir.\n\nSe agrega con estado \"Lista de deseos\", y puedes cambiarlo despues desde su ficha.": {
       "localizations": {
         "en": {
@@ -3189,6 +3373,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Summary"
+          }
+        }
+      }
+    },
+    "Revisa el client ID y el client secret en portal.azure.com y pegalos de nuevo.": {
+      "comment": "Como resolver credenciales de app de Xbox invalidas",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check the client ID and client secret at portal.azure.com and paste them again."
           }
         }
       }
@@ -3304,6 +3499,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "The code is removed from the keychain. Your saved games are left alone."
+          }
+        }
+      }
+    },
+    "Se borra la sesion del llavero. Tu app de Azure y tus juegos guardados no se tocan.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This removes the session from the keychain. Your Azure app and saved games aren't touched."
           }
         }
       }
@@ -3804,6 +4009,17 @@
         }
       }
     },
+    "Todavia no has conectado tu cuenta de Xbox.": {
+      "comment": "Error de autenticacion con Xbox",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You haven't connected your Xbox account yet."
+          }
+        }
+      }
+    },
     "Todavia no sale": {
       "comment": "Juego sin lanzar",
       "localizations": {
@@ -3903,6 +4119,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Trophies: %lld%%. Tap to see the breakdown by type."
+          }
+        }
+      }
+    },
+    "Tu app de Azure": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Azure app"
           }
         }
       }
@@ -4013,7 +4239,7 @@
       }
     },
     "Vuelve a copiar el codigo desde el navegador y pegalo aca.": {
-      "comment": "Como recuperarse de un token de PSN caducado",
+      "comment": "Como recuperarse de un codigo de Xbox caducado\nComo recuperarse de un token de PSN caducado",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -4040,6 +4266,27 @@
           "stringUnit": {
             "state": "translated",
             "value": "Come back here and open the code page. You will see a short piece of text in quotes."
+          }
+        }
+      }
+    },
+    "Xbox": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xbox"
+          }
+        }
+      }
+    },
+    "Xbox respondio algo inesperado: %@": {
+      "comment": "Error de autenticacion con Xbox",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xbox responded with something unexpected: %@"
           }
         }
       }
