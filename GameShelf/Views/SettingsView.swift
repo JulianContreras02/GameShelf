@@ -10,6 +10,7 @@ struct SettingsView: View {
   @State private var steam = SteamAccountViewModel()
   @State private var psn = PSNAccountViewModel()
   @State private var epic = EpicAccountViewModel()
+  @State private var xbox = XboxAccountViewModel()
   @State private var itad = ITADSettingsViewModel()
 
   var body: some View {
@@ -45,6 +46,16 @@ struct SettingsView: View {
               simbolo: "gamecontroller.fill",
               detalle: detalleEpic,
               conectado: epic.state.isConnected
+            )
+          }
+          NavigationLink {
+            XboxConnectView(viewModel: xbox)
+          } label: {
+            FilaDeTienda(
+              nombre: "Xbox",
+              simbolo: "xbox.logo",
+              detalle: detalleXbox,
+              conectado: xbox.state.isConnected
             )
           }
         } header: {
@@ -102,6 +113,19 @@ struct SettingsView: View {
     switch epic.state {
     case .conectado:
       epic.displayName ?? String(localized: "Conectado", comment: "Estado de una cuenta")
+    case .necesitaCodigoNuevo:
+      String(localized: "Hay que volver a conectarla", comment: "Estado de una cuenta")
+    case .trabajando:
+      String(localized: "Conectando…", comment: "Estado de una cuenta")
+    case .desconectado, .fallo:
+      String(localized: "Sin conectar", comment: "Estado de una cuenta")
+    }
+  }
+
+  private var detalleXbox: String {
+    switch xbox.state {
+    case .conectado:
+      xbox.gamertag ?? String(localized: "Conectado", comment: "Estado de una cuenta")
     case .necesitaCodigoNuevo:
       String(localized: "Hay que volver a conectarla", comment: "Estado de una cuenta")
     case .trabajando:

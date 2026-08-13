@@ -5,8 +5,8 @@ sin importar de que tienda vienen.
 
 ## Que hace
 
-- Conecta tus cuentas de Steam, PlayStation Network y Epic Games para traer los
-  juegos que ya tienes.
+- Conecta tus cuentas de Steam, PlayStation Network, Epic Games y Xbox para
+  traer los juegos que ya tienes.
 - Te deja organizar esa biblioteca con tus propias carpetas y listas
   (pendientes, favoritos, lo que sea), algo que ninguna tienda te deja hacer
   entre plataformas.
@@ -41,7 +41,7 @@ dispositivo.
 
 ## Conectar cuentas y claves
 
-Steam, PlayStation, Epic e IsThereAnyDeal se conectan desde la app, en
+Steam, PlayStation, Epic, Xbox e IsThereAnyDeal se conectan desde la app, en
 **Ajustes**, y sus credenciales se guardan cifradas en el llavero del
 telefono. Ninguna vive en el archivo de secretos: eso es lo que permite
 instalar la app en otro telefono y conectar ahi cuentas distintas, sin
@@ -92,6 +92,42 @@ Ese codigo dura unos dos meses. Mientras tanto la app renueva el acceso sola.
 Los codigos de Epic caducan en segundos. Si al pegarlo dice que no sirve, basta
 con recargar esa pagina y copiar el nuevo. Si la pagina muestra
 `"authorizationCode": null`, es que falta el paso 1.
+
+### Xbox
+
+Microsoft no ofrece un client publico para apps de terceros como si hacen PSN
+y Epic con los suyos (sacado de sus propias apps moviles): hay que registrar
+una app propia en Azure, una sola vez, y usar ese client id y client secret
+desde GameShelf.
+
+#### Registrar la app en Azure (una sola vez)
+
+1. Entra a https://portal.azure.com con tu cuenta de Microsoft (la misma de
+   Xbox) y busca **"App registrations"**.
+2. **New registration**. En "Supported account types" elige **"Personal
+   Microsoft accounts only"**.
+3. En **"Add a platform"** elige **"Web"** (no "Mobile and desktop
+   applications") y pon como Redirect URI:
+   `http://localhost/auth/callback`
+4. Copia el **"Application (client) ID"** que aparece en la pagina de la app:
+   esa es la primera pieza.
+5. Entra a **"Certificates & secrets" -> "New client secret"** y copia el
+   **valor** apenas se genere. Azure solo lo muestra esa vez; si lo pierdes,
+   toca crear uno nuevo.
+
+#### Conectar desde la app
+
+1. Pega el client ID y el client secret en **Ajustes -> Xbox**, seccion "Tu
+   app de Azure".
+2. Toca "1. Iniciar sesion con Microsoft" y autoriza la app.
+3. La pagina va a **fallar al llegar a `localhost`**: es lo esperado, nada
+   escucha ahi. El codigo ya quedo en la **barra de direcciones**, no en la
+   pagina. Copia lo que hay tras `code=`.
+4. Pega ese codigo en la app.
+
+El acceso se renueva solo mientras el refresh token de Microsoft siga
+sirviendo. La app de Azure (client id y secret) no se borra al desconectar la
+sesion: es tuya, no de la sesion, y Azure no deja verla de nuevo.
 
 ### Ofertas y precios (IsThereAnyDeal)
 
