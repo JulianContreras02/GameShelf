@@ -1,0 +1,104 @@
+# Compila, corre las pruebas y revisa el estilo en cada PR y en cada push a
+# main. Los runners de macOS son gratis en repos publicos, que es el caso.
+#
+# No corre en el push a una rama sin PR: con GitHub Flow todo llega a main por
+# PR, y correr en los dos eventos haria cada build dos veces.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# En un PR, un push nuevo cancela la corrida anterior: solo importa el ultimo
+# commit. En main no se cancela nada, para que cada commit fusionado tenga su
+# propio resultado.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  # Fijados a proposito. Xcode 26.6 trae el SDK de iOS 26.5, el minimo que
+  # pide el proyecto (IPHONEOS_DEPLOYMENT_TARGET). SwiftLint fijo para que un
+  # release nuevo con reglas nuevas no ponga el CI en rojo de un dia para otro:
+  # se sube a mano, con el mismo commit que arregle lo que marque.
+  XCODE_VERSION: "26.6"
+  SWIFTLINT_VERSION: "0.65.1"
+  DESTINO: "platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5"
+
+jobs:
+  estilo:
+    name: SwiftLint y traducciones
+    runs-on: macos-26
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Instalar SwiftLint ${{ env.SWIFTLINT_VERSION }}
+        # El binario oficial del release y no Homebrew, que solo instala la
+        # ultima version.
+        run: |
+          curl -sSfL -o "$RUNNER_TEMP/swiftlint.zip" \
+            "https://github.com/realm/SwiftLint/releases/download/${SWIFTLINT_VERSION}/portable_swiftlint.zip"
+          unzip -q "$RUNNER_TEMP/swiftlint.zip" -d "$RUNNER_TEMP/swiftlint"
+          chmod +x "$RUNNER_TEMP/swiftlint/swiftlint"
+          echo "$RUNNER_TEMP/swiftlint" >> "$GITHUB_PATH"
+
+      - name: SwiftLint
+        # --strict: un aviso tambien rompe el build, que es lo que pide el
+        # issue. El formato github-actions los marca en la linea del PR.
+        run: swiftlint lint --strict --reporter github-actions-logging
+
+      - name: Traducciones completas
+        run: python3 scripts/verificar-traducciones.py
+
+  pruebas:
+    name: Compilar y probar
+    runs-on: macos-26
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Usar Xcode ${{ env.XCODE_VERSION }}
+        run: sudo xcode-select -s "/Applications/Xcode_${XCODE_VERSION}.app/Contents/Developer"
+
+      - name: Crear el archivo de secretos
+        # El proyecto lo usa como configuracion base y no compila sin el.
+        # Ninguna clave hace falta para compilar ni para las pruebas: todas se
+        # conectan desde la app.
+        run: cp Config/Secrets.example.xcconfig Config/Secrets.xcconfig
+
+      - name: Compilar y correr las pruebas
+        # Sin CODE_SIGNING_ALLOWED=NO a proposito: las pruebas del llavero usan
+        # el Keychain de verdad, y en el simulador eso necesita la firma local
+        # ("Sign to Run Locally") que Xcode pone sola. Para el simulador no
+        # hace falta la cuenta de Apple ni ningun certificado.
+        #
+        # En espanol y en Colombia, como un simulador de desarrollo: el
+        # espanol es el idioma base de la app y hay pruebas que comparan sus
+        # textos. El simulador de GitHub viene en ingles.
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project GameShelf.xcodeproj \
+            -scheme GameShelf \
+            -destination "$DESTINO" \
+            -testLanguage es \
+            -testRegion CO \
+            -resultBundlePath "$RUNNER_TEMP/Pruebas.xcresult" \
+            | xcbeautify --renderer github-actions
+
+      - name: Guardar el resultado si fallo
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: resultado-de-pruebas
+          path: ${{ runner.temp }}/Pruebas.xcresult
+          retention-days: 7
