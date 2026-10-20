@@ -55,6 +55,11 @@ private struct PreviewSteamService: SteamServicing {
     if let error { throw error }
     return []
   }
+
+  func fetchPresence() async throws -> SteamPresence {
+    if let error { throw error }
+    return .notPlaying
+  }
 }
 
 /// UserDefaults aislado para que las vistas previas no toquen los del sistema.
