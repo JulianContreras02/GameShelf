@@ -60,9 +60,11 @@ Para que Xcode respete la indentacion de 2 espacios:
 `Xcode > Settings > Text Editing > Indentation` y dejar
 `Prefer Indent Using: Spaces`, `Tab width: 2`, `Indent width: 2`.
 
-Cuando el proyecto tenga codigo real se agrega SwiftLint, y estas reglas
-quedan escritas en `.swiftlint.yml` para que el estilo se revise solo y no
-dependa de la configuracion local de cada maquina.
+Estas reglas estan escritas en `.swiftlint.yml`, para que el estilo se revise
+solo y no dependa de la configuracion local de cada maquina. CI usa
+**SwiftLint 0.65.1** en modo estricto: un aviso tambien rompe el build. Usa la
+misma version en local; otra puede marcar distinto (la 0.57, por ejemplo,
+marcaba unos 40 avisos que la 0.65 ya no ve).
 
 ## Secretos
 
@@ -85,6 +87,28 @@ Reglas:
 - Vistas de SwiftUI no llevan prueba unitaria; lo que se prueba es el modelo
   que las alimenta.
 - Un PR que agrega logica sin prueba no se fusiona.
+
+## CI
+
+Cada PR, y cada push a `main`, pasa por GitHub Actions
+(`.github/workflows/ci.yml`) con dos trabajos:
+
+1. **SwiftLint y traducciones**: `swiftlint lint --strict` y
+   `python3 scripts/verificar-traducciones.py`.
+2. **Compilar y probar**: `xcodebuild test` con Xcode 26.6, en el simulador del
+   iPhone 17 Pro con iOS 26.5.
+
+Un PR en rojo no se fusiona. Para correr lo mismo en local:
+
+```
+swiftlint lint --strict
+python3 scripts/verificar-traducciones.py
+xcodebuild test -project GameShelf.xcodeproj -scheme GameShelf \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5'
+```
+
+Las versiones de Xcode y de SwiftLint estan fijadas en el workflow. Subirlas es
+un cambio a proposito, en su propio PR y junto con lo que haya que arreglar.
 
 ## Documentacion
 
