@@ -87,7 +87,7 @@ struct LibraryEmptyStateView: View {
 
 #Preview("Perfil privado") {
   LibraryEmptyStateView(
-    state: .succeeded(created: 0, updated: 0),
+    state: .succeeded(created: 0, updated: 0, merged: 0),
     syncReturnedNoGames: true
   ) {}
 }
