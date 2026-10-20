@@ -103,7 +103,8 @@ Cada PR, y cada push a `main`, pasa por GitHub Actions
 1. **SwiftLint y traducciones**: `swiftlint lint --strict` y
    `python3 scripts/verificar-traducciones.py`.
 2. **Compilar y probar**: `xcodebuild test` con Xcode 26.6, en el simulador del
-   iPhone 17 Pro con iOS 26.5.
+   iPhone 17 Pro con iOS 26.5. Un aviso del compilador de Swift, en la app o
+   en las pruebas, rompe el build (`SWIFT_TREAT_WARNINGS_AS_ERRORS=YES`).
 
 Un PR en rojo no se fusiona. Para correr lo mismo en local:
 
@@ -112,7 +113,7 @@ swiftlint lint --strict
 python3 scripts/verificar-traducciones.py
 xcodebuild test -project GameShelf.xcodeproj -scheme GameShelf \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5' \
-  -testLanguage es -testRegion CO
+  -testLanguage es -testRegion CO SWIFT_TREAT_WARNINGS_AS_ERRORS=YES
 ```
 
 Las pruebas corren en espanol porque algunas comparan los textos del idioma
