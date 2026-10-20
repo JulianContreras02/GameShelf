@@ -73,9 +73,11 @@ final class RoutingHTTPClient: HTTPClient, @unchecked Sendable {
   func post<Response: Decodable, Body: Encodable>(
     _ type: Response.Type,
     to url: URL,
-    body: Body
+    body: Body,
+    headers: [String: String]
   ) async throws -> Response {
     requestedURLs.append(url)
+    sentHeaders.append(headers)
     if let datos = try? JSONEncoder().encode(body), let texto = String(data: datos, encoding: .utf8) {
       sentBodies.append(texto)
     }
