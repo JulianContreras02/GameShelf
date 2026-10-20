@@ -248,7 +248,7 @@ struct LibraryView: View {
   private func cambiarEstado(de juego: Game, a estado: PlayStatus) {
     // Un fallo al guardar el estado no merece tapar la pantalla: se ignora en
     // silencio porque el usuario ve que la etiqueta no cambio.
-    try? statusViewModel.setStatus(estado, for: juego, in: modelContext)
+    _ = try? statusViewModel.setStatus(estado, for: juego, in: modelContext)
   }
 
   private var textoUltimaSincronizacion: String? {

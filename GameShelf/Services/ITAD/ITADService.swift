@@ -24,7 +24,7 @@ protocol ITADServicing: Sendable {
 }
 
 /// Implementacion real contra la API v2 de IsThereAnyDeal.
-struct ITADService: ITADServicing {
+nonisolated struct ITADService: ITADServicing {
 
   /// Cuantos juegos se piden por peticion.
   ///

@@ -6,7 +6,7 @@
 import Foundation
 
 /// Un juego de Epic, ya agrupado y listo para guardar.
-struct EpicGame: Sendable, Equatable {
+nonisolated struct EpicGame: Sendable, Equatable {
   /// El `namespace` de Epic, que identifica al juego.
   let namespace: String
 
@@ -31,7 +31,7 @@ protocol EpicLibraryServicing: Sendable {
 }
 
 /// Implementacion real contra los endpoints de Epic.
-struct EpicLibraryService: EpicLibraryServicing {
+nonisolated struct EpicLibraryService: EpicLibraryServicing {
 
   /// Tope de paginas, por si `nextCursor` nunca dejara de venir.
   static let paginasMaximas = 30

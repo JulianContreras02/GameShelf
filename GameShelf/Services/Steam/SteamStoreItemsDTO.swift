@@ -9,7 +9,7 @@ import Foundation
 ///
 /// Es el complemento de la wishlist: esa devuelve solo appids, y esto convierte
 /// una tanda de appids en nombres, caratulas y fechas de lanzamiento.
-struct SteamStoreItemsResponse: Decodable, Sendable {
+nonisolated struct SteamStoreItemsResponse: Decodable, Sendable {
   let response: SteamStoreItemsPayload
 
   var items: [SteamStoreItemDTO] { response.storeItems ?? [] }
@@ -18,7 +18,7 @@ struct SteamStoreItemsResponse: Decodable, Sendable {
 /// El contenido de la respuesta.
 ///
 /// Va fuera y no anidado para no dejar sus `CodingKeys` a dos niveles.
-struct SteamStoreItemsPayload: Decodable, Sendable {
+nonisolated struct SteamStoreItemsPayload: Decodable, Sendable {
   let storeItems: [SteamStoreItemDTO]?
 
   enum CodingKeys: String, CodingKey {
@@ -27,7 +27,7 @@ struct SteamStoreItemsPayload: Decodable, Sendable {
 }
 
 /// La ficha de tienda de un juego.
-struct SteamStoreItemDTO: Decodable, Sendable {
+nonisolated struct SteamStoreItemDTO: Decodable, Sendable {
   let appID: Int
   let name: String?
 
@@ -94,7 +94,7 @@ struct SteamStoreItemDTO: Decodable, Sendable {
 ///
 /// Va fuera de `SteamStoreItemDTO` y no anidado dentro para no dejar sus
 /// `CodingKeys` a dos niveles de profundidad.
-struct SteamStoreAssets: Decodable, Sendable {
+nonisolated struct SteamStoreAssets: Decodable, Sendable {
   /// Plantilla con un hueco, del estilo `steam/apps/268910/${FILENAME}?t=1`.
   let urlFormat: String?
   let header: String?
@@ -125,7 +125,7 @@ struct SteamStoreAssets: Decodable, Sendable {
 }
 
 /// Datos de lanzamiento de un juego.
-struct SteamStoreRelease: Decodable, Sendable {
+nonisolated struct SteamStoreRelease: Decodable, Sendable {
   let steamReleaseDate: Int?
   let isComingSoon: Bool?
   let customMessage: String?

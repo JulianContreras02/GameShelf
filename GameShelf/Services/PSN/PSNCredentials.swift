@@ -15,7 +15,7 @@ import Foundation
 /// - El **access token** dura una hora y se usa en cada peticion.
 /// - El **refresh token** dura unas semanas y sirve para pedir uno de acceso
 ///   nuevo sin molestar al usuario.
-struct PSNCredentials: Sendable, Equatable {
+nonisolated struct PSNCredentials: Sendable, Equatable {
   let accessToken: String
   let refreshToken: String
 

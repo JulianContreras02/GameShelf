@@ -6,7 +6,7 @@
 import Foundation
 
 /// Respuesta buena del endpoint de tokens.
-struct PSNTokenResponse: Decodable, Sendable {
+nonisolated struct PSNTokenResponse: Decodable, Sendable {
   let accessToken: String?
   let refreshToken: String?
 
@@ -60,7 +60,7 @@ struct PSNTokenResponse: Decodable, Sendable {
 ///   "error_description": "Invalid authorization code",
 ///   "error_code": 4650 }
 /// ```
-struct PSNErrorResponse: Decodable, Sendable {
+nonisolated struct PSNErrorResponse: Decodable, Sendable {
   let error: String?
   let errorDescription: String?
   let errorCode: Int?

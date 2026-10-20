@@ -20,7 +20,7 @@ protocol SteamServicing: Sendable {
 }
 
 /// Implementacion real contra la Steam Web API.
-struct SteamService: SteamServicing {
+nonisolated struct SteamService: SteamServicing {
 
   /// Credenciales necesarias para consultar la API.
   struct Credentials: Sendable, Equatable {
@@ -108,7 +108,7 @@ enum SteamCredentialsError: LocalizedError, Equatable {
   }
 }
 
-extension SteamService.Credentials {
+nonisolated extension SteamService.Credentials {
   private enum ClaveDeLlavero {
     static let apiKey = "steam.apiKey"
     static let steamID = "steam.steamID"

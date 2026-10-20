@@ -8,7 +8,7 @@ import Foundation
 // MARK: - Lista de juegos jugados
 
 /// Respuesta de `/gamelist/v2/users/me/titles`.
-struct PSNGameListResponse: Decodable, Sendable {
+nonisolated struct PSNGameListResponse: Decodable, Sendable {
   let titles: [PSNTitleDTO]?
   let totalItemCount: Int?
 
@@ -19,7 +19,7 @@ struct PSNGameListResponse: Decodable, Sendable {
 }
 
 /// Un juego jugado en PlayStation.
-struct PSNTitleDTO: Decodable, Sendable {
+nonisolated struct PSNTitleDTO: Decodable, Sendable {
   /// Identificador del juego en la tienda, del estilo `PPSA28038_00`.
   ///
   /// **No es el mismo que el de los trofeos**, que usan `npCommunicationId`
@@ -100,7 +100,7 @@ struct PSNTitleDTO: Decodable, Sendable {
 ///
 /// **Los resultados no vienen en el orden en que se pidieron.** Hay que
 /// indexarlos por `npTitleId`.
-struct PSNTrophyMapResponse: Decodable, Sendable {
+nonisolated struct PSNTrophyMapResponse: Decodable, Sendable {
   let titles: [PSNTitleTrophiesDTO]?
 
   /// El progreso de cada juego, indexado por su id de tienda.
@@ -117,7 +117,7 @@ struct PSNTrophyMapResponse: Decodable, Sendable {
 }
 
 /// Los sets de trofeos de un juego.
-struct PSNTitleTrophiesDTO: Decodable, Sendable {
+nonisolated struct PSNTitleTrophiesDTO: Decodable, Sendable {
   let npTitleId: String
 
   /// Puede venir vacio: hay juegos sin trofeos.
@@ -125,7 +125,7 @@ struct PSNTitleTrophiesDTO: Decodable, Sendable {
 }
 
 /// Un set de trofeos.
-struct PSNTrophyTitleDTO: Decodable, Sendable {
+nonisolated struct PSNTrophyTitleDTO: Decodable, Sendable {
   let npCommunicationId: String?
   let trophyTitleName: String?
 
@@ -137,7 +137,7 @@ struct PSNTrophyTitleDTO: Decodable, Sendable {
 }
 
 /// Cuantos trofeos hay de cada tipo.
-struct PSNTrophyCountsDTO: Decodable, Sendable {
+nonisolated struct PSNTrophyCountsDTO: Decodable, Sendable {
   let bronze: Int?
   let silver: Int?
   let gold: Int?

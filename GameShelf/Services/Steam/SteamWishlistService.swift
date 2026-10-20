@@ -9,7 +9,7 @@ import Foundation
 ///
 /// Junta las dos llamadas que hay que hacer: la wishlist da los appids y la
 /// tienda da los nombres.
-struct SteamWishlistGame: Sendable, Equatable {
+nonisolated struct SteamWishlistGame: Sendable, Equatable {
   let appID: Int
   let name: String
   let coverURL: URL?
@@ -41,7 +41,7 @@ protocol SteamWishlistServicing: Sendable {
 }
 
 /// Implementacion real contra la API de Steam.
-struct SteamWishlistService: SteamWishlistServicing {
+nonisolated struct SteamWishlistService: SteamWishlistServicing {
 
   /// Cuantos appids se piden por llamada a la tienda.
   ///
@@ -185,7 +185,7 @@ struct SteamWishlistService: SteamWishlistServicing {
 ///
 /// Va fuera del servicio y no anidado dentro para que sus tipos no queden a dos
 /// niveles de profundidad.
-private struct StoreItemsRequest: Encodable {
+private nonisolated struct StoreItemsRequest: Encodable {
   let ids: [StoreItemID]
   let context: StoreItemsContext
   let dataRequest: StoreItemsDataRequest
@@ -197,12 +197,12 @@ private struct StoreItemsRequest: Encodable {
   }
 }
 
-private struct StoreItemID: Encodable {
+private nonisolated struct StoreItemID: Encodable {
   let appid: Int
 }
 
 /// Idioma y pais con los que responde la tienda.
-private struct StoreItemsContext: Encodable {
+private nonisolated struct StoreItemsContext: Encodable {
   let language: String
   let countryCode: String
 
@@ -213,7 +213,7 @@ private struct StoreItemsContext: Encodable {
 }
 
 /// Que partes de la ficha se quieren.
-private struct StoreItemsDataRequest: Encodable {
+private nonisolated struct StoreItemsDataRequest: Encodable {
   let includeAssets: Bool
   let includeRelease: Bool
 
@@ -223,7 +223,7 @@ private struct StoreItemsDataRequest: Encodable {
   }
 }
 
-extension Array {
+nonisolated extension Array {
   /// Parte el arreglo en tandas de como maximo `tamano` elementos.
   func chunked(into tamano: Int) -> [[Element]] {
     guard tamano > 0 else { return [self] }

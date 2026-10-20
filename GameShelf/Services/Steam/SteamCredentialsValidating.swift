@@ -15,7 +15,7 @@ protocol SteamCredentialsValidating: Sendable {
   func validate(_ credentials: SteamService.Credentials) async throws
 }
 
-struct SteamAPICredentialsValidator: SteamCredentialsValidating {
+nonisolated struct SteamAPICredentialsValidator: SteamCredentialsValidating {
   let client: HTTPClient
 
   init(client: HTTPClient = URLSessionHTTPClient()) {

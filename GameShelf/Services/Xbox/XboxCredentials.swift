@@ -16,7 +16,7 @@ import Foundation
 /// - La **cadena de tokens** de Xbox Live: el refresh token de Microsoft
 ///   sirve para renovar toda la cadena (token de usuario y despues XSTS), sin
 ///   guardar el access token de Microsoft porque se consume enseguida.
-struct XboxCredentials: Sendable, Equatable {
+nonisolated struct XboxCredentials: Sendable, Equatable {
   let clientID: String
   let clientSecret: String
 
