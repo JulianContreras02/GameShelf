@@ -10,7 +10,7 @@ import Foundation
 /// Respuesta de `library/api/public/items`.
 ///
 /// Viene paginada: mientras `nextCursor` traiga algo, faltan mas.
-struct EpicLibraryResponse: Decodable, Sendable {
+nonisolated struct EpicLibraryResponse: Decodable, Sendable {
   let records: [EpicLibraryRecordDTO]?
   let responseMetadata: EpicResponseMetadataDTO?
 
@@ -21,7 +21,7 @@ struct EpicLibraryResponse: Decodable, Sendable {
   }
 }
 
-struct EpicResponseMetadataDTO: Decodable, Sendable {
+nonisolated struct EpicResponseMetadataDTO: Decodable, Sendable {
   let nextCursor: String?
 }
 
@@ -30,7 +30,7 @@ struct EpicResponseMetadataDTO: Decodable, Sendable {
 /// **No es un juego, es un artefacto.** Un mismo juego aparece varias veces:
 /// el ejecutable, sus DLC, sus editores... En la biblioteca real, Ark salia 6
 /// veces y Cyberpunk 4. Lo que agrupa a todos es el `namespace`.
-struct EpicLibraryRecordDTO: Decodable, Sendable {
+nonisolated struct EpicLibraryRecordDTO: Decodable, Sendable {
   /// Identifica al **juego**. Se comprobo con la biblioteca real que cada
   /// namespace tiene un unico nombre, asi que sirve de identificador estable.
   let namespace: String
@@ -67,7 +67,7 @@ struct EpicLibraryRecordDTO: Decodable, Sendable {
 /// repetido bajo varios artefactos del mismo juego**: Cyberpunk reportaba
 /// 49,8 h dos veces, con ids distintos. Por eso al juntarlos se toma el mayor
 /// y no la suma, que daria el doble.
-struct EpicPlaytimeDTO: Decodable, Sendable {
+nonisolated struct EpicPlaytimeDTO: Decodable, Sendable {
   let artifactId: String
   let totalTime: Int?
 
@@ -80,7 +80,7 @@ struct EpicPlaytimeDTO: Decodable, Sendable {
 ///
 /// Es un diccionario con el `catalogItemId` como clave. Aporta el nombre de
 /// verdad y la caratula, que la biblioteca no trae.
-struct EpicCatalogResponse: Decodable, Sendable {
+nonisolated struct EpicCatalogResponse: Decodable, Sendable {
   let items: [String: EpicCatalogItemDTO]
 
   init(from decoder: Decoder) throws {
@@ -89,7 +89,7 @@ struct EpicCatalogResponse: Decodable, Sendable {
   }
 }
 
-struct EpicCatalogItemDTO: Decodable, Sendable {
+nonisolated struct EpicCatalogItemDTO: Decodable, Sendable {
   let title: String?
   let keyImages: [EpicKeyImageDTO]?
 
@@ -109,7 +109,7 @@ struct EpicCatalogItemDTO: Decodable, Sendable {
   }
 }
 
-struct EpicKeyImageDTO: Decodable, Sendable {
+nonisolated struct EpicKeyImageDTO: Decodable, Sendable {
   let type: String?
   let url: String?
 }

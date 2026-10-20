@@ -6,7 +6,7 @@
 import Foundation
 
 /// Respuesta buena del endpoint de tokens de Epic.
-struct EpicTokenResponse: Decodable, Sendable {
+nonisolated struct EpicTokenResponse: Decodable, Sendable {
   let accessToken: String?
   let refreshToken: String?
   let expiresIn: Int?
@@ -49,7 +49,7 @@ struct EpicTokenResponse: Decodable, Sendable {
 /// { "errorCode": "errors.com.epicgames.account.oauth.authorization_code_not_found",
 ///   "numericErrorCode": 18059 }
 /// ```
-struct EpicErrorResponse: Decodable, Sendable {
+nonisolated struct EpicErrorResponse: Decodable, Sendable {
   let errorCode: String?
   let errorMessage: String?
   let numericErrorCode: Int?
@@ -87,7 +87,7 @@ protocol EpicAuthenticating: Sendable {
 }
 
 /// Implementacion real contra los endpoints de Epic.
-struct EpicAuthService: EpicAuthenticating {
+nonisolated struct EpicAuthService: EpicAuthenticating {
 
   /// Credenciales del launcher de Epic.
   ///

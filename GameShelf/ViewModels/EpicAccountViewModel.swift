@@ -141,7 +141,7 @@ final class EpicAccountViewModel {
         guard let self else { throw EpicAuthError.sinCredenciales }
         return try await self.validAccessToken()
       },
-      accountID: { [weak self] in try self?.accountID() }
+      accountID: { [weak self] in try await self?.accountID() }
     )
 
     do {

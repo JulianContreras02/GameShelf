@@ -11,7 +11,7 @@ import Security
 /// Es un protocolo para poder inyectar un doble en las pruebas: el Keychain de
 /// verdad es un recurso compartido del sistema, y una prueba que lo escriba
 /// puede dejar basura o chocar con otra.
-protocol KeychainStoring: Sendable {
+nonisolated protocol KeychainStoring: Sendable {
   /// Lee un valor. `nil` si no esta guardado.
   func string(for key: String) throws -> String?
 
@@ -45,7 +45,7 @@ enum KeychainError: LocalizedError, Equatable {
 /// Se usa `kSecClassGenericPassword` con `kSecAttrAccessibleAfterFirstUnlock`:
 /// el token tiene que poder leerse cuando la app se actualice en segundo plano,
 /// pero no antes de que el usuario desbloquee el telefono por primera vez.
-struct KeychainStore: KeychainStoring {
+nonisolated struct KeychainStore: KeychainStoring {
 
   /// Agrupa las entradas de la app y evita chocar con otras.
   let service: String
@@ -123,7 +123,7 @@ struct KeychainStore: KeychainStoring {
 ///
 /// Vive junto a la implementacion real, y no en la carpeta de pruebas, para que
 /// los `#Preview` puedan usarla sin tocar el llavero del sistema.
-final class InMemoryKeychainStore: KeychainStoring, @unchecked Sendable {
+nonisolated final class InMemoryKeychainStore: KeychainStoring, @unchecked Sendable {
   private let candado = NSLock()
   private var valores: [String: String] = [:]
 

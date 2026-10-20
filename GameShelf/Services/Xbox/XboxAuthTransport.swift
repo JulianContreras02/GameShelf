@@ -13,7 +13,7 @@ import Foundation
 /// credenciales en la cabecera `Authorization: Basic`, y aca van dentro del
 /// propio formulario. Tampoco `HTTPClient`, que no permite cabeceras propias
 /// en un POST.
-protocol XboxAuthTransporting: Sendable {
+nonisolated protocol XboxAuthTransporting: Sendable {
   /// Manda un formulario `application/x-www-form-urlencoded` y devuelve la
   /// respuesta cruda.
   func postForm(_ campos: [String: String], to url: URL) async throws -> Data
@@ -24,7 +24,7 @@ protocol XboxAuthTransporting: Sendable {
 }
 
 /// Implementacion real sobre `URLSession`.
-struct XboxAuthTransport: XboxAuthTransporting {
+nonisolated struct XboxAuthTransport: XboxAuthTransporting {
   private let session: URLSession
 
   init(session: URLSession = .shared) {

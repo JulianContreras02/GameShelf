@@ -11,7 +11,7 @@ import Foundation
 /// mano y no con `DateComponentsFormatter` porque ese tipo sirve para dar
 /// formato, no para leer, y su contraparte
 /// (`ISO8601DateComponentsFormatter`) no existe en iOS.
-enum ISO8601Duration {
+nonisolated enum ISO8601Duration {
 
   /// Convierte una duracion ISO 8601 en segundos.
   ///
@@ -65,7 +65,7 @@ enum ISO8601Duration {
   }
 }
 
-private extension Substring {
+private nonisolated extension Substring {
   /// Los ultimos caracteres que cumplen la condicion.
   func suffix(while condicion: (Character) -> Bool) -> Substring {
     var inicio = endIndex

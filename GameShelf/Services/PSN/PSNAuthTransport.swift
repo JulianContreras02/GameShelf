@@ -9,13 +9,13 @@ import Foundation
 ///
 /// No se reusa `HTTPClient` porque ese manda JSON, y estos endpoints esperan
 /// `application/x-www-form-urlencoded`. Lo usan PSN y Epic.
-protocol FormPostTransporting: Sendable {
+nonisolated protocol FormPostTransporting: Sendable {
   /// Manda un formulario y devuelve la respuesta cruda.
   func postForm(_ campos: [String: String], to url: URL, authorization: String) async throws -> Data
 }
 
 /// Lo que necesita el inicio de sesion de PSN, ademas del formulario.
-protocol PSNAuthTransporting: FormPostTransporting {
+nonisolated protocol PSNAuthTransporting: FormPostTransporting {
   /// Pide `url` con la cookie del NPSSO y devuelve a donde redirige, **sin ir**.
   ///
   /// El codigo de autorizacion viaja en esa redireccion. Si se sigue, se pierde.
@@ -24,7 +24,7 @@ protocol PSNAuthTransporting: FormPostTransporting {
 }
 
 /// Implementacion real sobre `URLSession`.
-struct PSNAuthTransport: PSNAuthTransporting {
+nonisolated struct PSNAuthTransport: PSNAuthTransporting {
   private let session: URLSession
 
   init(session: URLSession? = nil) {
@@ -117,7 +117,7 @@ struct PSNAuthTransport: PSNAuthTransporting {
 /// `URLSession` las sigue sola, y siguiendo esta se perderia el codigo de
 /// autorizacion: el destino es `com.scee.psxandroid.scecompcall://redirect`,
 /// un esquema de otra app que ni siquiera se puede abrir.
-private final class SinSeguirRedirecciones: NSObject, URLSessionTaskDelegate, @unchecked Sendable {
+private nonisolated final class SinSeguirRedirecciones: NSObject, URLSessionTaskDelegate, @unchecked Sendable {
   // Se usa la version con completion handler y no la `async`: esta ultima, con
   // el aislamiento por defecto en MainActor que usa el proyecto, tumbaba al
   // compilador (no daba un error, se caia).

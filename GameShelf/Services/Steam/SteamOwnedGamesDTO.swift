@@ -15,7 +15,7 @@ import Foundation
 /// ```json
 /// { "response": { "game_count": 2, "games": [ ... ] } }
 /// ```
-struct SteamOwnedGamesResponse: Decodable, Equatable {
+nonisolated struct SteamOwnedGamesResponse: Decodable, Equatable {
   let response: SteamOwnedGamesPayload
 }
 
@@ -24,7 +24,7 @@ struct SteamOwnedGamesResponse: Decodable, Equatable {
 /// Steam devuelve `{"response":{}}` cuando el perfil es privado o la
 /// biblioteca esta vacia: por eso los dos campos son opcionales y se exponen
 /// con valores por defecto.
-struct SteamOwnedGamesPayload: Decodable, Equatable {
+nonisolated struct SteamOwnedGamesPayload: Decodable, Equatable {
   private let gameCount: Int?
   private let rawGames: [SteamGameDTO]?
 
@@ -47,7 +47,7 @@ struct SteamOwnedGamesPayload: Decodable, Equatable {
 }
 
 /// Un juego tal como lo describe Steam.
-struct SteamGameDTO: Decodable, Equatable, Identifiable {
+nonisolated struct SteamGameDTO: Decodable, Equatable, Identifiable {
   /// Identificador del juego en Steam. Es la clave para todo lo demas.
   let appID: Int
 

@@ -31,7 +31,7 @@ protocol XboxAuthenticating: Sendable {
 }
 
 /// Implementacion real contra login.live.com y xboxlive.com.
-struct XboxAuthService: XboxAuthenticating {
+nonisolated struct XboxAuthService: XboxAuthenticating {
 
   static let scope = "Xboxlive.signin Xboxlive.offline_access"
 
@@ -215,7 +215,7 @@ struct XboxAuthService: XboxAuthenticating {
 
 // MARK: - Respuestas de login.live.com
 
-private struct MicrosoftTokenResponse: Decodable {
+private nonisolated struct MicrosoftTokenResponse: Decodable {
   let accessToken: String?
   let refreshToken: String?
 
@@ -225,7 +225,7 @@ private struct MicrosoftTokenResponse: Decodable {
   }
 }
 
-private struct MicrosoftErrorResponse: Decodable {
+private nonisolated struct MicrosoftErrorResponse: Decodable {
   let error: String?
   let errorDescription: String?
 
@@ -238,7 +238,7 @@ private struct MicrosoftErrorResponse: Decodable {
 // MARK: - Respuestas de user.auth.xboxlive.com y xsts.auth.xboxlive.com
 
 /// Misma forma para el token de usuario y para el XSTS.
-private struct XboxTokenResponse: Decodable {
+private nonisolated struct XboxTokenResponse: Decodable {
   let token: String
   private let notAfterRaw: String
   let displayClaims: DisplayClaims
@@ -262,7 +262,7 @@ private struct XboxTokenResponse: Decodable {
   }
 }
 
-private struct XboxUserTokenRequest: Encodable {
+private nonisolated struct XboxUserTokenRequest: Encodable {
   let relyingParty = "http://auth.xboxlive.com"
   let tokenType = "JWT"
   let properties: XboxUserTokenProperties
@@ -278,7 +278,7 @@ private struct XboxUserTokenRequest: Encodable {
   }
 }
 
-private struct XboxUserTokenProperties: Encodable {
+private nonisolated struct XboxUserTokenProperties: Encodable {
   let authMethod: String
   let siteName: String
   let rpsTicket: String
@@ -290,7 +290,7 @@ private struct XboxUserTokenProperties: Encodable {
   }
 }
 
-private struct XboxXSTSRequest: Encodable {
+private nonisolated struct XboxXSTSRequest: Encodable {
   let relyingParty = "http://xboxlive.com"
   let tokenType = "JWT"
   let properties: XboxXSTSProperties
@@ -306,7 +306,7 @@ private struct XboxXSTSRequest: Encodable {
   }
 }
 
-private struct XboxXSTSProperties: Encodable {
+private nonisolated struct XboxXSTSProperties: Encodable {
   let userTokens: [String]
   let sandboxId: String
 
