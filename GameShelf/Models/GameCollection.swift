@@ -16,8 +16,10 @@ import SwiftData
 /// que lo use (`'Element' is not a member type of type 'C'`).
 @Model
 final class GameCollection {
+  /// Identificador propio de la app.
   var id: UUID = UUID()
 
+  /// Nombre que le puso el usuario.
   var name: String = ""
 
   /// Nombre de un simbolo del sistema (SF Symbols), por ejemplo `folder`.
@@ -30,6 +32,7 @@ final class GameCollection {
   /// Posicion en la lista. El usuario las reordena arrastrando.
   var sortOrder: Int = 0
 
+  /// Cuando se creo.
   var createdAt: Date = Date()
 
   /// Juegos que contiene.
@@ -40,8 +43,10 @@ final class GameCollection {
   @Relationship(inverse: \Game.collections)
   var games: [Game] = []
 
+  /// El simbolo de una coleccion nueva.
   static let defaultSymbol = "folder"
 
+  /// Crea una coleccion vacia.
   init(
     name: String,
     symbolName: String = GameCollection.defaultSymbol,

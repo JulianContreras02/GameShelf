@@ -19,12 +19,14 @@ final class Game {
   /// Identificador propio de la app, estable aunque cambien los ids de tienda.
   var id: UUID = UUID()
 
+  /// Nombre para mostrar. Al sincronizar puede venir de cualquiera de sus tiendas.
   var name: String = ""
 
   /// URL de la caratula. Se guarda como texto porque SwiftData no persiste
   /// `URL` de forma directa y confiable.
   var coverImageURL: String?
 
+  /// Fecha de lanzamiento, si alguna tienda la dio.
   var releaseDate: Date?
 
   /// Horas jugadas acumuladas, sumando todas las tiendas.
@@ -33,6 +35,7 @@ final class Game {
   /// Notas personales del usuario.
   var notes: String = ""
 
+  /// En que punto esta el usuario con el juego. Lo decide el, ninguna tienda lo toca.
   var status: PlayStatus = PlayStatus.backlog
 
   /// Cuando se creo el registro en la app.
@@ -58,6 +61,7 @@ final class Game {
   /// vuelo desde la ficha del juego.
   var tags: [GameTag] = []
 
+  /// Crea un juego. Las tiendas se le agregan despues, en `storeEntries`.
   init(
     name: String,
     coverImageURL: String? = nil,
