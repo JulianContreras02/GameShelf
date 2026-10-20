@@ -50,7 +50,7 @@ struct LibraryViewModelTests {
 
     await viewModel.sync(into: context)
 
-    #expect(viewModel.state == .succeeded(created: 5, updated: 0))
+    #expect(viewModel.state == .succeeded(created: 5, updated: 0, merged: 0))
     #expect(try context.fetch(FetchDescriptor<Game>()).count == 5)
     #expect(viewModel.lastSyncedAt != nil)
   }
@@ -63,8 +63,25 @@ struct LibraryViewModelTests {
     await viewModel.sync(into: context)
     await viewModel.sync(into: context)
 
-    #expect(viewModel.state == .succeeded(created: 0, updated: 5))
+    #expect(viewModel.state == .succeeded(created: 0, updated: 5, merged: 0))
     #expect(try context.fetch(FetchDescriptor<Game>()).count == 5)
+  }
+
+  @Test("Un juego que ya estaba por PSN se reporta como unido, no como nuevo")
+  func reportaLosUnidos() async throws {
+    let context = try hacerContexto()
+    try PSNLibrarySyncer.sync([
+      PSNGame(
+        titleId: "PPSA1", name: "Juego Con Muchas Horas", coverURL: nil,
+        playtimeHours: 2, playCount: nil, lastPlayedAt: nil, firstPlayedAt: nil, trophyProgress: nil
+      )
+    ], into: context)
+    let viewModel = hacerViewModel(.success(try juegosDeEjemplo()))
+
+    await viewModel.sync(into: context)
+
+    #expect(viewModel.state == .succeeded(created: 4, updated: 0, merged: 1))
+    #expect(try context.fetch(FetchDescriptor<Game>()).count == 5, "4 nuevos y el de PSN, sin duplicar")
   }
 
   @Test("Sin conexion muestra un mensaje con su sugerencia, no un crash")
@@ -135,7 +152,7 @@ struct LibraryViewModelTests {
 
     await viewModel.sync(into: context)
 
-    #expect(viewModel.state == .succeeded(created: 0, updated: 0))
+    #expect(viewModel.state == .succeeded(created: 0, updated: 0, merged: 0))
   }
 
   @Test("Las notas del usuario sobreviven a una sincronizacion desde la vista")

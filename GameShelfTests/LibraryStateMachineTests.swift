@@ -54,7 +54,7 @@ struct LibraryStateMachineTests {
 
     await viewModel.sync(into: context)
 
-    #expect(viewModel.state == .succeeded(created: 5, updated: 0))
+    #expect(viewModel.state == .succeeded(created: 5, updated: 0, merged: 0))
     #expect(viewModel.state.hasAttempted)
     #expect(viewModel.lastSyncedAt != nil)
   }
@@ -98,7 +98,7 @@ struct LibraryStateMachineTests {
     )
     await exitoso.sync(into: context)
 
-    #expect(exitoso.state == .succeeded(created: 5, updated: 0))
+    #expect(exitoso.state == .succeeded(created: 5, updated: 0, merged: 0))
   }
 
   @Test("Una segunda llamada mientras hay una en curso se ignora")
@@ -210,7 +210,7 @@ struct EmptyLibraryTests {
 
     await viewModel.sync(into: context)
 
-    #expect(viewModel.state == .succeeded(created: 0, updated: 0))
+    #expect(viewModel.state == .succeeded(created: 0, updated: 0, merged: 0))
     #expect(
       viewModel.lastSyncReturnedNoGames,
       "Hay que poder distinguirlo de 'todavia no sincronizaste'"

@@ -32,8 +32,9 @@ final class LibraryViewModel {
     case idle
     /// Pidiendo datos a Steam.
     case syncing
-    /// Termino bien.
-    case succeeded(created: Int, updated: Int)
+    /// Termino bien. `merged` son los juegos que ya estaban por otra tienda y
+    /// ahora tambien tienen Steam.
+    case succeeded(created: Int, updated: Int, merged: Int)
     /// Fallo, con un mensaje que se puede mostrar tal cual.
     case failed(message: String, suggestion: String?)
 
@@ -105,7 +106,11 @@ final class LibraryViewModel {
 
       lastSyncReturnedNoGames = juegos.isEmpty
       registrarSincronizacion(at: Date())
-      state = .succeeded(created: resultado.created, updated: resultado.updated)
+      state = .succeeded(
+        created: resultado.created,
+        updated: resultado.updated,
+        merged: resultado.merged
+      )
     } catch let error as NetworkError {
       state = .failed(
         message: error.errorDescription ?? String(localized: "No se pudo sincronizar.", comment: "Error generico"),
