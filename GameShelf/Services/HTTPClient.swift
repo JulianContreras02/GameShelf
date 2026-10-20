@@ -16,8 +16,11 @@ import Foundation
 protocol HTTPClient: Sendable {
   /// Pide los datos de `url` y los decodifica como `T`.
   ///
-  /// - Parameter headers: Cabeceras extra. Hacen falta para las APIs que piden
-  ///   un token de sesion, como la de PlayStation.
+  /// - Parameters:
+  ///   - type: El tipo en que se decodifica la respuesta.
+  ///   - url: Que pedir.
+  ///   - headers: Cabeceras extra. Hacen falta para las APIs que piden un
+  ///     token de sesion, como la de PlayStation.
   /// - Throws: `NetworkError` con el motivo del fallo.
   func get<T: Decodable>(_ type: T.Type, from url: URL, headers: [String: String]) async throws -> T
 
@@ -27,8 +30,12 @@ protocol HTTPClient: Sendable {
   /// IsThereAnyDeal, por ejemplo, recibe la lista de juegos en el cuerpo. Pedir
   /// uno por uno con GET seria una peticion por juego.
   ///
-  /// - Parameter headers: Cabeceras extra, igual que en `get`. Las
-  ///   estadisticas de Xbox, por ejemplo, piden el token en un POST.
+  /// - Parameters:
+  ///   - type: El tipo en que se decodifica la respuesta.
+  ///   - url: A donde mandarlo.
+  ///   - body: Lo que se manda, codificado como JSON.
+  ///   - headers: Cabeceras extra, igual que en `get`. Las estadisticas de
+  ///     Xbox, por ejemplo, piden el token en un POST.
   /// - Throws: `NetworkError` con el motivo del fallo.
   func post<Response: Decodable, Body: Encodable>(
     _ type: Response.Type,
