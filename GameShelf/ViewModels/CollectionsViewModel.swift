@@ -183,6 +183,7 @@ final class CollectionsViewModel {
   ///   - colecciones: La lista tal como se ve, ya ordenada.
   ///   - origen: Indices que se arrastran, tal como los da SwiftUI.
   ///   - destino: Posicion de destino, tal como la da SwiftUI.
+  ///   - context: Donde se guarda el orden nuevo.
   func move(
     _ colecciones: [GameCollection],
     from origen: IndexSet,
