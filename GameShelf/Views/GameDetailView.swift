@@ -204,6 +204,23 @@ struct GameDetailView: View {
         }
       }
 
+      // Solo Xbox lleva Gamerscore. Va en su propia fila y no en la de
+      // trofeos: son dos sistemas distintos, y un juego que este en
+      // PlayStation y en Xbox tiene los dos.
+      if let gamerscore = game.gamerscore {
+        FilaDato(
+          etiqueta: String(localized: "Gamerscore", comment: "Dato de la ficha"),
+          valor: String(
+            localized: "\(gamerscore.earned) de \(gamerscore.total)",
+            comment: "Gamerscore conseguido y total, en la ficha"
+          ),
+          valorAccesible: String(
+            localized: "\(gamerscore.earned) de \(gamerscore.total) puntos, el \(gamerscore.progress) %",
+            comment: "Gamerscore conseguido y total, para VoiceOver"
+          )
+        )
+      }
+
       if game.storeEntries.count > 1 {
         // Con varias tiendas, el desglose explica de donde salen las horas
         ForEach(game.storeEntries.sorted { $0.store.rawValue < $1.store.rawValue }) { entrada in

@@ -11,8 +11,9 @@ import Foundation
 ///
 /// No se reusa `FormPostTransporting` de PSN/Epic porque ese manda las
 /// credenciales en la cabecera `Authorization: Basic`, y aca van dentro del
-/// propio formulario. Tampoco `HTTPClient`, que no permite cabeceras propias
-/// en un POST.
+/// propio formulario. Tampoco `HTTPClient`: ante un codigo que no sea 2xx se
+/// queda solo con el numero, y el motivo del rechazo de login.live.com viene
+/// en el cuerpo.
 protocol XboxAuthTransporting: Sendable {
   /// Manda un formulario `application/x-www-form-urlencoded` y devuelve la
   /// respuesta cruda.

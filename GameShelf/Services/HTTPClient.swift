@@ -27,11 +27,14 @@ protocol HTTPClient: Sendable {
   /// IsThereAnyDeal, por ejemplo, recibe la lista de juegos en el cuerpo. Pedir
   /// uno por uno con GET seria una peticion por juego.
   ///
+  /// - Parameter headers: Cabeceras extra, igual que en `get`. Las
+  ///   estadisticas de Xbox, por ejemplo, piden el token en un POST.
   /// - Throws: `NetworkError` con el motivo del fallo.
   func post<Response: Decodable, Body: Encodable>(
     _ type: Response.Type,
     to url: URL,
-    body: Body
+    body: Body,
+    headers: [String: String]
   ) async throws -> Response
 }
 
@@ -61,10 +64,14 @@ struct URLSessionHTTPClient: HTTPClient {
   func post<Response: Decodable, Body: Encodable>(
     _ type: Response.Type,
     to url: URL,
-    body: Body
+    body: Body,
+    headers: [String: String]
   ) async throws -> Response {
     var peticion = URLRequest(url: url)
     peticion.httpMethod = "POST"
+    for (clave, valor) in headers {
+      peticion.setValue(valor, forHTTPHeaderField: clave)
+    }
     peticion.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
     do {
@@ -145,5 +152,14 @@ extension HTTPClient {
   /// Atajo para las APIs que no piden cabeceras.
   func get<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T {
     try await get(type, from: url, headers: [:])
+  }
+
+  /// Atajo para las APIs que no piden cabeceras en un POST.
+  func post<Response: Decodable, Body: Encodable>(
+    _ type: Response.Type,
+    to url: URL,
+    body: Body
+  ) async throws -> Response {
+    try await post(type, to: url, body: body, headers: [:])
   }
 }

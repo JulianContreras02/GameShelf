@@ -153,6 +153,23 @@ final class Game {
     )
   }
 
+  /// Gamerscore de Xbox, si el juego viene de ahi y tiene logros.
+  ///
+  /// Un juego puede tener dos entradas de Xbox con logros distintos, por
+  /// ejemplo la version de Xbox 360 y la de Xbox One. Igual que con los
+  /// trofeos, se toma la mas avanzada.
+  ///
+  /// Un juego sin logros (Xbox manda el total en 0) da `nil` y no un 0 de 0:
+  /// no hay nada que conseguir, y ensenar "0 / 0" pareceria un dato.
+  var gamerscore: Gamerscore? {
+    storeEntries
+      .compactMap { entrada -> Gamerscore? in
+        guard let total = entrada.totalGamerscore, total > 0 else { return nil }
+        return Gamerscore(earned: entrada.earnedGamerscore ?? 0, total: total)
+      }
+      .max { $0.progress < $1.progress }
+  }
+
   /// El appid de Steam, si el juego viene de ahi.
   ///
   /// Hace falta para consultar precios: IsThereAnyDeal identifica los juegos
