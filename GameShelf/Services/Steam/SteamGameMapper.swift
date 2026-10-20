@@ -87,11 +87,16 @@ enum SteamGameMapper {
     // game.notes, game.status y game.addedAt NO se tocan: son del usuario.
   }
 
-  /// Recalcula las horas totales sumando todas las tiendas.
+  /// Recalcula las horas totales sumando todas las tiendas y las sesiones
+  /// registradas en la app.
   ///
   /// Hace falta porque `Game.playtimeHours` es el total y cada `StoreEntry`
   /// lleva lo suyo: si solo se actualizara la entrada, el total quedaria viejo.
+  ///
+  /// Las sesiones entran aca, y no sumandolas una vez al cerrarlas, porque
+  /// cada sincronizacion rehace el total desde cero: un `+=` suelto se
+  /// perderia con la siguiente.
   static func recalculatePlaytime(for game: Game) {
-    game.playtimeHours = game.storeEntries.reduce(0) { $0 + $1.playtimeHours }
+    game.playtimeHours = game.storeEntries.reduce(0) { $0 + $1.playtimeHours } + game.sessionPlaytimeHours
   }
 }
