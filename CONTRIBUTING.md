@@ -104,8 +104,12 @@ Un PR en rojo no se fusiona. Para correr lo mismo en local:
 swiftlint lint --strict
 python3 scripts/verificar-traducciones.py
 xcodebuild test -project GameShelf.xcodeproj -scheme GameShelf \
-  -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5'
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5' \
+  -testLanguage es -testRegion CO
 ```
+
+Las pruebas corren en espanol porque algunas comparan los textos del idioma
+base. En un simulador en ingles esas fallan aunque la app este bien.
 
 Las versiones de Xcode y de SwiftLint estan fijadas en el workflow. Subirlas es
 un cambio a proposito, en su propio PR y junto con lo que haya que arreglar.

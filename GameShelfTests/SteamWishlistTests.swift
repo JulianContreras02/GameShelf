@@ -70,6 +70,12 @@ struct SteamStoreItemsDTOTests {
     // fecha aproximada (el 31 de diciembre quiere decir "en algun momento de
     // este ano") o un texto ("Proximamente"). Por eso la fila se fija en que la
     // fecha sea futura y no en que exista.
+    //
+    // Futura respecto al dia en que se grabo la respuesta, no respecto a hoy:
+    // el archivo no cambia, y comparar con `Date()` hacia fallar la prueba en
+    // cuanto pasaba la fecha de uno de los juegos (BOMBANANA!, agosto de 2026).
+    let grabadaEl = try #require(ISO8601DateFormatter().date(from: "2026-08-11T00:00:00Z"))
+
     for juego in proximos {
       let tieneFecha = juego.releaseDate != nil
       let tieneTexto = juego.releaseNote?.isEmpty == false
@@ -77,7 +83,7 @@ struct SteamStoreItemsDTOTests {
       #expect(tieneFecha || tieneTexto, "Un juego sin lanzar deberia decir algo de cuando sale")
 
       if let fecha = juego.releaseDate {
-        #expect(fecha > Date(), "Un juego sin lanzar no puede tener fecha pasada")
+        #expect(fecha > grabadaEl, "Un juego sin lanzar no puede tener fecha pasada")
       }
     }
   }
