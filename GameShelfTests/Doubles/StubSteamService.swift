@@ -17,6 +17,9 @@ final class StubSteamService: SteamServicing, @unchecked Sendable {
 
   private let behavior: Behavior
 
+  /// Lo que responde `fetchPresence`.
+  private let presencia: Result<SteamPresence, Error>
+
   /// Retardo antes de responder.
   ///
   /// Sin esto el doble nunca suspende, o sea que dos llamadas seguidas jamas
@@ -27,9 +30,14 @@ final class StubSteamService: SteamServicing, @unchecked Sendable {
   /// sincronizaciones de mas.
   private(set) var callCount = 0
 
-  init(_ behavior: Behavior, delay: Duration? = nil) {
+  init(
+    _ behavior: Behavior,
+    delay: Duration? = nil,
+    presencia: Result<SteamPresence, Error> = .success(.notPlaying)
+  ) {
     self.behavior = behavior
     self.delay = delay
+    self.presencia = presencia
   }
 
   func fetchOwnedGames() async throws -> [SteamGameDTO] {
@@ -43,5 +51,9 @@ final class StubSteamService: SteamServicing, @unchecked Sendable {
     case .success(let juegos): return juegos
     case .failure(let error): throw error
     }
+  }
+
+  func fetchPresence() async throws -> SteamPresence {
+    try presencia.get()
   }
 }

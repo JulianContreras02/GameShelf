@@ -137,4 +137,8 @@ private struct UnavailableSteamService: SteamServicing {
   func fetchOwnedGames() async throws -> [SteamGameDTO] {
     throw error
   }
+
+  func fetchPresence() async throws -> SteamPresence {
+    throw error
+  }
 }
