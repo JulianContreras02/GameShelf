@@ -65,6 +65,10 @@ struct XboxAuthService: XboxAuthenticating {
   private let transport: XboxAuthTransporting
   private let ahora: @Sendable () -> Date
 
+  /// - Parameters:
+  ///   - transport: Por donde salen las peticiones. En las pruebas, un doble.
+  ///   - ahora: De donde sale la hora. Hoy no se usa: el vencimiento lo da el
+  ///     propio XSTS (`NotAfter`), no un calculo de la app.
   init(transport: XboxAuthTransporting = XboxAuthTransport(), ahora: @escaping @Sendable () -> Date = Date.init) {
     self.transport = transport
     self.ahora = ahora

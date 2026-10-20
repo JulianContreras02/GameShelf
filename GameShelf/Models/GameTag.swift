@@ -15,6 +15,7 @@ import SwiftData
 /// "pendiente de DLC").
 @Model
 final class GameTag {
+  /// Identificador propio de la app.
   var id: UUID = UUID()
 
   /// Nombre tal como lo escribio el usuario la primera vez.
@@ -23,6 +24,7 @@ final class GameTag {
   /// tiene sentido que "RPG" y "rpg" sean etiquetas distintas.
   var name: String = ""
 
+  /// Cuando se creo.
   var createdAt: Date = Date()
 
   /// Juegos que llevan esta etiqueta.
@@ -35,6 +37,7 @@ final class GameTag {
   /// Limite del nombre. Una etiqueta larga deja de servir como etiqueta.
   static let maxNameLength = 30
 
+  /// Crea una etiqueta. El nombre se limpia con `clean(_:)` antes de guardarse.
   init(name: String) {
     self.id = UUID()
     self.name = GameTag.clean(name)

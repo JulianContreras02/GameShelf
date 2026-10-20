@@ -14,8 +14,10 @@ import SwiftData
 /// al juego sin importar donde se compro.
 @Model
 final class StoreEntry {
+  /// Identificador propio de la app.
   var id: UUID = UUID()
 
+  /// La tienda de esta entrada.
   var store: Store = Store.steam
 
   /// Identificador del juego dentro de esa tienda. En Steam es el appid.
@@ -83,6 +85,9 @@ final class StoreEntry {
   /// Juego al que pertenece. La relacion inversa esta en `Game.storeEntries`.
   var game: Game?
 
+  /// Crea la entrada de un juego en una tienda.
+  ///
+  /// Solo la tienda y el id son obligatorios: cada conector llena lo que su tienda informa.
   init(
     store: Store,
     storeGameID: String,

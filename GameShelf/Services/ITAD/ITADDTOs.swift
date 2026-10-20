@@ -57,6 +57,7 @@ struct ITADDealDTO: Decodable, Sendable {
   let url: String?
 }
 
+/// La tienda donde esta un precio, por ejemplo Steam o GOG.
 struct ITADShopDTO: Decodable, Sendable {
   let id: Int
   let name: String

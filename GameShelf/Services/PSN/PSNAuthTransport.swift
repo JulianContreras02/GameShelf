@@ -27,6 +27,7 @@ protocol PSNAuthTransporting: FormPostTransporting {
 struct PSNAuthTransport: PSNAuthTransporting {
   private let session: URLSession
 
+  /// - Parameter session: La sesion a usar. Sin ella se crea una sin cookies compartidas.
   init(session: URLSession? = nil) {
     // Sin cookies compartidas: el NPSSO se manda a mano en cada peticion y no
     // debe quedar guardado en el almacen de cookies del sistema.
