@@ -80,12 +80,18 @@ jobs:
         # el Keychain de verdad, y en el simulador eso necesita la firma local
         # ("Sign to Run Locally") que Xcode pone sola. Para el simulador no
         # hace falta la cuenta de Apple ni ningun certificado.
+        #
+        # En espanol y en Colombia, como un simulador de desarrollo: el
+        # espanol es el idioma base de la app y hay pruebas que comparan sus
+        # textos. El simulador de GitHub viene en ingles.
         run: |
           set -o pipefail
           xcodebuild test \
             -project GameShelf.xcodeproj \
             -scheme GameShelf \
             -destination "$DESTINO" \
+            -testLanguage es \
+            -testRegion CO \
             -resultBundlePath "$RUNNER_TEMP/Pruebas.xcresult" \
             | xcbeautify --renderer github-actions
 
