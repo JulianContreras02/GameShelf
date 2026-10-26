@@ -1,5 +1,7 @@
 # GameShelf
 
+[![CI](https://github.com/JulianContreras02/GameShelf/actions/workflows/ci.yml/badge.svg)](https://github.com/JulianContreras02/GameShelf/actions/workflows/ci.yml)
+
 App personal para iOS que organiza tu biblioteca de videojuegos en un solo lugar,
 sin importar de que tienda vienen.
 
@@ -36,8 +38,9 @@ dispositivo.
 
 ### Requisitos
 
-- Xcode 26 o superior
-- [SwiftLint](https://github.com/realm/SwiftLint): `brew install swiftlint`
+- Xcode 26.5 o superior: el proyecto pide iOS 26.5, y ese SDK llego con Xcode 26.5
+- [SwiftLint](https://github.com/realm/SwiftLint) 0.65.1, la misma que usa CI:
+  `brew install swiftlint` instala la ultima, que puede marcar distinto.
 
 ## Conectar cuentas y claves
 
