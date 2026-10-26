@@ -58,6 +58,13 @@ final class Game {
   /// vuelo desde la ficha del juego.
   var tags: [GameTag] = []
 
+  /// Sesiones de juego registradas desde la app.
+  ///
+  /// Si se borra el juego, sus sesiones se borran con el, igual que sus
+  /// entradas de tienda: sin el juego no dicen nada.
+  @Relationship(deleteRule: .cascade, inverse: \PlaySession.game)
+  var playSessions: [PlaySession] = []
+
   init(
     name: String,
     coverImageURL: String? = nil,
@@ -94,7 +101,8 @@ final class Game {
     storeEntries.compactMap(\.lastPlayedAt).max()
   }
 
-  /// Si el juego nunca se ha jugado, segun las horas que reportan las tiendas.
+  /// Si el juego nunca se ha jugado, segun sus horas: las que reportan las
+  /// tiendas y las de las sesiones registradas en la app.
   ///
   /// Es distinto de `status`: esto es un dato de la tienda, y `status` es una
   /// decision del usuario. Pueden no coincidir, por ejemplo si lo jugaste en
@@ -185,6 +193,17 @@ final class Game {
   /// Ojo: no es lo mismo que `status == .wishlist`. Esto es un dato de la
   /// tienda y aquello una decision tuya, y pueden no coincidir.
   var isWishlistedInStore: Bool { wishlistedAt != nil }
+
+  /// Horas de las sesiones ya terminadas.
+  ///
+  /// La que sigue activa no cuenta todavia: se suma al cerrarla, como pide
+  /// `PlaySessionTracker`, para que el total no vaya cambiando solo mientras
+  /// se juega.
+  var sessionPlaytimeHours: Double {
+    playSessions
+      .filter { !$0.isActive }
+      .reduce(0) { $0 + $1.duration } / 3600
+  }
 
   /// Horas jugadas en las ultimas dos semanas, sumando todas las tiendas.
   var recentPlaytimeHours: Double {

@@ -1821,6 +1821,17 @@
         }
       }
     },
+    "Esa sesion ya estaba terminada.": {
+      "comment": "Error al cerrar una sesion dos veces",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That session had already ended."
+          }
+        }
+      }
+    },
     "Escribe lo que quieras recordar de este juego.": {
       "localizations": {
         "en": {
@@ -2350,6 +2361,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "The Xbox session expired."
+          }
+        }
+      }
+    },
+    "La sesion no puede terminar antes de empezar.": {
+      "comment": "Error al cerrar una sesion con una fecha invalida",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A session can't end before it starts."
           }
         }
       }
@@ -4353,6 +4375,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "They are all here already"
+          }
+        }
+      }
+    },
+    "Ya estas jugando a %@. Termina esa sesion antes de empezar otra.": {
+      "comment": "Error al empezar una sesion con otra activa",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're already playing %@. End that session before starting another one."
+          }
+        }
+      }
+    },
+    "Ya hay una sesion activa. Terminala antes de empezar otra.": {
+      "comment": "Error al empezar una sesion con otra activa, sin saber de que juego",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There's already an active session. End it before starting another one."
           }
         }
       }
