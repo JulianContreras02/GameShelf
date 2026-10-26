@@ -132,6 +132,20 @@ El acceso se renueva solo mientras el refresh token de Microsoft siga
 sirviendo. La app de Azure (client id y secret) no se borra al desconectar la
 sesion: es tuya, no de la sesion, y Azure no deja verla de nuevo.
 
+#### Traer tus juegos
+
+Con la cuenta conectada, toca **Ajustes -> Xbox -> "Traer mis juegos de
+Xbox"**. Llegan con su Gamerscore (lo conseguido y el total) y las horas
+jugadas. Si un juego ya estaba por Steam, PlayStation o Epic, se suma a ese en
+vez de salir dos veces.
+
+Dos cosas cambian respecto a las otras tiendas:
+
+- Xbox no da la lista de lo comprado sino el **historial de lo jugado**: un
+  juego comprado y nunca abierto no aparece.
+- Las horas salen de una consulta aparte. Si esa falla, los juegos llegan
+  igual, con las horas que ya tuvieran (o 0 la primera vez).
+
 ### Ofertas y precios (IsThereAnyDeal)
 
 Esta si es solo una API key, gratis y sin cuenta:

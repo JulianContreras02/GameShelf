@@ -195,6 +195,23 @@
         }
       }
     },
+    "%lld de %lld": {
+      "comment": "Gamerscore conseguido y total, en la ficha",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld of %2$lld"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld de %2$lld"
+          }
+        }
+      }
+    },
     "%lld de %lld juegos": {
       "comment": "Cuantos se ven de cuantos hay",
       "localizations": {
@@ -252,6 +269,23 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld de %lld puntos, el %lld %%": {
+      "comment": "Gamerscore conseguido y total, para VoiceOver",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld of %2$lld points, %3$lld%%"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld de %2$lld puntos, el %3$lld %%"
           }
         }
       }
@@ -1982,6 +2016,17 @@
         }
       }
     },
+    "Gamerscore": {
+      "comment": "Dato de la ficha",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gamerscore"
+          }
+        }
+      }
+    },
     "Gamertag": {
       "localizations": {
         "en": {
@@ -2903,12 +2948,12 @@
         }
       }
     },
-    "No hay que hacer nada mientras tanto: el acceso se renueva solo.": {
+    "No hay que hacer nada mientras tanto: el acceso se renueva solo.\n\nXbox solo cuenta lo que abriste alguna vez, en consola o en PC: un juego comprado y nunca abierto no aparece.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No need to do anything in the meantime: access renews on its own."
+            "value": "No need to do anything in the meantime: access renews on its own.\n\nXbox only counts what you've opened at least once, on console or PC: a game you bought and never opened won't show up."
           }
         }
       }
@@ -4067,6 +4112,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bring in my PlayStation games"
+          }
+        }
+      }
+    },
+    "Traer mis juegos de Xbox": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bring in my Xbox games"
           }
         }
       }

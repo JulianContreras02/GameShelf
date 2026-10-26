@@ -3,6 +3,7 @@
 //  GameShelf
 //
 
+import SwiftData
 import SwiftUI
 
 /// Conectar la cuenta de Xbox: primero la app de Azure, despues la sesion.
@@ -13,6 +14,7 @@ import SwiftUI
 /// partes independientes en vez de un solo flujo.
 struct XboxConnectView: View {
   @Environment(\.openURL) private var openURL
+  @Environment(\.modelContext) private var modelContext
 
   let viewModel: XboxAccountViewModel
 
@@ -116,9 +118,40 @@ struct XboxConnectView: View {
         LabeledContent("Gamertag") { Text(gamertag) }
       }
 
+      Button(action: sincronizar) {
+        if viewModel.libraryState.isSyncing {
+          HStack(spacing: 8) {
+            ProgressView().controlSize(.small)
+            Text("Trayendo tus juegos…")
+          }
+        } else {
+          Label("Traer mis juegos de Xbox", systemImage: "arrow.down.circle")
+        }
+      }
+      .disabled(viewModel.libraryState.isSyncing)
+
+      if case .succeeded(let creados, let actualizados, let unidos) = viewModel.libraryState {
+        Text(resumen(creados: creados, actualizados: actualizados, unidos: unidos))
+          .font(.footnote)
+          .foregroundStyle(.secondary)
+      }
+
+      if case .failed(let mensaje) = viewModel.libraryState {
+        Label(mensaje, systemImage: "exclamationmark.triangle.fill")
+          .font(.footnote)
+          .foregroundStyle(.orange)
+      }
+
       Button("Desconectar", role: .destructive) { confirmandoDesconexion = true }
     } footer: {
-      Text("No hay que hacer nada mientras tanto: el acceso se renueva solo.")
+      Text(
+        """
+        No hay que hacer nada mientras tanto: el acceso se renueva solo.
+
+        Xbox solo cuenta lo que abriste alguna vez, en consola o en PC: un \
+        juego comprado y nunca abierto no aparece.
+        """
+      )
     }
   }
 
@@ -185,6 +218,27 @@ struct XboxConnectView: View {
       }
       .font(.subheadline)
     }
+  }
+
+  private func sincronizar() {
+    Task { await viewModel.syncLibrary(into: modelContext) }
+  }
+
+  /// Que cambio en la ultima sincronizacion.
+  private func resumen(creados: Int, actualizados: Int, unidos: Int) -> String {
+    var partes = [
+      String(localized: "\(creados) juegos nuevos", comment: "Resultado de sincronizar con PSN"),
+      String(localized: "\(actualizados) actualizados", comment: "Resultado de sincronizar con PSN")
+    ]
+    if unidos > 0 {
+      partes.append(
+        String(
+          localized: "\(unidos) que ya tenias en otra tienda",
+          comment: "Juegos que ya estaban y ahora tambien tienen PSN"
+        )
+      )
+    }
+    return partes.joined(separator: " · ")
   }
 
   private var urlDeAutorizacion: URL? {

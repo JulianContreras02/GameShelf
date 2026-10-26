@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import SwiftData
 import Testing
 
 @testable import GameShelf
@@ -291,5 +292,87 @@ struct XboxAccountStartupTests {
 
     #expect(viewModel.state == .desconectado)
     #expect(!viewModel.hasAppCredentials)
+  }
+}
+
+@MainActor
+@Suite("Xbox: traer la biblioteca")
+struct XboxAccountLibraryTests {
+
+  private func hacerContexto() throws -> ModelContext {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let contenedor = try ModelContainer(
+      for: Game.self, StoreEntry.self, GameCollection.self, GameTag.self,
+      configurations: config
+    )
+    return ModelContext(contenedor)
+  }
+
+  private func conectado() async -> XboxAccountViewModel {
+    let viewModel = XboxAccountViewModel(
+      service: StubXboxAuthService(.success(credenciales())),
+      keychain: InMemoryKeychainStore()
+    )
+    viewModel.saveAppCredentials(clientID: "ID", clientSecret: "SECRETO")
+    await viewModel.connect(authorizationCode: "X")
+    return viewModel
+  }
+
+  @Test("Guarda los juegos y lo deja en el estado")
+  func sincroniza() async throws {
+    let context = try hacerContexto()
+    let viewModel = await conectado()
+    let cliente = RoutingHTTPClient(rutas: [
+      ("titlehub", XboxJSONDePrueba.historial),
+      ("userstats", XboxJSONDePrueba.estadisticas)
+    ])
+
+    await viewModel.syncLibrary(into: context, using: cliente)
+
+    #expect(viewModel.libraryState == .succeeded(created: 1, updated: 0, merged: 0))
+    #expect(try context.fetch(FetchDescriptor<Game>()).first?.stores == [.xbox])
+  }
+
+  @Test("Pide el historial con el xuid y el XSTS de la cuenta conectada")
+  func usaLaCuenta() async throws {
+    let viewModel = await conectado()
+    let cliente = RoutingHTTPClient(rutas: [("titlehub", #"{"titles": []}"#)])
+
+    await viewModel.syncLibrary(into: try hacerContexto(), using: cliente)
+
+    #expect(cliente.requestedURLs.first?.absoluteString.contains("xuid(123)") == true)
+    #expect(cliente.sentHeaders.first?["Authorization"] == "XBL3.0 x=HASH;XSTS")
+  }
+
+  @Test("Si Xbox rechaza el token, la cuenta pide un codigo nuevo")
+  func tokenRechazado() async throws {
+    let viewModel = await conectado()
+
+    await viewModel.syncLibrary(
+      into: try hacerContexto(),
+      using: StubHTTPClient(.failure(.httpError(statusCode: 401)))
+    )
+
+    guard case .failed = viewModel.libraryState else {
+      Issue.record("Se esperaba failed, quedo en \(viewModel.libraryState)")
+      return
+    }
+    guard case .necesitaCodigoNuevo = viewModel.state else {
+      Issue.record("Se esperaba necesitaCodigoNuevo, quedo en \(viewModel.state)")
+      return
+    }
+  }
+
+  @Test("Sin conexion lo dice, sin tocar el estado de la cuenta")
+  func sinRed() async throws {
+    let viewModel = await conectado()
+
+    await viewModel.syncLibrary(into: try hacerContexto(), using: StubHTTPClient(.failure(.noConnection)))
+
+    guard case .failed = viewModel.libraryState else {
+      Issue.record("Se esperaba failed, quedo en \(viewModel.libraryState)")
+      return
+    }
+    #expect(viewModel.state == .conectado, "Que falle la red no desconecta la cuenta")
   }
 }
