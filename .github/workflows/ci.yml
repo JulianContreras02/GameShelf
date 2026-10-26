@@ -93,7 +93,13 @@ jobs:
             -testLanguage es \
             -testRegion CO \
             -resultBundlePath "$RUNNER_TEMP/Pruebas.xcresult" \
+            -enableCodeCoverage YES \
             | xcbeautify --renderer github-actions
+
+      - name: Cobertura de servicios y modelos
+        # Falla si alguna de las dos capas baja del 70 %. La tabla queda en el
+        # resumen del trabajo. Que queda sin cubrir y por que: docs/cobertura.md.
+        run: python3 scripts/revisar-cobertura.py "$RUNNER_TEMP/Pruebas.xcresult"
 
       - name: Guardar el resultado si fallo
         if: failure()

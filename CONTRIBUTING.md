@@ -87,6 +87,9 @@ Reglas:
 - Vistas de SwiftUI no llevan prueba unitaria; lo que se prueba es el modelo
   que las alimenta.
 - Un PR que agrega logica sin prueba no se fusiona.
+- Servicios y modelos tienen que quedar en **70 % de cobertura o mas**, cada
+  capa por su lado. CI lo revisa en cada PR. Que queda fuera y por que:
+  `docs/cobertura.md`.
 
 ## CI
 
@@ -96,7 +99,8 @@ Cada PR, y cada push a `main`, pasa por GitHub Actions
 1. **SwiftLint y traducciones**: `swiftlint lint --strict` y
    `python3 scripts/verificar-traducciones.py`.
 2. **Compilar y probar**: `xcodebuild test` con Xcode 26.6, en el simulador del
-   iPhone 17 Pro con iOS 26.5.
+   iPhone 17 Pro con iOS 26.5, y despues `scripts/revisar-cobertura.py`, que
+   falla si servicios o modelos bajan del 70 %.
 
 Un PR en rojo no se fusiona. Para correr lo mismo en local:
 
