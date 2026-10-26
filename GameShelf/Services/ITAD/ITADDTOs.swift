@@ -18,14 +18,14 @@ import Foundation
 ///    posicion.
 /// 2. `deals` trae **todas** las tiendas, no solo las que tienen descuento, y
 ///    no vienen ordenadas por precio.
-struct ITADGamePricesDTO: Decodable, Sendable {
+nonisolated struct ITADGamePricesDTO: Decodable, Sendable {
   let id: String
   let historyLow: ITADHistoryLowDTO?
   let deals: [ITADDealDTO]?
 }
 
 /// Minimos historicos en distintas ventanas de tiempo.
-struct ITADHistoryLowDTO: Decodable, Sendable {
+nonisolated struct ITADHistoryLowDTO: Decodable, Sendable {
   /// El minimo de siempre. Es el que interesa.
   let all: ITADPriceDTO?
 
@@ -45,7 +45,7 @@ struct ITADHistoryLowDTO: Decodable, Sendable {
 }
 
 /// Una oferta concreta en una tienda.
-struct ITADDealDTO: Decodable, Sendable {
+nonisolated struct ITADDealDTO: Decodable, Sendable {
   let shop: ITADShopDTO
   let price: ITADPriceDTO
   let regular: ITADPriceDTO
@@ -58,13 +58,13 @@ struct ITADDealDTO: Decodable, Sendable {
 }
 
 /// La tienda donde esta un precio, por ejemplo Steam o GOG.
-struct ITADShopDTO: Decodable, Sendable {
+nonisolated struct ITADShopDTO: Decodable, Sendable {
   let id: Int
   let name: String
 }
 
 /// Un importe tal como lo manda la API.
-struct ITADPriceDTO: Decodable, Sendable {
+nonisolated struct ITADPriceDTO: Decodable, Sendable {
   /// El valor con decimales. **No usar para calcular**: llega como numero de
   /// coma flotante y pierde precision al convertirlo.
   let amount: Double?
@@ -98,7 +98,7 @@ struct ITADPriceDTO: Decodable, Sendable {
 /// Para Steam la clave no es el appid pelado sino `app/<appid>`. Mandar solo el
 /// numero devuelve `null` para todo, sin error: un fallo silencioso facil de no
 /// notar.
-struct ITADShopLookupResponse: Decodable, Sendable {
+nonisolated struct ITADShopLookupResponse: Decodable, Sendable {
   let porIDDeTienda: [String: String?]
 
   init(from decoder: Decoder) throws {

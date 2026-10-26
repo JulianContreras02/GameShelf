@@ -16,7 +16,7 @@ import Foundation
 /// Cuando la wishlist es privada, o esta vacia, Steam responde `{"response":{}}`
 /// con HTTP 200: **no hay forma de distinguir los dos casos**. Por eso `items`
 /// es opcional y quien llame decide que decirle al usuario.
-struct SteamWishlistResponse: Decodable, Sendable {
+nonisolated struct SteamWishlistResponse: Decodable, Sendable {
   let response: Payload
 
   /// Contenido de la respuesta. `items` falta si la lista esta vacia o es privada.
@@ -38,7 +38,7 @@ struct SteamWishlistResponse: Decodable, Sendable {
 ///
 /// Trae solo el identificador: el nombre y la caratula hay que pedirlos aparte
 /// a `IStoreBrowseService/GetItems`.
-struct SteamWishlistItemDTO: Decodable, Sendable, Equatable {
+nonisolated struct SteamWishlistItemDTO: Decodable, Sendable, Equatable {
   let appID: Int
 
   /// Orden que el usuario le puso en Steam. `0` significa sin prioridad.

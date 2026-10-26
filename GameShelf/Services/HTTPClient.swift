@@ -46,7 +46,7 @@ protocol HTTPClient: Sendable {
 }
 
 /// Implementacion real, sobre `URLSession`.
-struct URLSessionHTTPClient: HTTPClient {
+nonisolated struct URLSessionHTTPClient: HTTPClient {
   private let session: URLSession
   private let decoder: JSONDecoder
 

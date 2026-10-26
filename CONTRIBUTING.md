@@ -43,6 +43,13 @@ Las reglas que se revisan en cada PR:
 4. Los DTOs de red nunca se persisten: se mapean a modelos `@Model` antes.
 5. Los ViewModels reciben Services por inyeccion; no construyen URLs ni
    parsean JSON.
+6. Lo que no toca la interfaz ni SwiftData se declara `nonisolated`: los
+   Services de red, sus DTOs, las credenciales y el llavero. El proyecto aisla
+   todo en `MainActor` por defecto (`SWIFT_DEFAULT_ACTOR_ISOLATION`), y sin
+   eso cada argumento por defecto que construye un Service, y cada prueba que
+   decodifica un DTO, da un aviso de aislamiento. Los sincronizadores y los
+   mapeadores que crean modelos `@Model` se quedan en `MainActor`, igual que
+   los ViewModels.
 
 ## Estilo de codigo
 
@@ -96,7 +103,8 @@ Cada PR, y cada push a `main`, pasa por GitHub Actions
 1. **SwiftLint y traducciones**: `swiftlint lint --strict` y
    `python3 scripts/verificar-traducciones.py`.
 2. **Compilar y probar**: `xcodebuild test` con Xcode 26.6, en el simulador del
-   iPhone 17 Pro con iOS 26.5.
+   iPhone 17 Pro con iOS 26.5. Un aviso del compilador de Swift, en la app o
+   en las pruebas, rompe el build (`SWIFT_TREAT_WARNINGS_AS_ERRORS=YES`).
 3. **Documentacion**: `xcodebuild docbuild` con los avisos como errores. El
    resultado queda como artefacto del trabajo, para leerlo sin compilar.
 
@@ -107,7 +115,7 @@ swiftlint lint --strict
 python3 scripts/verificar-traducciones.py
 xcodebuild test -project GameShelf.xcodeproj -scheme GameShelf \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5' \
-  -testLanguage es -testRegion CO
+  -testLanguage es -testRegion CO SWIFT_TREAT_WARNINGS_AS_ERRORS=YES
 ```
 
 Las pruebas corren en espanol porque algunas comparan los textos del idioma

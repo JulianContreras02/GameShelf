@@ -11,7 +11,7 @@ import Foundation
 /// siempre lo dice: con el perfil privado la respuesta es igual tanto si esta
 /// jugando como si no, y tratarla como "no jugando" haria que la deteccion
 /// automatica (#49) cerrara sesiones que siguen abiertas.
-enum SteamPresence: Equatable, Sendable {
+nonisolated enum SteamPresence: Equatable, Sendable {
   /// Jugando a algo.
   ///
   /// `appID` es `nil` cuando el juego no es de la tienda: Steam deja agregar

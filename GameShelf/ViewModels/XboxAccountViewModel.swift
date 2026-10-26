@@ -182,7 +182,7 @@ final class XboxAccountViewModel {
         guard let self else { throw XboxAuthError.sinCredenciales }
         return try await self.validAuthorizationHeader()
       },
-      xuid: { [weak self] in try self?.xuid() }
+      xuid: { [weak self] in try await self?.xuid() }
     )
 
     do {

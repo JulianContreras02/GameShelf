@@ -19,10 +19,10 @@ final class GameNotesViewModel {
   ///
   /// No es una restriccion del almacenamiento: es para que un pegado accidental
   /// de miles de lineas no vuelva lenta la ficha del juego.
-  static let maxLength = 5_000
+  nonisolated static let maxLength = 5_000
 
   /// A partir de cuantos caracteres se muestra el contador.
-  static let counterThreshold = 4_500
+  nonisolated static let counterThreshold = 4_500
 
   init() {}
 

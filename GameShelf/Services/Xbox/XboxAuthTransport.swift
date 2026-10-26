@@ -14,7 +14,7 @@ import Foundation
 /// propio formulario. Tampoco `HTTPClient`: ante un codigo que no sea 2xx se
 /// queda solo con el numero, y el motivo del rechazo de login.live.com viene
 /// en el cuerpo.
-protocol XboxAuthTransporting: Sendable {
+nonisolated protocol XboxAuthTransporting: Sendable {
   /// Manda un formulario `application/x-www-form-urlencoded` y devuelve la
   /// respuesta cruda.
   func postForm(_ campos: [String: String], to url: URL) async throws -> Data
@@ -25,7 +25,7 @@ protocol XboxAuthTransporting: Sendable {
 }
 
 /// Implementacion real sobre `URLSession`.
-struct XboxAuthTransport: XboxAuthTransporting {
+nonisolated struct XboxAuthTransport: XboxAuthTransporting {
   private let session: URLSession
 
   /// - Parameter session: La sesion a usar. Por defecto, la compartida.

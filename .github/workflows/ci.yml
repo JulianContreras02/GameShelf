@@ -84,6 +84,10 @@ jobs:
         # En espanol y en Colombia, como un simulador de desarrollo: el
         # espanol es el idioma base de la app y hay pruebas que comparan sus
         # textos. El simulador de GitHub viene en ingles.
+        #
+        # Los avisos del compilador de Swift rompen el build, en la app y en
+        # las pruebas: llegaron a ser unos 900 de aislamiento de actores sin
+        # que nada fallara, y asi no vuelven a acumularse.
         run: |
           set -o pipefail
           xcodebuild test \
@@ -93,6 +97,7 @@ jobs:
             -testLanguage es \
             -testRegion CO \
             -resultBundlePath "$RUNNER_TEMP/Pruebas.xcresult" \
+            SWIFT_TREAT_WARNINGS_AS_ERRORS=YES \
             | xcbeautify --renderer github-actions
 
       - name: Guardar el resultado si fallo

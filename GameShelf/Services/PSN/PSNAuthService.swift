@@ -23,7 +23,7 @@ protocol PSNAuthenticating: Sendable {
 }
 
 /// Implementacion real contra los endpoints de Sony.
-struct PSNAuthService: PSNAuthenticating {
+nonisolated struct PSNAuthService: PSNAuthenticating {
 
   /// Credenciales de la app movil de PlayStation.
   ///

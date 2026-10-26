@@ -9,7 +9,7 @@ import Foundation
 ///
 /// Es el tipo de dominio: la vista y los ViewModels hablan con esto, no con los
 /// DTOs de IsThereAnyDeal.
-struct GamePrices: Sendable, Equatable {
+nonisolated struct GamePrices: Sendable, Equatable {
 
   /// Identificador del juego dentro de IsThereAnyDeal.
   let itadID: String
@@ -39,7 +39,7 @@ struct GamePrices: Sendable, Equatable {
 }
 
 /// Una oferta concreta en una tienda.
-struct GameDeal: Sendable, Equatable {
+nonisolated struct GameDeal: Sendable, Equatable {
   let shopName: String
 
   /// Lo que cuesta ahora.

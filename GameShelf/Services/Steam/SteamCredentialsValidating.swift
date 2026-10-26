@@ -19,7 +19,7 @@ protocol SteamCredentialsValidating: Sendable {
 }
 
 /// Implementacion real: pide la biblioteca con las credenciales y descarta el resultado.
-struct SteamAPICredentialsValidator: SteamCredentialsValidating {
+nonisolated struct SteamAPICredentialsValidator: SteamCredentialsValidating {
   let client: HTTPClient
 
   /// - Parameter client: Por donde salen las peticiones.

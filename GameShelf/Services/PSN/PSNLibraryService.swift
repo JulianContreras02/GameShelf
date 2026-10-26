@@ -6,7 +6,7 @@
 import Foundation
 
 /// Un juego de PlayStation, ya con todo lo que hace falta para guardarlo.
-struct PSNGame: Sendable, Equatable {
+nonisolated struct PSNGame: Sendable, Equatable {
   /// Identificador en la tienda, del estilo `PPSA28038_00`.
   let titleId: String
 
@@ -45,7 +45,7 @@ protocol PSNLibraryServicing: Sendable {
 }
 
 /// Implementacion real contra los endpoints de PSN.
-struct PSNLibraryService: PSNLibraryServicing {
+nonisolated struct PSNLibraryService: PSNLibraryServicing {
 
   /// Cuantos juegos se piden por pagina. El maximo que acepta el endpoint.
   static let tamanoDePagina = 200

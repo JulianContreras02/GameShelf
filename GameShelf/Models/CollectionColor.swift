@@ -25,7 +25,7 @@ enum CollectionColor: String, Codable, CaseIterable, Sendable {
   case gray
 
   /// Color por defecto de una coleccion nueva.
-  static let `default` = CollectionColor.blue
+  nonisolated static let `default` = CollectionColor.blue
 
   /// Nombre para mostrar en un selector.
   var displayName: String {

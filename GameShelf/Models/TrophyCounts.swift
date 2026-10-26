@@ -10,7 +10,7 @@ import Foundation
 /// Se guarda como un valor y no como cuatro campos sueltos en `StoreEntry`
 /// porque los cuatro van siempre juntos: sumarlos, compararlos o mostrarlos
 /// por separado no tiene sentido.
-struct TrophyCounts: Codable, Hashable, Sendable {
+nonisolated struct TrophyCounts: Codable, Hashable, Sendable {
   var bronze: Int = 0
   var silver: Int = 0
   var gold: Int = 0

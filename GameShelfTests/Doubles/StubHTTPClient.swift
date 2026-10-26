@@ -45,13 +45,20 @@ final class StubHTTPClient: HTTPClient, @unchecked Sendable {
   /// servicio puso el token donde debia.
   private(set) var sentHeaders: [[String: String]] = []
 
-  func get<T: Decodable>(_ type: T.Type, from url: URL, headers: [String: String]) async throws -> T {
+  // nonisolated(nonsending), como URLSessionHTTPClient: corre en el actor de
+  // quien llama. Sin eso el doble hereda MainActor del protocolo y el
+  // compilador avisa al pasarle el tipo generico desde un servicio.
+  nonisolated(nonsending) func get<T: Decodable>(
+    _ type: T.Type,
+    from url: URL,
+    headers: [String: String]
+  ) async throws -> T {
     requestedURLs.append(url)
     sentHeaders.append(headers)
     return try responder(T.self)
   }
 
-  func post<Response: Decodable, Body: Encodable>(
+  nonisolated(nonsending) func post<Response: Decodable, Body: Encodable>(
     _ type: Response.Type,
     to url: URL,
     body: Body,

@@ -6,7 +6,7 @@
 import Foundation
 
 /// Lo que hace falta para hablar con Epic en nombre del usuario.
-struct EpicCredentials: Sendable, Equatable {
+nonisolated struct EpicCredentials: Sendable, Equatable {
   let accessToken: String
   let refreshToken: String
 

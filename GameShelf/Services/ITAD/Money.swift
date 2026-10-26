@@ -12,7 +12,7 @@ import Foundation
 /// esperaria: para Colombia responde en **USD**, porque Steam y las demas
 /// tiendas facturan en dolares aca. Guardar solo el numero y asumir la moneda
 /// seria mostrar precios equivocados.
-struct Money: Sendable, Equatable, Hashable {
+nonisolated struct Money: Sendable, Equatable, Hashable {
 
   /// El valor, ya en unidades enteras de la moneda (19.99, no 1999).
   let amount: Decimal

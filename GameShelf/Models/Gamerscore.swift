@@ -10,7 +10,7 @@ import Foundation
 /// No se reusa `TrophyCounts` porque no se parecen: en Xbox no hay tipos de
 /// logro, cada uno vale una cantidad de puntos distinta. Lo que el usuario
 /// reconoce es "465 de 1300", no cuantos bronces lleva.
-struct Gamerscore: Hashable, Sendable {
+nonisolated struct Gamerscore: Hashable, Sendable {
   /// Puntos conseguidos.
   var earned: Int
 

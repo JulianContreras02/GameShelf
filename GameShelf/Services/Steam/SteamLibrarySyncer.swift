@@ -13,7 +13,7 @@ import SwiftData
 struct SteamLibrarySyncer {
 
   /// Que cambio en una sincronizacion.
-  struct Result: Equatable {
+  nonisolated struct Result: Equatable {
     /// Juegos que no existian y se crearon.
     var created: Int = 0
     /// Juegos que ya existian y se refrescaron.
