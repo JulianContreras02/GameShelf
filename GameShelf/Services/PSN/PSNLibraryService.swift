@@ -71,6 +71,9 @@ struct PSNLibraryService: PSNLibraryServicing {
   /// momento deja que quien lo provea lo renueve si hace falta.
   private let accessToken: @Sendable () async throws -> String
 
+  /// - Parameters:
+  ///   - client: Por donde salen las peticiones.
+  ///   - accessToken: De donde sacar un token vigente.
   init(client: HTTPClient, accessToken: @escaping @Sendable () async throws -> String) {
     self.client = client
     self.accessToken = accessToken

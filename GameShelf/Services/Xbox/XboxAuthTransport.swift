@@ -28,6 +28,7 @@ protocol XboxAuthTransporting: Sendable {
 struct XboxAuthTransport: XboxAuthTransporting {
   private let session: URLSession
 
+  /// - Parameter session: La sesion a usar. Por defecto, la compartida.
   init(session: URLSession = .shared) {
     self.session = session
   }

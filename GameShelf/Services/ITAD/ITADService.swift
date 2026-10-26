@@ -50,6 +50,10 @@ struct ITADService: ITADServicing {
   /// de ITAD es un calculo suyo con una tasa de cambio, no el precio cobrado.
   let country: String
 
+  /// - Parameters:
+  ///   - client: Por donde salen las peticiones.
+  ///   - apiKey: La clave de IsThereAnyDeal.
+  ///   - country: Pais de los precios, en codigo ISO de dos letras.
   init(client: HTTPClient, apiKey: String, country: String = "CO") {
     self.client = client
     self.apiKey = apiKey
@@ -199,10 +203,12 @@ struct ITADService: ITADServicing {
     try keychain.string(for: claveDeLlavero)
   }
 
+  /// Guarda la clave en el llavero, reemplazando la anterior.
   static func save(apiKey: String, to keychain: KeychainStoring) throws {
     try keychain.set(apiKey, for: claveDeLlavero)
   }
 
+  /// Borra la clave del llavero. No falla si no habia.
   static func removeAPIKey(from keychain: KeychainStoring) throws {
     try keychain.remove(for: claveDeLlavero)
   }

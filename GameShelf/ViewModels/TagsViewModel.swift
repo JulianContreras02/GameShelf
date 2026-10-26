@@ -119,6 +119,7 @@ final class TagsViewModel {
   ///   - texto: Lo que lleva escrito el usuario. Vacio devuelve las mas usadas.
   ///   - juego: Sus etiquetas se excluyen: no tiene sentido sugerir una que ya
   ///     tiene puesta.
+  ///   - context: De donde se leen las etiquetas.
   ///   - limite: Cuantas devolver como maximo.
   func suggestions(
     for texto: String,

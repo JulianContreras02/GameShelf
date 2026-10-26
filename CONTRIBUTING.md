@@ -91,12 +91,14 @@ Reglas:
 ## CI
 
 Cada PR, y cada push a `main`, pasa por GitHub Actions
-(`.github/workflows/ci.yml`) con dos trabajos:
+(`.github/workflows/ci.yml`) con tres trabajos:
 
 1. **SwiftLint y traducciones**: `swiftlint lint --strict` y
    `python3 scripts/verificar-traducciones.py`.
 2. **Compilar y probar**: `xcodebuild test` con Xcode 26.6, en el simulador del
    iPhone 17 Pro con iOS 26.5.
+3. **Documentacion**: `xcodebuild docbuild` con los avisos como errores. El
+   resultado queda como artefacto del trabajo, para leerlo sin compilar.
 
 Un PR en rojo no se fusiona. Para correr lo mismo en local:
 
@@ -116,7 +118,16 @@ un cambio a proposito, en su propio PR y junto con lo que haya que arreglar.
 
 ## Documentacion
 
-- Todo tipo y metodo publico lleva comentario de documentacion (`///`).
+- Todo tipo y metodo publico lleva comentario de documentacion (`///`). En una
+  app casi todo es `internal`: "publico" quiere decir todo lo que no es
+  `private`.
+- Si un comentario documenta un parametro, documenta todos: DocC avisa de los
+  que faltan, y en CI un aviso rompe el build.
+- La documentacion se arma con DocC desde `GameShelf/GameShelf.docc`: la
+  portada (`GameShelf.md`) agrupa los tipos de modelos y servicios, y
+  `Sincronizacion.md` explica el camino de una tienda a la base de datos. Se ve
+  en Xcode con **Product > Build Documentation**. Un tipo nuevo de modelos o
+  servicios se agrega a su grupo en la portada.
 - Cada requerimiento (issue) se cierra con su documentacion al dia.
 - Las decisiones de arquitectura que no sean obvias se registran en
   `docs/decisiones/`, en un archivo corto por decision: que se decidio,
