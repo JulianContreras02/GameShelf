@@ -1,0 +1,19 @@
+{
+  "response": {
+    "players": [
+      {
+        "steamid": "76561198000000000",
+        "profilestate": 1,
+        "personaname": "Jugador de prueba",
+        "profileurl": "https://steamcommunity.com/profiles/76561198000000000/",
+        "avatar": "https://avatars.steamstatic.com/0000000000000000000000000000000000000000.jpg",
+        "avatarmedium": "https://avatars.steamstatic.com/0000000000000000000000000000000000000000_medium.jpg",
+        "avatarfull": "https://avatars.steamstatic.com/0000000000000000000000000000000000000000_full.jpg",
+        "avatarhash": "0000000000000000000000000000000000000000",
+        "lastlogoff": 1760000000,
+        "personastate": 1,
+        "communityvisibilitystate": 1
+      }
+    ]
+  }
+}
