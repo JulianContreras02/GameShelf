@@ -4,9 +4,10 @@
 //
 
 import Foundation
+import SwiftData
 
-/// La conexion con la cuenta de Xbox: la app de Azure, conectar, renovar y
-/// desconectar.
+/// La conexion con la cuenta de Xbox: la app de Azure, conectar, renovar,
+/// desconectar y traer la biblioteca.
 ///
 /// Va en dos piezas independientes, a diferencia de PSN y Epic:
 /// - **La app de Azure** (client id y client secret) es del usuario, no de la
@@ -134,6 +135,12 @@ final class XboxAccountViewModel {
     }
   }
 
+  /// El identificador numerico de la cuenta, que hace falta para pedir la
+  /// biblioteca.
+  func xuid() throws -> String? {
+    try keychain.string(for: Clave.xuid)
+  }
+
   /// Borra la sesion del llavero. El client id y el client secret **no** se
   /// tocan: son de la app registrada, no de la sesion.
   func disconnect() {
@@ -145,6 +152,57 @@ final class XboxAccountViewModel {
     }
     gamertag = nil
     state = .desconectado
+  }
+
+  // MARK: - Biblioteca
+
+  /// En que punto esta la sincronizacion de la biblioteca de Xbox.
+  enum LibraryState: Equatable {
+    case idle
+    case syncing
+    case succeeded(created: Int, updated: Int, merged: Int)
+    case failed(message: String)
+
+    var isSyncing: Bool { self == .syncing }
+  }
+
+  private(set) var libraryState: LibraryState = .idle
+
+  /// Trae los juegos de Xbox y los guarda.
+  ///
+  /// No propaga errores: los deja en `libraryState`. Si la sesion caduco, el
+  /// estado de la cuenta pasa a pedir un codigo nuevo, igual que en PSN y Epic.
+  func syncLibrary(into context: ModelContext, using client: HTTPClient = URLSessionHTTPClient()) async {
+    guard !libraryState.isSyncing else { return }
+    libraryState = .syncing
+
+    let servicio = XboxLibraryService(
+      client: client,
+      authorizationHeader: { [weak self] in
+        guard let self else { throw XboxAuthError.sinCredenciales }
+        return try await self.validAuthorizationHeader()
+      },
+      xuid: { [weak self] in try self?.xuid() }
+    )
+
+    do {
+      let juegos = try await servicio.fetchPlayedGames()
+      let resultado = try XboxLibrarySyncer.sync(juegos, into: context)
+      libraryState = .succeeded(
+        created: resultado.created,
+        updated: resultado.updated,
+        merged: resultado.merged
+      )
+    } catch let error as XboxAuthError {
+      state = Self.estado(para: error)
+      libraryState = .failed(message: error.errorDescription ?? "")
+    } catch let error as NetworkError {
+      libraryState = .failed(
+        message: error.errorDescription ?? String(localized: "No se pudo sincronizar.", comment: "Error generico")
+      )
+    } catch {
+      libraryState = .failed(message: error.localizedDescription)
+    }
   }
 
   // MARK: - Guardado

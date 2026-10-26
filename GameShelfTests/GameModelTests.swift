@@ -139,7 +139,8 @@ struct DomainEnumTests {
     #expect(Store.steam.rawValue == "steam")
     #expect(Store.psn.rawValue == "psn")
     #expect(Store.epic.rawValue == "epic")
-    #expect(Store.allCases.count == 3)
+    #expect(Store.xbox.rawValue == "xbox")
+    #expect(Store.allCases.count == 4)
   }
 
   @Test("PlayStatus cubre los cinco estados y solo wishlist no es poseido")

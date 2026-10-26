@@ -70,6 +70,17 @@ final class StoreEntry {
   /// "llevas 52 de 58 bronces".
   var definedTrophies: TrophyCounts?
 
+  /// Gamerscore conseguido, en Xbox.
+  ///
+  /// Va aparte de `trophyProgress` y de los trofeos porque es otra cosa: no
+  /// hay tipos, cada logro vale una cantidad de puntos, y lo que el usuario
+  /// reconoce es "465 de 1300", no un porcentaje. `nil` si la tienda no lo
+  /// lleva o si el juego no tiene logros.
+  var earnedGamerscore: Int?
+
+  /// Gamerscore que tiene el juego en total.
+  var totalGamerscore: Int?
+
   /// Si la tienda dice que el juego todavia no ha salido.
   ///
   /// No basta con mirar `Game.releaseDate`: Steam informa el lanzamiento de una
@@ -101,6 +112,8 @@ final class StoreEntry {
     launchCount: Int? = nil,
     earnedTrophies: TrophyCounts? = nil,
     definedTrophies: TrophyCounts? = nil,
+    earnedGamerscore: Int? = nil,
+    totalGamerscore: Int? = nil,
     lastSyncedAt: Date? = nil
   ) {
     self.id = UUID()
@@ -116,6 +129,8 @@ final class StoreEntry {
     self.launchCount = launchCount
     self.earnedTrophies = earnedTrophies
     self.definedTrophies = definedTrophies
+    self.earnedGamerscore = earnedGamerscore
+    self.totalGamerscore = totalGamerscore
     self.lastSyncedAt = lastSyncedAt
   }
 }
