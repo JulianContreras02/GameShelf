@@ -49,6 +49,13 @@ El camino entero, de la cuenta del usuario a la base de datos, esta en
 - ``TrophyCounts``
 - ``TrophyBreakdown``
 - ``TrophyKind``
+- ``Gamerscore``
+
+### Sesiones de juego
+
+- ``PlaySession``
+- ``PlaySessionError``
+- ``PlaySessionTracker``
 
 ### Organizacion del usuario
 
@@ -80,6 +87,7 @@ El camino entero, de la cuenta del usuario a la base de datos, esta en
 - ``SteamCredentialsError``
 - ``SteamLibrarySyncer``
 - ``SteamGameMapper``
+- ``SteamPresence``
 - ``SteamWishlistServicing``
 - ``SteamWishlistService``
 - ``SteamWishlistGame``
@@ -116,6 +124,11 @@ El camino entero, de la cuenta del usuario a la base de datos, esta en
 - ``XboxAuthService``
 - ``XboxCredentials``
 - ``XboxAuthError``
+- ``XboxLibraryServicing``
+- ``XboxLibraryService``
+- ``XboxGame``
+- ``XboxLibrarySyncer``
+- ``XboxGameMapper``
 
 ### Precios y ofertas
 

@@ -13,7 +13,7 @@ nueva sin tocar las demas.
 ```
 Ajustes ─▶ ViewModel de la cuenta ─▶ servicio de biblioteca ─▶ HTTPClient ─▶ API
                                               │
-                                     DTOs ─▶ valor propio (PSNGame, EpicGame…)
+                                     DTOs ─▶ valor propio (PSNGame, XboxGame…)
                                               │
                     syncer ─ LibraryMatcher ─▶ mapper ─▶ Game + StoreEntry ─▶ SwiftData
 ```
@@ -61,6 +61,9 @@ Lo propio de cada tienda queda encerrado en su servicio:
   tiempo jugado y los nombres que faltan salen de consultas aparte que **no
   tumban la sincronizacion** si fallan: mejor ver los juegos sin horas que no
   verlos.
+- **Xbox** (``XboxLibraryService``): el historial de juegos de TitleHub ya trae
+  los logros y las imagenes. Las horas salen de userstats, en tandas por el
+  `scid` de cada juego, y tampoco tumban la sincronizacion si fallan.
 - **Lista de deseos de Steam** (``SteamWishlistService``): dos llamadas
   encadenadas, primero los appids y despues sus fichas en la tienda.
 
@@ -69,14 +72,14 @@ Lo propio de cada tienda queda encerrado en su servicio:
 Las respuestas se decodifican a DTOs que reflejan la API tal cual, con sus
 nombres y sus opcionales. Los DTOs **nunca se guardan**. Lo que sale del
 servicio es un valor propio y simple, ya limpio (``PSNGame``, ``EpicGame``,
-``SteamWishlistGame``): con el nombre resuelto, las horas en horas y las fechas
+``XboxGame``, ``SteamWishlistGame``): con el nombre resuelto, las horas en horas y las fechas
 como `Date`. Steam es la excepcion: su syncer recibe directamente
 ``SteamGameDTO``, que ya es casi un valor de dominio.
 
 ### 4. Guardar sin duplicar
 
 Un *syncer* por tienda (``SteamLibrarySyncer``, ``PSNLibrarySyncer``,
-``EpicLibrarySyncer``) guarda lo que llego, siempre con las mismas reglas:
+``EpicLibrarySyncer``, ``XboxLibrarySyncer``) guarda lo que llego, siempre con las mismas reglas:
 
 - **Es idempotente.** Sincronizar dos veces con lo mismo deja la base igual.
 - **Nunca borra.** Un juego que deja de venir puede faltar porque la peticion
@@ -91,13 +94,14 @@ Un *syncer* por tienda (``SteamLibrarySyncer``, ``PSNLibrarySyncer``,
   tiendas juntas.
 
 Un *mapper* por tienda (``PSNGameMapper``, ``EpicGameMapper``,
-``SteamGameMapper``) decide que se pisa al actualizar. En general, solo lo que
+``XboxGameMapper``, ``SteamGameMapper``) decide que se pisa al actualizar. En general, solo lo que
 llego bien: si PlayStation manda una duracion ilegible, la que ya estaba
 guardada es mejor que un cero.
 
-> Important: Steam todavia busca solo por appid. Fue el primer conector y no usa
-> ``LibraryMatcher``, asi que un juego que llego antes por PlayStation o Epic se
-> crea otra vez al sincronizar Steam.
+> Note: En Steam, un juego que coincide por nombre pero ya tiene su propia
+> entrada de Steam se guarda aparte. Cada appid es un producto distinto: Resident
+> Evil 4 de 2005 y su remake se llaman igual, y unirlos pisaria las horas de uno
+> con las del otro.
 
 La lista de deseos es la unica que quita algo: si un juego deja de estar en la
 lista de Steam, ``SteamWishlistSyncer`` le quita la marca
@@ -109,8 +113,14 @@ vacia no quita nada, porque una lista privada responde igual que una vacia.
 ``Game/playtimeHours`` es el total, y cada ``StoreEntry`` lleva las horas de su
 tienda. Cada sincronizacion rehace el total desde cero con
 ``SteamGameMapper/recalculatePlaytime(for:)``, sumando las de todas las
-entradas. Por eso el total nunca se toca a mano: el siguiente recalculo lo
-pisaria.
+entradas y las de las sesiones ya cerradas en la app
+(``Game/sessionPlaytimeHours``). Por eso el total nunca se toca a mano: el
+siguiente recalculo lo pisaria.
+
+Las sesiones (``PlaySession``) se abren y se cierran con
+``PlaySessionTracker``, que no deja tener dos activas a la vez y recalcula el
+total al cerrar una. Una hora jugada puede contar dos veces, en la sesion y en
+la tienda; la decision esta en `docs/decisiones/003-horas-de-las-sesiones.md`.
 
 ### 6. Los precios
 
