@@ -48,11 +48,21 @@ enum SteamWishlistMapper {
   /// Tampoco pisa las horas jugadas: un juego puede estar en la lista de deseos
   /// y a la vez ser uno que ya tienes (pasa con los DLC y las ediciones
   /// completas), y ahi las horas las manda la biblioteca, no la wishlist.
+  ///
+  /// El juego puede venir de otra tienda, o de agregarlo a mano, y no tener
+  /// todavia entrada de Steam: en ese caso se le agrega. El nombre solo se
+  /// refresca si el juego es nada mas de Steam, como en la biblioteca.
   static func update(_ game: Game, from juego: SteamWishlistGame) {
-    game.name = juego.name
+    // Si el juego tambien es de PSN o de Epic, se conserva su nombre: si Steam
+    // lo pisara, esa tienda se lo volveria a cambiar en su siguiente
+    // sincronizacion.
+    if game.storeEntries.allSatisfy({ $0.store == .steam }) {
+      game.name = juego.name
+    }
 
     // La caratula solo se pone si falta: la que ya tenga viene de la
-    // biblioteca, que es igual de buena y evita que la fila parpadee.
+    // biblioteca, de Steam o de otra tienda, que es igual de buena y evita que
+    // la fila parpadee.
     if game.coverImageURL == nil {
       game.coverImageURL = juego.coverURL?.absoluteString
     }

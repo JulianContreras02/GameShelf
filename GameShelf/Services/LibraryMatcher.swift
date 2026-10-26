@@ -12,9 +12,9 @@ import SwiftData
 /// Red Dead Redemption 2 esta en Steam y en PlayStation, la biblioteca muestra
 /// **un** juego con las horas de los dos, no dos filas repetidas.
 ///
-/// Vive aparte porque la usan todos los conectores menos Steam. Estaba escrita
-/// dentro del sincronizador de PSN y copiarla para Epic habria sido la tercera
-/// version de la misma idea.
+/// Vive aparte porque la usan todos los conectores, y tambien la lista de deseos
+/// de Steam. Estaba escrita dentro del sincronizador de PSN y copiarla para Epic
+/// habria sido la tercera version de la misma idea.
 ///
 /// Pasar a una cuarta tienda (Xbox) no cambio la idea: cada sincronizacion
 /// mira su propia tienda por id y todas las demas por nombre, sean las que

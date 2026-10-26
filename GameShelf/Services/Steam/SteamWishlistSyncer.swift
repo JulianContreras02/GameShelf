@@ -11,6 +11,13 @@ import SwiftData
 /// Como el de la biblioteca, es **idempotente**: correrlo dos veces con los
 /// mismos datos deja la base igual.
 ///
+/// Tambien reconoce los juegos como el de la biblioteca, con `LibraryMatcher`:
+/// por appID y, si no, por nombre. Asi un juego que ya vino de PlayStation o de
+/// Epic, o que agregaste a mano, **no se duplica** al aparecer en tu lista de
+/// deseos de Steam: suma su entrada de Steam, con `wishlistedAt`. Sin esto el
+/// resultado dependia del orden: si la wishlist llegaba primero, PSN ya se unia
+/// a ese juego, y si llegaba despues salian dos.
+///
 /// La diferencia con `SteamLibrarySyncer` es que aca si hay que reflejar las
 /// bajas. Si compras un juego, Steam lo saca de tu lista y la app tiene que
 /// enterarse. Pero "sacarlo de la lista" **nunca** significa borrar el juego ni
@@ -24,10 +31,13 @@ struct SteamWishlistSyncer {
     var created: Int = 0
     /// Juegos que ya existian y se refrescaron.
     var updated: Int = 0
+    /// Juegos que ya estaban por otra tienda, o a mano, y ahora tambien estan
+    /// en la lista de deseos de Steam.
+    var merged: Int = 0
     /// Juegos que ya no estan en la lista de Steam.
     var removed: Int = 0
 
-    var total: Int { created + updated }
+    var total: Int { created + updated + merged }
   }
 
   /// Sincroniza la lista de deseos contra lo que ya hay guardado.
@@ -45,23 +55,35 @@ struct SteamWishlistSyncer {
     into context: ModelContext,
     allowRemovals: Bool = true
   ) throws -> Result {
-    let existentes = try indexarEntradasDeSteam(in: context)
+    var matcher = try LibraryMatcher(store: .steam, context: context)
     var result = Result()
 
     for juego in juegos {
-      let clave = String(juego.appID)
-
-      if let entrada = existentes[clave], let game = entrada.game {
-        SteamWishlistMapper.update(game, from: juego)
+      switch matcher.buscar(storeGameID: String(juego.appID), nombre: juego.name) {
+      case .mismaTienda(let existente):
+        SteamWishlistMapper.update(existente, from: juego)
         result.updated += 1
-      } else {
-        context.insert(SteamWishlistMapper.makeGame(from: juego))
+
+      case .otraTienda(let existente) where !existente.isAvailable(on: .steam):
+        // Lo tienes en otra tienda y lo deseas en Steam: es el mismo juego. Se
+        // le suma la entrada sin tocar su estado, asi que si ya lo tienes no
+        // pasa a la lista de deseos, que se guia por `status`.
+        SteamWishlistMapper.update(existente, from: juego)
+        result.merged += 1
+
+      case .otraTienda, .nuevo:
+        // Mismo criterio que la biblioteca: un juego con el mismo nombre que
+        // ya tiene Steam es otro producto de Steam, con otro appID (Resident
+        // Evil 4 y su remake), y unirlos pisaria la entrada del otro.
+        let nuevo = SteamWishlistMapper.makeGame(from: juego)
+        context.insert(nuevo)
+        matcher.registrar(nuevo)
         result.created += 1
       }
     }
 
     if allowRemovals {
-      result.removed = quitarLosQueYaNoEstan(juegos, de: existentes)
+      result.removed = try quitarLosQueYaNoEstan(juegos, in: context)
     }
 
     try context.save()
@@ -71,35 +93,22 @@ struct SteamWishlistSyncer {
   /// Limpia la marca de wishlist en los juegos que Steam ya no reporta.
   ///
   /// No borra nada ni cambia el estado: solo deja de decir "esto esta en tu
-  /// lista de deseos de Steam", que es justo lo que dejo de ser cierto.
+  /// lista de deseos de Steam", que es justo lo que dejo de ser cierto. Una
+  /// entrada que se sumo a un juego de otra tienda se limpia igual, y el juego
+  /// queda con sus otras tiendas como estaba.
   private static func quitarLosQueYaNoEstan(
     _ juegos: [SteamWishlistGame],
-    de existentes: [String: StoreEntry]
-  ) -> Int {
+    in context: ModelContext
+  ) throws -> Int {
     let vigentes = Set(juegos.map { String($0.appID) })
-    var quitados = 0
-
-    for (clave, entrada) in existentes
-    where entrada.wishlistedAt != nil && !vigentes.contains(clave) {
-      entrada.wishlistedAt = nil
-      quitados += 1
+    let quitadas = try context.fetch(FetchDescriptor<StoreEntry>()).filter { entrada in
+      entrada.store == .steam && entrada.wishlistedAt != nil && !vigentes.contains(entrada.storeGameID)
     }
 
-    return quitados
-  }
+    for entrada in quitadas {
+      entrada.wishlistedAt = nil
+    }
 
-  /// Indexa las entradas de Steam ya guardadas por su `storeGameID`.
-  private static func indexarEntradasDeSteam(
-    in context: ModelContext
-  ) throws -> [String: StoreEntry] {
-    let todas = try context.fetch(FetchDescriptor<StoreEntry>())
-
-    return todas
-      .filter { $0.store == .steam }
-      .reduce(into: [String: StoreEntry]()) { indice, entrada in
-        if indice[entrada.storeGameID] == nil {
-          indice[entrada.storeGameID] = entrada
-        }
-      }
+    return quitadas.count
   }
 }
