@@ -18,19 +18,25 @@ struct SteamLibrarySyncer {
     var created: Int = 0
     /// Juegos que ya existian y se refrescaron.
     var updated: Int = 0
+    /// Juegos que ya estaban por otra tienda y ahora tambien tienen Steam.
+    var merged: Int = 0
 
-    var total: Int { created + updated }
+    var total: Int { created + updated + merged }
   }
 
   /// Sincroniza la lista de Steam contra lo que ya hay guardado.
   ///
-  /// Un juego se considera "el mismo" si existe un `StoreEntry` de Steam con su
-  /// mismo `appID`. Los juegos guardados que ya no vienen en la respuesta **no
-  /// se borran**: pueden faltar porque la peticion fallo a medias o porque
-  /// Steam los omitio, y borrar la biblioteca del usuario por eso seria mucho
-  /// peor que dejar un juego de mas.
+  /// Un juego se reconoce por su `StoreEntry` de Steam, con el mismo `appID`.
+  /// Si no lo tiene, se busca por nombre: asi un juego que ya vino de
+  /// PlayStation o de Epic **no se duplica**, sino que suma su entrada de Steam.
   ///
-  /// - Returns: Cuantos se crearon y cuantos se actualizaron.
+  /// Los juegos guardados que ya no vienen en la respuesta **no se borran**:
+  /// pueden faltar porque la peticion fallo a medias o porque Steam los omitio,
+  /// y borrar la biblioteca del usuario por eso seria mucho peor que dejar un
+  /// juego de mas.
+  ///
+  /// - Returns: Cuantos se crearon, cuantos se actualizaron y cuantos se
+  ///   unieron a un juego de otra tienda.
   @discardableResult
   static func sync(
     _ dtos: [SteamGameDTO],
@@ -38,43 +44,35 @@ struct SteamLibrarySyncer {
   ) throws -> Result {
     guard !dtos.isEmpty else { return Result() }
 
-    // Se traen todas las entradas de Steam de una vez y se indexan en memoria.
-    // Es mas rapido que una consulta por juego, y evita pelear con los
-    // predicados de SwiftData sobre enums.
-    let existentes = try indexarEntradasDeSteam(in: context)
-
+    var matcher = try LibraryMatcher(store: .steam, context: context)
     var result = Result()
 
     for dto in dtos {
-      let clave = String(dto.appID)
+      let nombre = dto.name ?? SteamGameMapper.fallbackName(for: dto.appID)
 
-      if let entrada = existentes[clave], let game = entrada.game {
-        SteamGameMapper.update(game, from: dto)
+      switch matcher.buscar(storeGameID: String(dto.appID), nombre: nombre) {
+      case .mismaTienda(let existente):
+        SteamGameMapper.update(existente, from: dto)
         result.updated += 1
-      } else {
-        context.insert(SteamGameMapper.makeGame(from: dto))
+
+      case .otraTienda(let existente) where !existente.isAvailable(on: .steam):
+        SteamGameMapper.update(existente, from: dto)
+        result.merged += 1
+
+      case .otraTienda, .nuevo:
+        // Un juego con el mismo nombre que ya tiene Steam es otro producto de
+        // Steam: Resident Evil 4 de 2005 y su remake de 2023 se llaman igual y
+        // tienen appID distinto. A diferencia de PSN, que lista la version de
+        // consola y la de PC del mismo juego, en Steam cada appID es un juego
+        // aparte, asi que se guarda aparte en vez de pisar la entrada del otro.
+        let nuevo = SteamGameMapper.makeGame(from: dto)
+        context.insert(nuevo)
+        matcher.registrar(nuevo)
         result.created += 1
       }
     }
 
     try context.save()
     return result
-  }
-
-  /// Indexa las entradas de Steam ya guardadas por su `storeGameID`.
-  private static func indexarEntradasDeSteam(
-    in context: ModelContext
-  ) throws -> [String: StoreEntry] {
-    let todas = try context.fetch(FetchDescriptor<StoreEntry>())
-
-    return todas
-      .filter { $0.store == .steam }
-      .reduce(into: [String: StoreEntry]()) { indice, entrada in
-        // Si hubiera duplicados por un fallo previo, gana el primero: asi la
-        // sincronizacion no crea todavia mas copias.
-        if indice[entrada.storeGameID] == nil {
-          indice[entrada.storeGameID] = entrada
-        }
-      }
   }
 }

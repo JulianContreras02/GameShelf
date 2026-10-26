@@ -17,6 +17,13 @@ protocol SteamServicing: Sendable {
   ///   distinguirlos.
   /// - Throws: `NetworkError` si la peticion falla.
   func fetchOwnedGames() async throws -> [SteamGameDTO]
+
+  /// Que esta jugando el usuario en este momento.
+  ///
+  /// - Returns: `.unavailable` si el perfil no es publico: Steam solo cuenta
+  ///   el juego en curso de los perfiles publicos.
+  /// - Throws: `NetworkError` si la peticion falla.
+  func fetchPresence() async throws -> SteamPresence
 }
 
 /// Implementacion real contra la Steam Web API.
@@ -70,8 +77,41 @@ nonisolated struct SteamService: SteamServicing {
   ///   Steam los omite: en una biblioteca real la diferencia fue de 88 a 118
   ///   juegos y de 1220 a 2735 horas, porque el juego mas jugado era F2P.
   func ownedGamesURL() throws -> URL {
-    let ruta = "/IPlayerService/GetOwnedGames/v1/"
+    try url(
+      ruta: "/IPlayerService/GetOwnedGames/v1/",
+      parametros: [
+        URLQueryItem(name: "key", value: credentials.apiKey),
+        URLQueryItem(name: "steamid", value: credentials.steamID),
+        URLQueryItem(name: "include_appinfo", value: "1"),
+        URLQueryItem(name: "include_played_free_games", value: "1"),
+        URLQueryItem(name: "format", value: "json")
+      ]
+    )
+  }
 
+  func fetchPresence() async throws -> SteamPresence {
+    let url = try playerSummariesURL()
+    let respuesta = try await client.get(SteamPlayerSummariesResponse.self, from: url)
+    return SteamPresence(respuesta, steamID: credentials.steamID)
+  }
+
+  /// Arma la URL de `GetPlayerSummaries` para la cuenta conectada.
+  ///
+  /// Es el mismo endpoint del perfil publico: no hay uno solo para la
+  /// presencia. El parametro va en plural (`steamids`) porque admite varias
+  /// cuentas separadas por comas; aca solo se pide la propia.
+  func playerSummariesURL() throws -> URL {
+    try url(
+      ruta: "/ISteamUser/GetPlayerSummaries/v2/",
+      parametros: [
+        URLQueryItem(name: "key", value: credentials.apiKey),
+        URLQueryItem(name: "steamids", value: credentials.steamID),
+        URLQueryItem(name: "format", value: "json")
+      ]
+    )
+  }
+
+  private func url(ruta: String, parametros: [URLQueryItem]) throws -> URL {
     guard var componentes = URLComponents(
       url: Self.baseURL.appendingPathComponent(ruta),
       resolvingAgainstBaseURL: false
@@ -79,13 +119,7 @@ nonisolated struct SteamService: SteamServicing {
       throw NetworkError.invalidURL(Self.baseURL.absoluteString + ruta)
     }
 
-    componentes.queryItems = [
-      URLQueryItem(name: "key", value: credentials.apiKey),
-      URLQueryItem(name: "steamid", value: credentials.steamID),
-      URLQueryItem(name: "include_appinfo", value: "1"),
-      URLQueryItem(name: "include_played_free_games", value: "1"),
-      URLQueryItem(name: "format", value: "json")
-    ]
+    componentes.queryItems = parametros
 
     guard let url = componentes.url else {
       throw NetworkError.invalidURL(componentes.description)
@@ -145,7 +179,7 @@ extension URL {
       return absoluteString
     }
 
-    let sensibles: Set<String> = ["key", "steamid", "access_token", "token"]
+    let sensibles: Set<String> = ["key", "steamid", "steamids", "access_token", "token"]
     componentes.queryItems = items.map { item in
       sensibles.contains(item.name.lowercased())
         ? URLQueryItem(name: item.name, value: "***")

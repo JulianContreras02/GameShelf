@@ -57,12 +57,19 @@ enum SteamGameMapper {
   /// son del usuario y no se sobrescriben nunca: esa es la regla mas
   /// importante de la sincronizacion.
   ///
+  /// El nombre solo se refresca si el juego es nada mas de Steam. Si tambien
+  /// esta en otra tienda se conserva el que tiene, como hace Epic.
+  ///
   /// - Parameters:
-  ///   - game: El juego guardado, que puede tener datos personales.
+  ///   - game: El juego guardado, que puede tener datos personales. Puede
+  ///     venir de otra tienda y no tener todavia entrada de Steam.
   ///   - dto: Lo que acaba de llegar de Steam.
   static func update(_ game: Game, from dto: SteamGameDTO) {
-    // Datos de Steam: se refrescan
-    if let nombre = dto.name {
+    // Datos de Steam: se refrescan. El nombre, solo si nadie mas lo pone: un
+    // juego unido por nombre ya tiene el mismo salvo mayusculas y tildes, y si
+    // Steam lo pisara, PSN lo volveria a cambiar en su siguiente sincronizacion.
+    let soloDeSteam = game.storeEntries.allSatisfy { $0.store == .steam }
+    if let nombre = dto.name, soloDeSteam {
       game.name = nombre
     }
     if let caratula = dto.coverURL?.absoluteString {
@@ -87,11 +94,16 @@ enum SteamGameMapper {
     // game.notes, game.status y game.addedAt NO se tocan: son del usuario.
   }
 
-  /// Recalcula las horas totales sumando todas las tiendas.
+  /// Recalcula las horas totales sumando todas las tiendas y las sesiones
+  /// registradas en la app.
   ///
   /// Hace falta porque `Game.playtimeHours` es el total y cada `StoreEntry`
   /// lleva lo suyo: si solo se actualizara la entrada, el total quedaria viejo.
+  ///
+  /// Las sesiones entran aca, y no sumandolas una vez al cerrarlas, porque
+  /// cada sincronizacion rehace el total desde cero: un `+=` suelto se
+  /// perderia con la siguiente.
   static func recalculatePlaytime(for game: Game) {
-    game.playtimeHours = game.storeEntries.reduce(0) { $0 + $1.playtimeHours }
+    game.playtimeHours = game.storeEntries.reduce(0) { $0 + $1.playtimeHours } + game.sessionPlaytimeHours
   }
 }

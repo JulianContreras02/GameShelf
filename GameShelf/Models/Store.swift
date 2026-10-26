@@ -13,6 +13,7 @@ enum Store: String, Codable, CaseIterable, Sendable {
   case steam
   case psn
   case epic
+  case xbox
 
   /// Nombre para mostrar en pantalla.
   var displayName: String {
@@ -20,6 +21,7 @@ enum Store: String, Codable, CaseIterable, Sendable {
     case .steam: "Steam"
     case .psn: "PlayStation Network"
     case .epic: "Epic Games"
+    case .xbox: "Xbox"
     }
   }
 }
