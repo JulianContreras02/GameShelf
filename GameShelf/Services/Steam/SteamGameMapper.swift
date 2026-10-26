@@ -57,12 +57,19 @@ enum SteamGameMapper {
   /// son del usuario y no se sobrescriben nunca: esa es la regla mas
   /// importante de la sincronizacion.
   ///
+  /// El nombre solo se refresca si el juego es nada mas de Steam. Si tambien
+  /// esta en otra tienda se conserva el que tiene, como hace Epic.
+  ///
   /// - Parameters:
-  ///   - game: El juego guardado, que puede tener datos personales.
+  ///   - game: El juego guardado, que puede tener datos personales. Puede
+  ///     venir de otra tienda y no tener todavia entrada de Steam.
   ///   - dto: Lo que acaba de llegar de Steam.
   static func update(_ game: Game, from dto: SteamGameDTO) {
-    // Datos de Steam: se refrescan
-    if let nombre = dto.name {
+    // Datos de Steam: se refrescan. El nombre, solo si nadie mas lo pone: un
+    // juego unido por nombre ya tiene el mismo salvo mayusculas y tildes, y si
+    // Steam lo pisara, PSN lo volveria a cambiar en su siguiente sincronizacion.
+    let soloDeSteam = game.storeEntries.allSatisfy { $0.store == .steam }
+    if let nombre = dto.name, soloDeSteam {
       game.name = nombre
     }
     if let caratula = dto.coverURL?.absoluteString {
