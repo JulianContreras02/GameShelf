@@ -107,3 +107,48 @@ jobs:
           name: resultado-de-pruebas
           path: ${{ runner.temp }}/Pruebas.xcresult
           retention-days: 7
+
+  documentacion:
+    name: Documentacion
+    runs-on: macos-26
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Usar Xcode ${{ env.XCODE_VERSION }}
+        run: sudo xcode-select -s "/Applications/Xcode_${XCODE_VERSION}.app/Contents/Developer"
+
+      - name: Crear el archivo de secretos
+        run: cp Config/Secrets.example.xcconfig Config/Secrets.xcconfig
+
+      - name: Compilar la documentacion
+        # --warnings-as-errors: un enlace roto o un parametro sin documentar
+        # rompe el build, en vez de quedar como un aviso que nadie lee.
+        run: |
+          set -o pipefail
+          xcodebuild docbuild \
+            -project GameShelf.xcodeproj \
+            -scheme GameShelf \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath "$RUNNER_TEMP/DerivedData" \
+            OTHER_DOCC_FLAGS="--warnings-as-errors" \
+            | xcbeautify --renderer github-actions
+
+      - name: Empaquetar la documentacion
+        # upload-artifact no acepta ":" en los nombres de archivo, y DocC los
+        # usa en las paginas de las funciones (`accentcolor(_:).json`).
+        # Comprimida en un zip, ese nombre ya no es un problema.
+        run: |
+          ditto -c -k --keepParent \
+            "$RUNNER_TEMP/DerivedData/Build/Products/Debug-iphonesimulator/GameShelf.doccarchive" \
+            "$RUNNER_TEMP/GameShelf.doccarchive.zip"
+
+      - name: Guardar la documentacion
+        # Para leerla sin compilar: se descarga, se descomprime y se abre con
+        # Xcode.
+        uses: actions/upload-artifact@v7
+        with:
+          name: documentacion
+          path: ${{ runner.temp }}/GameShelf.doccarchive.zip
+          retention-days: 14

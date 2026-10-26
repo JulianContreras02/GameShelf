@@ -19,6 +19,7 @@ import Foundation
 nonisolated struct SteamWishlistResponse: Decodable, Sendable {
   let response: Payload
 
+  /// Contenido de la respuesta. `items` falta si la lista esta vacia o es privada.
   struct Payload: Decodable, Sendable {
     let items: [SteamWishlistItemDTO]?
   }

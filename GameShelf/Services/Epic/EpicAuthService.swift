@@ -133,6 +133,9 @@ nonisolated struct EpicAuthService: EpicAuthenticating {
   private let transport: FormPostTransporting
   private let ahora: @Sendable () -> Date
 
+  /// - Parameters:
+  ///   - transport: Por donde salen los formularios. En las pruebas, un doble.
+  ///   - ahora: De donde sale la hora, para calcular cuando vence el token sin depender del reloj real.
   init(
     transport: FormPostTransporting = PSNAuthTransport(),
     ahora: @escaping @Sendable () -> Date = Date.init

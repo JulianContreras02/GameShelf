@@ -11,6 +11,11 @@ import SwiftUI
 /// Muestra los juegos con `status == .wishlist`, vengan de Steam o los hayas
 /// agregado a mano. Ese es el criterio a proposito: el estado lo pones tu, y
 /// una lista de deseos que ignore tu decision no serviria de nada.
+///
+/// Por eso un juego que ya tienes en PlayStation o en Epic no sale aca aunque
+/// lo desees en Steam: la sincronizacion le suma la entrada de Steam pero no le
+/// cambia el estado. Si lo quieres ver aca, con su precio, le pones el estado
+/// "Lista de deseos".
 struct WishlistView: View {
   @Environment(\.modelContext) private var modelContext
   @Query private var todos: [Game]

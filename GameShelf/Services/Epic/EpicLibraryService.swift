@@ -44,6 +44,10 @@ nonisolated struct EpicLibraryService: EpicLibraryServicing {
   private let accessToken: @Sendable () async throws -> String
   private let accountID: @Sendable () async throws -> String?
 
+  /// - Parameters:
+  ///   - client: Por donde salen las peticiones.
+  ///   - accessToken: De donde sacar un token vigente. Se pide en el momento, para que se pueda renovar.
+  ///   - accountID: El id de la cuenta, que piden los tiempos jugados. `nil` si no se conoce.
   init(
     client: HTTPClient,
     accessToken: @escaping @Sendable () async throws -> String,

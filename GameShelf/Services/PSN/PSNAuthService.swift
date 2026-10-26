@@ -63,6 +63,9 @@ nonisolated struct PSNAuthService: PSNAuthenticating {
   private let transport: PSNAuthTransporting
   private let ahora: @Sendable () -> Date
 
+  /// - Parameters:
+  ///   - transport: Por donde salen las peticiones. En las pruebas, un doble.
+  ///   - ahora: De donde sale la hora, para calcular cuando vence el token sin depender del reloj real.
   init(transport: PSNAuthTransporting = PSNAuthTransport(), ahora: @escaping @Sendable () -> Date = Date.init) {
     self.transport = transport
     self.ahora = ahora

@@ -40,6 +40,9 @@ nonisolated struct SteamService: SteamServicing {
 
   static let baseURL = URL(string: "https://api.steampowered.com")!
 
+  /// Crea el servicio con unas credenciales ya conocidas.
+  ///
+  /// En la app se usa `live(client:keychain:)`, que las lee del llavero.
   init(client: HTTPClient, credentials: Credentials) {
     self.client = client
     self.credentials = credentials
@@ -156,11 +159,13 @@ nonisolated extension SteamService.Credentials {
     return SteamService.Credentials(apiKey: apiKey, steamID: steamID)
   }
 
+  /// Guarda las dos credenciales en el llavero, reemplazando las anteriores.
   func save(to keychain: KeychainStoring) throws {
     try keychain.set(apiKey, for: ClaveDeLlavero.apiKey)
     try keychain.set(steamID, for: ClaveDeLlavero.steamID)
   }
 
+  /// Borra las credenciales del llavero. No falla si no habia.
   static func removeFromKeychain(_ keychain: KeychainStoring) throws {
     try keychain.remove(for: ClaveDeLlavero.apiKey)
     try keychain.remove(for: ClaveDeLlavero.steamID)

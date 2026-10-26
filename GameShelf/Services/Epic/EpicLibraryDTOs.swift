@@ -21,6 +21,7 @@ nonisolated struct EpicLibraryResponse: Decodable, Sendable {
   }
 }
 
+/// Lo que acompana a cada pagina de la biblioteca. Solo interesa el cursor.
 nonisolated struct EpicResponseMetadataDTO: Decodable, Sendable {
   let nextCursor: String?
 }
@@ -89,6 +90,7 @@ nonisolated struct EpicCatalogResponse: Decodable, Sendable {
   }
 }
 
+/// La ficha de un juego en el catalogo de Epic: el nombre de verdad y sus imagenes.
 nonisolated struct EpicCatalogItemDTO: Decodable, Sendable {
   let title: String?
   let keyImages: [EpicKeyImageDTO]?
@@ -109,6 +111,9 @@ nonisolated struct EpicCatalogItemDTO: Decodable, Sendable {
   }
 }
 
+/// Una imagen de la ficha del catalogo.
+///
+/// `type` dice que clase de imagen es (`DieselGameBoxTall`, `OfferImageWide`...).
 nonisolated struct EpicKeyImageDTO: Decodable, Sendable {
   let type: String?
   let url: String?

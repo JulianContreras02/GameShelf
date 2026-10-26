@@ -16,8 +16,10 @@ nonisolated struct TrophyCounts: Codable, Hashable, Sendable {
   var gold: Int = 0
   var platinum: Int = 0
 
+  /// Cuantos hay, de todos los tipos.
   var total: Int { bronze + silver + gold + platinum }
 
+  /// Si no hay ninguno.
   var isEmpty: Bool { total == 0 }
 
   /// Cuantos hay de un tipo concreto.
@@ -58,6 +60,7 @@ enum TrophyKind: String, CaseIterable, Sendable {
   case gold
   case platinum
 
+  /// Nombre para mostrar, traducido.
   var displayName: String {
     switch self {
     case .bronze: String(localized: "Bronce", comment: "Tipo de trofeo")

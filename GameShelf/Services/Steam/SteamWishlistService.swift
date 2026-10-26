@@ -52,6 +52,9 @@ nonisolated struct SteamWishlistService: SteamWishlistServicing {
   private let client: HTTPClient
   private let steamID: String
 
+  /// - Parameters:
+  ///   - client: Por donde salen las peticiones.
+  ///   - steamID: La cuenta cuya lista se pide. El endpoint no pide API key.
   init(client: HTTPClient, steamID: String) {
     self.client = client
     self.steamID = steamID

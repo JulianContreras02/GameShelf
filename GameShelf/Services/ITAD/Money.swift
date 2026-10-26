@@ -30,6 +30,11 @@ nonisolated struct Money: Sendable, Equatable, Hashable {
     self.currency = currency
   }
 
+  /// Crea un importe a partir de una cantidad.
+  ///
+  /// Es el camino de respaldo cuando ITAD manda `amount` sin `amountInt`: ese
+  /// valor pasa por `Double` y puede arrastrar su error de redondeo, por eso
+  /// se prefiere `init(minorUnits:currency:)`.
   init(amount: Decimal, currency: String) {
     self.amount = amount
     self.currency = currency
