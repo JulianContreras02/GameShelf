@@ -14,7 +14,7 @@ import Foundation
 /// ```json
 /// { "response": { "players": [ { "steamid": "...", "gameid": "730", "gameextrainfo": "Counter-Strike 2" } ] } }
 /// ```
-struct SteamPlayerSummariesResponse: Decodable, Equatable {
+nonisolated struct SteamPlayerSummariesResponse: Decodable, Equatable {
   let response: SteamPlayerSummariesPayload
 }
 
@@ -22,7 +22,7 @@ struct SteamPlayerSummariesResponse: Decodable, Equatable {
 ///
 /// Si el SteamID no existe, Steam responde con la lista vacia, no con un
 /// error.
-struct SteamPlayerSummariesPayload: Decodable, Equatable {
+nonisolated struct SteamPlayerSummariesPayload: Decodable, Equatable {
   private let rawPlayers: [SteamPlayerSummaryDTO]?
 
   /// Perfiles devueltos. Lista vacia si no vino el dato.
@@ -34,7 +34,7 @@ struct SteamPlayerSummariesPayload: Decodable, Equatable {
 }
 
 /// Un perfil de Steam, con solo los campos que hacen falta para la presencia.
-struct SteamPlayerSummaryDTO: Decodable, Equatable {
+nonisolated struct SteamPlayerSummaryDTO: Decodable, Equatable {
   let steamID: String
 
   /// Quien puede ver el perfil: `3` es publico, `1` es cualquier otra cosa

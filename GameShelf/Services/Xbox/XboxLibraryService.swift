@@ -6,7 +6,7 @@
 import Foundation
 
 /// Un juego de Xbox, ya con todo lo que hace falta para guardarlo.
-struct XboxGame: Sendable, Equatable {
+nonisolated struct XboxGame: Sendable, Equatable {
   /// Identificador del juego en Xbox, del estilo `1560034050`.
   let titleId: String
 
@@ -37,7 +37,7 @@ protocol XboxLibraryServicing: Sendable {
 }
 
 /// Implementacion real contra TitleHub y userstats.
-struct XboxLibraryService: XboxLibraryServicing {
+nonisolated struct XboxLibraryService: XboxLibraryServicing {
 
   /// Cuantos juegos se piden del historial.
   ///
@@ -196,7 +196,7 @@ struct XboxLibraryService: XboxLibraryServicing {
   }
 }
 
-private extension Character {
+private nonisolated extension Character {
   /// Solo 0-9. `isNumber` acepta tambien otros sistemas de numeracion.
   var isASCIIDigit: Bool {
     isASCII && isNumber

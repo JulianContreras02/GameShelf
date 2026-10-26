@@ -10,7 +10,7 @@ import Foundation
 /// Respuesta de `titlehub.xboxlive.com/users/xuid(...)/titles/titlehistory`.
 ///
 /// No viene paginada: trae de una vez hasta `maxItems` juegos.
-struct XboxTitleHistoryResponse: Decodable, Sendable {
+nonisolated struct XboxTitleHistoryResponse: Decodable, Sendable {
   let xuid: String?
   let titles: [XboxTitleDTO]?
 
@@ -23,7 +23,7 @@ struct XboxTitleHistoryResponse: Decodable, Sendable {
 /// Es un **historial**, no la lista de lo comprado: solo aparece lo que se
 /// abrio alguna vez, en consola o en PC. Un juego comprado y nunca abierto no
 /// sale, a diferencia de Steam y Epic.
-struct XboxTitleDTO: Decodable, Sendable {
+nonisolated struct XboxTitleDTO: Decodable, Sendable {
   /// Identificador del juego, del estilo `1560034050`. Llega como texto.
   let titleId: String
 
@@ -116,7 +116,7 @@ struct XboxTitleDTO: Decodable, Sendable {
 }
 
 /// Una imagen del juego.
-struct XboxImageDTO: Decodable, Sendable {
+nonisolated struct XboxImageDTO: Decodable, Sendable {
   let url: String?
 
   /// `TitledHeroArt`, `SuperHeroArt`, `BoxArt`, `Poster`, `Screenshot`...
@@ -124,7 +124,7 @@ struct XboxImageDTO: Decodable, Sendable {
 }
 
 /// El resumen de logros de un juego.
-struct XboxAchievementSummaryDTO: Decodable, Sendable {
+nonisolated struct XboxAchievementSummaryDTO: Decodable, Sendable {
   let currentAchievements: Int?
 
   /// **No es fiable**: en los datos de referencia llega en 0 aunque
@@ -148,7 +148,7 @@ struct XboxAchievementSummaryDTO: Decodable, Sendable {
 }
 
 /// Cuando se jugo por ultima vez.
-struct XboxTitleHistoryDTO: Decodable, Sendable {
+nonisolated struct XboxTitleHistoryDTO: Decodable, Sendable {
   let lastTimePlayed: String?
 }
 
@@ -159,7 +159,7 @@ struct XboxTitleHistoryDTO: Decodable, Sendable {
 /// La forma, con un grupo `Hero` y una estadistica por juego, es la que usa
 /// OpenXbox/xbox-webapi para un juego. Aca se repite el par por cada juego de
 /// la tanda.
-struct XboxStatsBatchRequest: Encodable, Sendable {
+nonisolated struct XboxStatsBatchRequest: Encodable, Sendable {
   let arrangebyfield = "xuid"
   let xuids: [String]
   let groups: [Grupo]
@@ -186,7 +186,7 @@ struct XboxStatsBatchRequest: Encodable, Sendable {
 ///
 /// Trae tambien los grupos `Hero`, que son estadisticas propias de cada juego
 /// ("cofres entregados", "distancia navegada"). No hacen falta y no se leen.
-struct XboxStatsBatchResponse: Decodable, Sendable {
+nonisolated struct XboxStatsBatchResponse: Decodable, Sendable {
   let statlistscollection: [XboxStatListDTO]?
 
   /// Minutos jugados por juego, indexados por su scid en minusculas.
@@ -206,12 +206,12 @@ struct XboxStatsBatchResponse: Decodable, Sendable {
 }
 
 /// Las estadisticas de un usuario.
-struct XboxStatListDTO: Decodable, Sendable {
+nonisolated struct XboxStatListDTO: Decodable, Sendable {
   let stats: [XboxStatDTO]?
 }
 
 /// Una estadistica.
-struct XboxStatDTO: Decodable, Sendable {
+nonisolated struct XboxStatDTO: Decodable, Sendable {
   /// El nombre de la estadistica de tiempo jugado.
   static let minutosJugados = "MinutesPlayed"
 
