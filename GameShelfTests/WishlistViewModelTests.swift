@@ -42,7 +42,7 @@ struct WishlistSyncStateTests {
 
     await viewModel.sync(into: context)
 
-    #expect(viewModel.state == .succeeded(created: 2, updated: 0, removed: 0))
+    #expect(viewModel.state == .succeeded(created: 2, updated: 0, merged: 0, removed: 0))
     #expect(viewModel.lastSyncedAt != nil)
     #expect(!viewModel.lastSyncReturnedNoGames)
   }
@@ -82,7 +82,7 @@ struct WishlistSyncStateTests {
     await viewModel.sync(into: context)
 
     #expect(viewModel.lastSyncReturnedNoGames)
-    #expect(viewModel.state == .succeeded(created: 0, updated: 0, removed: 0))
+    #expect(viewModel.state == .succeeded(created: 0, updated: 0, merged: 0, removed: 0))
 
     // Es el caso de la lista privada: Steam responde igual que si estuviera
     // vacia, asi que no se puede tomar por cierta y borrar.

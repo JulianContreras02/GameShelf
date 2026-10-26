@@ -19,6 +19,13 @@ private func hacerContexto() throws -> ModelContext {
   return ModelContext(contenedor)
 }
 
+private func juegoDePSN(_ titleId: String, nombre: String, horas: Double, trofeos: Int? = nil) -> PSNGame {
+  PSNGame(
+    titleId: titleId, name: nombre, coverURL: nil,
+    playtimeHours: horas, playCount: nil, lastPlayedAt: nil, firstPlayedAt: nil, trophyProgress: trofeos
+  )
+}
+
 @MainActor
 @Suite("Wishlist: guardar en la base")
 struct WishlistSyncTests {
@@ -227,5 +234,163 @@ struct WishlistSyncTests {
 
     #expect(juegos.isEmpty)
     #expect(cliente.requestedURLs.count == 1, "No tiene sentido pedir fichas de cero appids")
+  }
+}
+
+@MainActor
+@Suite("Wishlist: un juego de otra tienda suma Steam")
+struct WishlistSyncMergeTests {
+
+  @Test("Un juego que ya vino de PSN no se duplica: suma su entrada de Steam")
+  func uneConPSN() throws {
+    let context = try hacerContexto()
+    try PSNLibrarySyncer.sync([juegoDePSN("PPSA1", nombre: "HADES", horas: 20)], into: context)
+
+    let resultado = try SteamWishlistSyncer.sync([.ejemplo(appID: 1145360, name: "Hades")], into: context)
+
+    #expect(resultado == SteamWishlistSyncer.Result(merged: 1))
+
+    let juegos = try context.fetch(FetchDescriptor<Game>())
+    #expect(juegos.count == 1, "Es el mismo juego, no dos")
+
+    let juego = try #require(juegos.first)
+    #expect(Set(juego.stores) == [.psn, .steam])
+    #expect(juego.wishlistedAt == Date(timeIntervalSince1970: 1_700_000_000))
+    #expect(juego.steamAppID == 1145360, "Con el appID ya se le pueden pedir precios")
+    #expect(juego.status == .backlog, "Ya lo tienes: no pasa a la lista de deseos")
+    #expect(juego.playtimeHours == 20, "Las horas son las de PSN")
+    #expect(juego.name == "HADES", "Si Steam lo pisara, PSN se lo volveria a cambiar")
+  }
+
+  @Test("Tambien une con Epic")
+  func uneConEpic() throws {
+    let context = try hacerContexto()
+    try EpicLibrarySyncer.sync(
+      [EpicGame(namespace: "ns", name: "Cyberpunk 2077", coverURL: nil, playtimeHours: 49.5)],
+      into: context
+    )
+
+    let resultado = try SteamWishlistSyncer.sync([.ejemplo(appID: 1091500, name: "Cyberpunk 2077")], into: context)
+
+    #expect(resultado.merged == 1)
+    #expect(try context.fetch(FetchDescriptor<Game>()).count == 1)
+
+    let juego = try #require(try context.fetch(FetchDescriptor<Game>()).first)
+    #expect(Set(juego.stores) == [.epic, .steam])
+    #expect(juego.isWishlistedInStore)
+  }
+
+  @Test("Sincronizar otra vez despues de la union no duplica nada")
+  func unionIdempotente() throws {
+    let context = try hacerContexto()
+    try PSNLibrarySyncer.sync([juegoDePSN("PPSA1", nombre: "Hades", horas: 20)], into: context)
+    let deseado = SteamWishlistGame.ejemplo(appID: 1145360, name: "Hades")
+
+    try SteamWishlistSyncer.sync([deseado], into: context)
+    let segunda = try SteamWishlistSyncer.sync([deseado], into: context)
+
+    #expect(segunda == SteamWishlistSyncer.Result(updated: 1), "La segunda vez ya lo encuentra por su appID")
+    #expect(try context.fetch(FetchDescriptor<Game>()).count == 1)
+    #expect(try context.fetch(FetchDescriptor<StoreEntry>()).count == 2, "Una entrada de PSN y una de Steam")
+  }
+
+  @Test("La union no pisa el estado ni las notas del juego que ya estaba")
+  func unionRespetaLoDelUsuario() throws {
+    let context = try hacerContexto()
+    try PSNLibrarySyncer.sync([juegoDePSN("PPSA1", nombre: "Hades", horas: 20)], into: context)
+
+    let guardado = try #require(try context.fetch(FetchDescriptor<Game>()).first)
+    guardado.status = .finished
+    guardado.notes = "Platino conseguido"
+    let idOriginal = guardado.id
+    try context.save()
+
+    let deseado = SteamWishlistGame.ejemplo(appID: 1145360, name: "Hades")
+    try SteamWishlistSyncer.sync([deseado], into: context)
+    try SteamWishlistSyncer.sync([deseado], into: context)
+
+    let despues = try #require(try context.fetch(FetchDescriptor<Game>()).first)
+    #expect(despues.id == idOriginal, "Es el mismo registro, no uno nuevo")
+    #expect(despues.status == .finished, "El estado no se puede perder")
+    #expect(despues.notes == "Platino conseguido", "Las notas no se pueden perder")
+    #expect(despues.isWishlistedInStore)
+  }
+
+  @Test("Si sale de la lista, al juego unido solo se le limpia la fecha")
+  func quitarLaUnionSoloLimpiaLaFecha() throws {
+    let context = try hacerContexto()
+    try PSNLibrarySyncer.sync([juegoDePSN("PPSA1", nombre: "Hades", horas: 20, trofeos: 40)], into: context)
+
+    let guardado = try #require(try context.fetch(FetchDescriptor<Game>()).first)
+    guardado.status = .playing
+    guardado.notes = "Lo quiero tambien en PC"
+    try context.save()
+
+    try SteamWishlistSyncer.sync(
+      [.ejemplo(appID: 1145360, name: "Hades"), .ejemplo(appID: 268910, name: "Cuphead")],
+      into: context
+    )
+
+    // Lo compraste en Steam o lo quitaste de la lista: ya no viene.
+    let resultado = try SteamWishlistSyncer.sync([.ejemplo(appID: 268910, name: "Cuphead")], into: context)
+
+    #expect(resultado == SteamWishlistSyncer.Result(updated: 1, removed: 1))
+    #expect(try context.fetch(FetchDescriptor<Game>()).count == 2, "No se borra ningun juego")
+
+    let hades = try #require(try context.fetch(FetchDescriptor<Game>()).first { $0.name == "Hades" })
+    #expect(!hades.isWishlistedInStore)
+    #expect(hades.status == .playing, "El estado es del usuario")
+    #expect(hades.notes == "Lo quiero tambien en PC")
+
+    let steam = try #require(hades.storeEntries.first { $0.store == .steam })
+    #expect(steam.wishlistedAt == nil)
+    #expect(steam.storeGameID == "1145360", "La entrada se queda: solo se limpia la fecha")
+
+    let psn = try #require(hades.storeEntries.first { $0.store == .psn })
+    #expect(psn.playtimeHours == 20, "La entrada de PSN no se toca")
+    #expect(psn.trophyProgress == 40)
+  }
+
+  @Test("Un juego de Steam con el mismo nombre y otro appID se guarda aparte")
+  func mismoNombreEnSteam() throws {
+    let context = try hacerContexto()
+    // Tienes Resident Evil 4 de 2005 y deseas el remake: mismo nombre, otro appID.
+    let json = #"{"appid": 254700, "name": "Resident Evil 4", "playtime_forever": 600}"#
+    let original = try JSONDecoder().decode(SteamGameDTO.self, from: Data(json.utf8))
+    try SteamLibrarySyncer.sync([original], into: context)
+
+    let resultado = try SteamWishlistSyncer.sync(
+      [.ejemplo(appID: 2050650, name: "Resident Evil 4")],
+      into: context
+    )
+
+    #expect(resultado == SteamWishlistSyncer.Result(created: 1))
+
+    let juegos = try context.fetch(FetchDescriptor<Game>())
+    #expect(juegos.count == 2)
+
+    let tuyo = try #require(juegos.first { $0.steamAppID == 254700 })
+    #expect(!tuyo.isWishlistedInStore, "La entrada del que ya tienes no se pisa")
+    #expect(tuyo.storeEntries.count == 1)
+
+    let remake = try #require(juegos.first { $0.steamAppID == 2050650 })
+    #expect(remake.status == .wishlist)
+  }
+
+  @Test("Un juego agregado a mano suma Steam en vez de repetirse")
+  func uneConUnoAgregadoAMano() throws {
+    let context = try hacerContexto()
+    context.insert(Game(name: "hades", status: .wishlist))
+    try context.save()
+
+    let resultado = try SteamWishlistSyncer.sync([.ejemplo(appID: 1145360, name: "Hades")], into: context)
+
+    #expect(resultado.merged == 1)
+
+    let juego = try #require(try context.fetch(FetchDescriptor<Game>()).first)
+    #expect(try context.fetch(FetchDescriptor<Game>()).count == 1)
+    #expect(juego.name == "Hades", "Sin otra tienda, el nombre lo pone Steam")
+    #expect(juego.isWishlistedInStore)
+    #expect(!WishlistViewModel.canDelete(juego), "Ahora vuelve con cada sincronizacion de Steam")
   }
 }

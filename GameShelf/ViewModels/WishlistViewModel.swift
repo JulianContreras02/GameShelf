@@ -20,8 +20,9 @@ final class WishlistViewModel {
   enum State: Equatable {
     case idle
     case syncing
-    /// Termino bien.
-    case succeeded(created: Int, updated: Int, removed: Int)
+    /// Termino bien. `merged` son los juegos que ya estaban por otra tienda, o
+    /// a mano, y ahora tambien estan en la lista de deseos de Steam.
+    case succeeded(created: Int, updated: Int, merged: Int, removed: Int)
     /// Fallo, con un mensaje que se puede mostrar tal cual.
     case failed(message: String, suggestion: String?)
 
@@ -167,6 +168,7 @@ final class WishlistViewModel {
       state = .succeeded(
         created: resultado.created,
         updated: resultado.updated,
+        merged: resultado.merged,
         removed: resultado.removed
       )
     } catch let error as NetworkError {
