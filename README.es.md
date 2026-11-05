@@ -1,0 +1,168 @@
+# GameShelf
+
+[English](README.md) · **Español**
+
+[![CI](https://github.com/JulianContreras02/GameShelf/actions/workflows/ci.yml/badge.svg)](https://github.com/JulianContreras02/GameShelf/actions/workflows/ci.yml)
+
+App personal para iOS que organiza tu biblioteca de videojuegos en un solo lugar,
+sin importar de qué tienda vienen.
+
+## Qué hace
+
+- Conecta tus cuentas de Steam, PlayStation Network, Epic Games y Xbox para
+  traer los juegos que ya tienes.
+- Te deja organizar esa biblioteca con tus propias carpetas y listas
+  (pendientes, favoritos, lo que sea), algo que ninguna tienda te deja hacer
+  entre plataformas.
+- Revisa ofertas de tu lista de deseos usando una API de agregador de precios
+  (IsThereAnyDeal), en vez de reinventar el scraping de cada tienda.
+
+Es un proyecto de aprendizaje: mi primera app en el ecosistema Apple, y estoy
+usándolo también para experimentar con las funciones de accesibilidad de iOS.
+
+## Cómo correrlo
+
+### 1. Crear tu archivo de secretos
+
+```bash
+cp Config/Secrets.example.xcconfig Config/Secrets.xcconfig
+```
+
+Ese archivo está ignorado por git. Hoy no hace falta llenarlo con nada: todas
+las claves se conectan desde dentro de la app (ver la siguiente sección).
+Sigue siendo parte del proyecto de Xcode, y es donde iría una clave que en el
+futuro haga falta antes de que el usuario haga nada.
+
+### 2. Correr
+
+Abrir `GameShelf.xcodeproj` en Xcode y correr en el simulador o en tu
+dispositivo.
+
+### Requisitos
+
+- Xcode 26.5 o superior: el proyecto pide iOS 26.5, y ese SDK llegó con Xcode 26.5
+- [SwiftLint](https://github.com/realm/SwiftLint) 0.65.1, la misma que usa CI:
+  `brew install swiftlint` instala la última, que puede marcar distinto.
+
+## Conectar cuentas y claves
+
+Steam, PlayStation, Epic, Xbox e IsThereAnyDeal se conectan desde la app, en
+**Ajustes**, y sus credenciales se guardan cifradas en el llavero del
+teléfono. Ninguna vive en el archivo de secretos: eso es lo que permite
+instalar la app en otro teléfono y conectar ahí cuentas distintas, sin
+recompilar.
+
+### Steam
+
+A diferencia de PSN y Epic, Steam sí ofrece un camino oficial: no hace falta
+iniciar sesión desde la app.
+
+1. Consigue tu SteamID64 en https://steamid.io pegando la URL de tu perfil.
+2. Saca una API key gratis en https://steamcommunity.com/dev/apikey (pide un
+   dominio; sirve `localhost`).
+3. Pega los dos datos en **Ajustes -> Steam**.
+
+### PlayStation y Epic
+
+La razón de que sean un rodeo es la misma en las dos: ni Sony ni Epic ofrecen
+un "iniciar sesión" para aplicaciones de terceros. Lo único que hay es copiar
+un código desde el navegador, con la sesión ya iniciada.
+
+### PlayStation Network
+
+1. Inicia sesión en https://www.playstation.com/ (botón "Sign In").
+2. **En el mismo navegador**, abre
+   https://ca.account.sony.com/api/v1/ssocookie
+3. Copia lo que aparece entre comillas y pégalo en la app.
+
+Lo que comparten los dos pasos es la sesión, por eso tienen que ser en el
+mismo navegador. Si el segundo responde
+`{"error":"invalid_grant","error_description":"Invalid login"}`, es que falta
+el paso 1.
+
+Ese código dura unos dos meses. Mientras tanto la app renueva el acceso sola.
+
+### Epic Games
+
+> **Ojo.** Epic avisa en su propia página de que ese código **da acceso
+> completo a la cuenta**. En GameShelf se guarda cifrado en el llavero y no se
+> manda a ningún servidor, pero no conviene pegarlo en ningún otro sitio.
+
+1. Inicia sesión en https://www.epicgames.com/id/login
+2. **En el mismo navegador**, abre
+   https://www.epicgames.com/id/api/redirect?clientId=34a02cf8f4414e29b15921876da36f9a&responseType=code
+3. Copia lo que hay tras `"authorizationCode"`, entre comillas, y pégalo en la
+   app **enseguida**.
+
+Los códigos de Epic caducan en segundos. Si al pegarlo dice que no sirve, basta
+con recargar esa página y copiar el nuevo. Si la página muestra
+`"authorizationCode": null`, es que falta el paso 1.
+
+### Xbox
+
+Microsoft no ofrece un client público para apps de terceros como sí hacen PSN
+y Epic con los suyos (sacado de sus propias apps móviles): hay que registrar
+una app propia en Azure, una sola vez, y usar ese client id y client secret
+desde GameShelf.
+
+#### Registrar la app en Azure (una sola vez)
+
+1. Entra a https://portal.azure.com con tu cuenta de Microsoft (la misma de
+   Xbox) y busca **"App registrations"**.
+2. **New registration**. En "Supported account types" elige **"Personal
+   Microsoft accounts only"**.
+3. En **"Add a platform"** elige **"Web"** (no "Mobile and desktop
+   applications") y pon como Redirect URI:
+   `http://localhost/auth/callback`
+4. Copia el **"Application (client) ID"** que aparece en la página de la app:
+   esa es la primera pieza.
+5. Entra a **"Certificates & secrets" -> "New client secret"** y copia el
+   **valor** apenas se genere. Azure solo lo muestra esa vez; si lo pierdes,
+   toca crear uno nuevo.
+
+#### Conectar desde la app
+
+1. Pega el client ID y el client secret en **Ajustes -> Xbox**, sección "Tu
+   app de Azure".
+2. Toca "1. Iniciar sesión con Microsoft" y autoriza la app.
+3. La página va a **fallar al llegar a `localhost`**: es lo esperado, nada
+   escucha ahí. El código ya quedó en la **barra de direcciones**, no en la
+   página. Copia lo que hay tras `code=`.
+4. Pega ese código en la app.
+
+El acceso se renueva solo mientras el refresh token de Microsoft siga
+sirviendo. La app de Azure (client id y secret) no se borra al desconectar la
+sesión: es tuya, no de la sesión, y Azure no deja verla de nuevo.
+
+#### Traer tus juegos
+
+Con la cuenta conectada, toca **Ajustes -> Xbox -> "Traer mis juegos de
+Xbox"**. Llegan con su Gamerscore (lo conseguido y el total) y las horas
+jugadas. Si un juego ya estaba por Steam, PlayStation o Epic, se suma a ese en
+vez de salir dos veces.
+
+Dos cosas cambian respecto a las otras tiendas:
+
+- Xbox no da la lista de lo comprado sino el **historial de lo jugado**: un
+  juego comprado y nunca abierto no aparece.
+- Las horas salen de una consulta aparte. Si esa falla, los juegos llegan
+  igual, con las horas que ya tuvieran (o 0 la primera vez).
+
+### Ofertas y precios (IsThereAnyDeal)
+
+Esta sí es solo una API key, gratis y sin cuenta:
+
+1. Sácala en https://isthereanydeal.com/apps/my/
+2. Pégala en **Ajustes -> Ofertas y precios**.
+
+Sin ella la lista de deseos se ve igual, solo que sin precios ni ofertas.
+
+### Qué pasa si una falla
+
+Cada tienda va por su lado. Si el flujo de Epic deja de funcionar, o si Sony
+cambia el suyo, **el resto de la app sigue igual**: la biblioteca ya guardada,
+las colecciones y las notas no dependen de ellos.
+
+## Estado del proyecto
+
+En construcción. Ver `CONTRIBUTING.md` para las reglas de trabajo.
