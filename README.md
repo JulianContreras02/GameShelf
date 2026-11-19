@@ -1,166 +1,170 @@
 # GameShelf
 
+**English** · [Español](README.es.md)
+
 [![CI](https://github.com/JulianContreras02/GameShelf/actions/workflows/ci.yml/badge.svg)](https://github.com/JulianContreras02/GameShelf/actions/workflows/ci.yml)
 
-App personal para iOS que organiza tu biblioteca de videojuegos en un solo lugar,
-sin importar de que tienda vienen.
+A personal iOS app that keeps your whole video game library in one place, no
+matter which store each game came from.
 
-## Que hace
+## What it does
 
-- Conecta tus cuentas de Steam, PlayStation Network, Epic Games y Xbox para
-  traer los juegos que ya tienes.
-- Te deja organizar esa biblioteca con tus propias carpetas y listas
-  (pendientes, favoritos, lo que sea), algo que ninguna tienda te deja hacer
-  entre plataformas.
-- Revisa ofertas de tu lista de deseos usando una API de agregador de precios
-  (IsThereAnyDeal), en vez de reinventar el scraping de cada tienda.
+- Connects your Steam, PlayStation Network, Epic Games and Xbox accounts to
+  bring in the games you already own.
+- Lets you organize that library with your own folders and lists (backlog,
+  favorites, anything), which no store lets you do across platforms.
+- Checks deals on your wishlist through a price-aggregator API
+  (IsThereAnyDeal) instead of reinventing scraping for every store.
 
-Es un proyecto de aprendizaje: mi primera app en el ecosistema Apple, y estoy
-usandolo tambien para experimentar con las funciones de accesibilidad de iOS.
+It is a learning project: my first app in the Apple ecosystem, which I am also
+using to experiment with iOS accessibility features.
 
-## Como correrlo
+## Running it
 
-### 1. Crear tu archivo de secretos
+### 1. Create your secrets file
 
 ```bash
 cp Config/Secrets.example.xcconfig Config/Secrets.xcconfig
 ```
 
-Ese archivo esta ignorado por git. Hoy no hace falta llenarlo con nada: todas
-las claves se conectan desde dentro de la app (ver la siguiente seccion).
-Sigue siendo parte del proyecto de Xcode, y es donde iria una clave que en el
-futuro haga falta antes de que el usuario haga nada.
+That file is ignored by git. Today it does not need anything in it: every key
+is connected from inside the app (see the next section). It is still part of
+the Xcode project, and it is where a key would go if one were ever needed
+before the user does anything.
 
-### 2. Correr
+### 2. Run
 
-Abrir `GameShelf.xcodeproj` en Xcode y correr en el simulador o en tu
-dispositivo.
+Open `GameShelf.xcodeproj` in Xcode and run it on the simulator or on your
+device.
 
-### Requisitos
+### Requirements
 
-- Xcode 26.5 o superior: el proyecto pide iOS 26.5, y ese SDK llego con Xcode 26.5
-- [SwiftLint](https://github.com/realm/SwiftLint) 0.65.1, la misma que usa CI:
-  `brew install swiftlint` instala la ultima, que puede marcar distinto.
+- Xcode 26.5 or later: the project targets iOS 26.5, and that SDK shipped with
+  Xcode 26.5.
+- [SwiftLint](https://github.com/realm/SwiftLint) 0.65.1, the same version CI
+  uses: `brew install swiftlint` installs the latest, which may report
+  differently.
 
-## Conectar cuentas y claves
+## Connecting accounts and keys
 
-Steam, PlayStation, Epic, Xbox e IsThereAnyDeal se conectan desde la app, en
-**Ajustes**, y sus credenciales se guardan cifradas en el llavero del
-telefono. Ninguna vive en el archivo de secretos: eso es lo que permite
-instalar la app en otro telefono y conectar ahi cuentas distintas, sin
-recompilar.
+Steam, PlayStation, Epic, Xbox and IsThereAnyDeal are connected from the app,
+under **Settings**, and their credentials are stored encrypted in the phone's
+Keychain. None of them live in the secrets file: that is what lets you install
+the app on another phone and connect different accounts there without
+rebuilding.
 
 ### Steam
 
-A diferencia de PSN y Epic, Steam si ofrece un camino oficial: no hace falta
-iniciar sesion desde la app.
+Unlike PSN and Epic, Steam offers an official path: you do not need to sign in
+from the app.
 
-1. Consigue tu SteamID64 en https://steamid.io pegando la URL de tu perfil.
-2. Saca una API key gratis en https://steamcommunity.com/dev/apikey (pide un
-   dominio; sirve `localhost`).
-3. Pega los dos datos en **Ajustes -> Steam**.
+1. Get your SteamID64 at https://steamid.io by pasting your profile URL.
+2. Get a free API key at https://steamcommunity.com/dev/apikey (it asks for a
+   domain; `localhost` works).
+3. Paste both values into **Settings → Steam**.
 
-### PlayStation y Epic
+### PlayStation and Epic
 
-La razon de que sean un rodeo es la misma en las dos: ni Sony ni Epic ofrecen
-un "iniciar sesion" para aplicaciones de terceros. Lo unico que hay es copiar
-un codigo desde el navegador, con la sesion ya iniciada.
+Both are a workaround for the same reason: neither Sony nor Epic offers a
+"sign in" for third-party apps. The only option is to copy a code from the
+browser while you are already signed in.
 
 ### PlayStation Network
 
-1. Inicia sesion en https://www.playstation.com/ (boton "Sign In").
-2. **En el mismo navegador**, abre
+1. Sign in at https://www.playstation.com/ ("Sign In" button).
+2. **In the same browser**, open
    https://ca.account.sony.com/api/v1/ssocookie
-3. Copia lo que aparece entre comillas y pegalo en la app.
+3. Copy the value between quotes and paste it into the app.
 
-Lo que comparten los dos pasos es la sesion, por eso tienen que ser en el
-mismo navegador. Si el segundo responde
-`{"error":"invalid_grant","error_description":"Invalid login"}`, es que falta
-el paso 1.
+The two steps share the browser session, which is why they must happen in the
+same browser. If the second one returns
+`{"error":"invalid_grant","error_description":"Invalid login"}`, step 1 is
+missing.
 
-Ese codigo dura unos dos meses. Mientras tanto la app renueva el acceso sola.
+That code lasts about two months. Meanwhile the app renews access by itself.
 
 ### Epic Games
 
-> **Ojo.** Epic avisa en su propia pagina de que ese codigo **da acceso
-> completo a la cuenta**. En GameShelf se guarda cifrado en el llavero y no se
-> manda a ningun servidor, pero no conviene pegarlo en ningun otro sitio.
+> **Warning.** Epic states on its own page that this code **gives full access
+> to the account**. GameShelf stores it encrypted in the Keychain and never
+> sends it to any server, but you should not paste it anywhere else.
 
-1. Inicia sesion en https://www.epicgames.com/id/login
-2. **En el mismo navegador**, abre
+1. Sign in at https://www.epicgames.com/id/login
+2. **In the same browser**, open
    https://www.epicgames.com/id/api/redirect?clientId=34a02cf8f4414e29b15921876da36f9a&responseType=code
-3. Copia lo que hay tras `"authorizationCode"`, entre comillas, y pegalo en la
-   app **enseguida**.
+3. Copy the value after `"authorizationCode"`, between quotes, and paste it
+   into the app **right away**.
 
-Los codigos de Epic caducan en segundos. Si al pegarlo dice que no sirve, basta
-con recargar esa pagina y copiar el nuevo. Si la pagina muestra
-`"authorizationCode": null`, es que falta el paso 1.
+Epic codes expire within seconds. If the app says the code is not valid,
+reload that page and copy the new one. If the page shows
+`"authorizationCode": null`, step 1 is missing.
 
 ### Xbox
 
-Microsoft no ofrece un client publico para apps de terceros como si hacen PSN
-y Epic con los suyos (sacado de sus propias apps moviles): hay que registrar
-una app propia en Azure, una sola vez, y usar ese client id y client secret
-desde GameShelf.
+Microsoft does not offer a public client for third-party apps the way PSN and
+Epic do with theirs (taken from their own mobile apps): you have to register
+your own app in Azure, once, and use that client ID and client secret from
+GameShelf.
 
-#### Registrar la app en Azure (una sola vez)
+#### Register the app in Azure (once)
 
-1. Entra a https://portal.azure.com con tu cuenta de Microsoft (la misma de
-   Xbox) y busca **"App registrations"**.
-2. **New registration**. En "Supported account types" elige **"Personal
+1. Go to https://portal.azure.com with your Microsoft account (the same one as
+   Xbox) and search for **"App registrations"**.
+2. **New registration**. Under "Supported account types" choose **"Personal
    Microsoft accounts only"**.
-3. En **"Add a platform"** elige **"Web"** (no "Mobile and desktop
-   applications") y pon como Redirect URI:
+3. Under **"Add a platform"** choose **"Web"** (not "Mobile and desktop
+   applications") and set the Redirect URI to:
    `http://localhost/auth/callback`
-4. Copia el **"Application (client) ID"** que aparece en la pagina de la app:
-   esa es la primera pieza.
-5. Entra a **"Certificates & secrets" -> "New client secret"** y copia el
-   **valor** apenas se genere. Azure solo lo muestra esa vez; si lo pierdes,
-   toca crear uno nuevo.
+4. Copy the **"Application (client) ID"** shown on the app's page: that is the
+   first piece.
+5. Go to **"Certificates & secrets" → "New client secret"** and copy the
+   **value** as soon as it is generated. Azure only shows it once; if you lose
+   it, you have to create a new one.
 
-#### Conectar desde la app
+#### Connect from the app
 
-1. Pega el client ID y el client secret en **Ajustes -> Xbox**, seccion "Tu
-   app de Azure".
-2. Toca "1. Iniciar sesion con Microsoft" y autoriza la app.
-3. La pagina va a **fallar al llegar a `localhost`**: es lo esperado, nada
-   escucha ahi. El codigo ya quedo en la **barra de direcciones**, no en la
-   pagina. Copia lo que hay tras `code=`.
-4. Pega ese codigo en la app.
+1. Paste the client ID and client secret into **Settings → Xbox**, section
+   "Your Azure app".
+2. Tap "1. Sign in with Microsoft" and authorize the app.
+3. The page will **fail when it reaches `localhost`**: that is expected,
+   nothing is listening there. The code is already in the **address bar**, not
+   on the page. Copy what follows `code=`.
+4. Paste that code into the app.
 
-El acceso se renueva solo mientras el refresh token de Microsoft siga
-sirviendo. La app de Azure (client id y secret) no se borra al desconectar la
-sesion: es tuya, no de la sesion, y Azure no deja verla de nuevo.
+Access renews by itself as long as Microsoft's refresh token keeps working. The
+Azure app (client ID and secret) is not deleted when you disconnect the
+session: it belongs to you, not to the session, and Azure will not show the
+secret again.
 
-#### Traer tus juegos
+#### Bring in your games
 
-Con la cuenta conectada, toca **Ajustes -> Xbox -> "Traer mis juegos de
-Xbox"**. Llegan con su Gamerscore (lo conseguido y el total) y las horas
-jugadas. Si un juego ya estaba por Steam, PlayStation o Epic, se suma a ese en
-vez de salir dos veces.
+With the account connected, tap **Settings → Xbox → "Bring in my Xbox
+games"**. They arrive with their Gamerscore (earned and total) and hours
+played. If a game was already there from Steam, PlayStation or Epic, it is
+merged into that one instead of showing up twice.
 
-Dos cosas cambian respecto a las otras tiendas:
+Two things differ from the other stores:
 
-- Xbox no da la lista de lo comprado sino el **historial de lo jugado**: un
-  juego comprado y nunca abierto no aparece.
-- Las horas salen de una consulta aparte. Si esa falla, los juegos llegan
-  igual, con las horas que ya tuvieran (o 0 la primera vez).
+- Xbox does not return what you bought but your **play history**: a game you
+  bought and never opened does not appear.
+- Hours come from a separate request. If that one fails, the games still
+  arrive, with the hours they already had (or 0 the first time).
 
-### Ofertas y precios (IsThereAnyDeal)
+### Deals and prices (IsThereAnyDeal)
 
-Esta si es solo una API key, gratis y sin cuenta:
+This one is just an API key, free and without an account:
 
-1. Sacala en https://isthereanydeal.com/apps/my/
-2. Pegala en **Ajustes -> Ofertas y precios**.
+1. Get it at https://isthereanydeal.com/apps/my/
+2. Paste it into **Settings → Deals and prices**.
 
-Sin ella la lista de deseos se ve igual, solo que sin precios ni ofertas.
+Without it the wishlist looks the same, just without prices or deals.
 
-### Que pasa si una falla
+### When one of them fails
 
-Cada tienda va por su lado. Si el flujo de Epic deja de funcionar, o si Sony
-cambia el suyo, **el resto de la app sigue igual**: la biblioteca ya guardada,
-las colecciones y las notas no dependen de ellos.
+Each store works on its own. If Epic's flow stops working, or Sony changes
+theirs, **the rest of the app keeps working**: your saved library, collections
+and notes do not depend on them.
 
-## Estado del proyecto
+## Project status
 
-En construccion. Ver `CONTRIBUTING.md` para las reglas de trabajo.
+In progress. See `CONTRIBUTING.md` for the working rules.
